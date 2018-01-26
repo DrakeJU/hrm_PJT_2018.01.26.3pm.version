@@ -24,7 +24,7 @@
 
 	<!-- DBMS 설정 ################################################################################################################## -->
 	<entry key="dbms.driverClassName"	>com.mysql.cj.jdbc.Driver</entry>						<!-- DBMS 드라이버 -->
-	<entry key="dbms.url"				>jdbc:mysql://192.168.0.88:3306/personnelmanagement?useSSL=false&amp;serverTimezone=Asia/Seoul
+	<entry key="dbms.url"				>jdbc:mysql://localhost:3306/personnelmanagement?useSSL=false&amp;serverTimezone=Asia/Seoul
 	</entry>	<!-- DBMS 주소 및 스키마 -->
 	<entry key="dbms.username"			>scott</entry>										<!-- 유저명 -->
 	<entry key="dbms.password"			>tiger</entry>											<!-- 비밀번호 -->
