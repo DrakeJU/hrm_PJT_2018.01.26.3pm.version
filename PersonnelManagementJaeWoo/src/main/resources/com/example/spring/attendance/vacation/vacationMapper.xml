@@ -1,0 +1,195 @@
+<!--?xml version="1.0" encoding="UTF-8"? -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 휴가 sql -->
+<mapper namespace="vacation">
+	
+
+	<!-- 휴가개수설정 사원 리스트 출력 -->
+		<select id="vacationCountEmpList" parameterType="HashMap" resultType="HashMap">
+		/* vacationCount Employee Select (휴가개수설정 사원 리스트 출력) */
+<!-- 		SELECT -->
+<!-- 			(SELECT CASE WHEN RET.RETR_DEL_YN='N' THEN '재직' ELSE '퇴직' END) AS retrDelYn, -->
+<!-- 			E.EMP_EMNO AS empEmno, -->
+<!-- 			E.EMP_NAME AS empName, -->
+<!-- 			D.DEPT_NAME AS deptName, -->
+<!-- 			R.RANK_NAME AS rankName, -->
+<!-- 			(SELECT CONCAT( -->
+<!-- 				(SELECT LEFT(E.EMP_INCO_DATE,4)), -->
+<!-- 				'-', -->
+<!-- 				(SELECT SUBSTRING(E.EMP_INCO_DATE,5,2)), -->
+<!-- 				'-', -->
+<!-- 				(SELECT RIGHT(E.EMP_INCO_DATE,2)) -->
+<!-- 			)) AS retrIncoDate -->
+<!-- 		FROM EMPLOYEE E -->
+<!-- 		INNER JOIN -->
+<!-- 			RETIREMENT RET -->
+<!-- 		ON RET.EMP_EMNO = E.EMP_EMNO -->
+<!-- 		INNER JOIN -->
+<!-- 			DEPARTMENT D -->
+<!-- 		ON D.DEPT_CODE = E.DEPT_CODE -->
+<!-- 		INNER JOIN -->
+<!-- 			RANK R -->
+<!-- 		ON R.RANK_CODE = E.RANK_CODE -->
+<!-- 		<if test='retrDelYn == "off"'> #default -->
+<!-- 		WHERE -->
+<!-- 			RET.RETR_DEL_YN = 'N' -->
+<!-- 		</if> -->
+<!-- 		<if test="retrDelYn == 'off' and keyword != null and !keyword.equals('')"> -->
+<!-- 		WHERE -->
+<!-- 			RET.RETR_DEL_YN = 'N' -->
+<!-- 		AND -->
+<!-- 			E.EMP_EMNO LIKE CONCAT('%',#{keyword},'%') OR -->
+<!-- 			E.EMP_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
+<!-- 			D.DEPT_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
+<!-- 			R.RANK_NAME LIKE CONCAT('%',#{keyword},'%') -->
+<!-- 		</if> -->
+<!-- 		<if test="retrDelYn == 'on' and keyword != null and !keyword.equals('')"> #검색어, 퇴직자 포함 -->
+<!-- 		WHERE -->
+<!-- 			E.EMP_EMNO LIKE CONCAT('%',#{keyword},'%') OR -->
+<!-- 			E.EMP_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
+<!-- 			D.DEPT_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
+<!-- 			R.RANK_NAME LIKE CONCAT('%',#{keyword},'%') -->
+<!-- 		</if> -->
+	</select>
+	
+	<select id="vacationCountEmpSignUpCntNum" resultType="java.lang.Integer">
+		SELECT
+			COUNT(E.EMP_EMNO) AS EmpSignUpCntNum
+		FROM
+			EMPLOYEE_REMINDING_VAC V
+		RIGHT OUTER JOIN
+			EMPLOYEE E
+		ON V.EMP_EMNO = E.EMP_EMNO
+		WHERE V.EMP_EMNO IS NULL
+	</select>
+	
+	<select id="vacationCountEmpSignUpList" parameterType="HashMap" resultType="HashMap">
+	/* 휴가일수설정 사원등록 사원리스트 출력(사원정보 테이블 != 사원별 잔여휴가 테이블: 비교해서 없는 데이터만 출력) */
+		SELECT
+			E.EMP_EMNO AS empEmno,
+			E.EMP_NAME AS empName,
+			D.DEPT_NAME AS deptName,
+			R.RANK_NAME AS rankName,
+			(SELECT CONCAT(
+		 		(SELECT
+				 	LEFT(E.EMP_INCO_DATE,4)), 
+		 			'-', 
+		 			(SELECT SUBSTRING(E.EMP_INCO_DATE,5,2)), 
+		 			'-', 
+		 			(SELECT RIGHT(E.EMP_INCO_DATE,2))
+		 		)
+			) AS retrIncoDate
+		FROM
+			EMPLOYEE_REMINDING_VAC V
+		RIGHT OUTER JOIN
+			EMPLOYEE E
+		ON V.EMP_EMNO = E.EMP_EMNO
+		INNER JOIN
+			DEPARTMENT D
+		ON D.DEPT_CODE = E.DEPT_CODE
+		INNER JOIN
+			RANK R
+		ON R.RANK_CODE = E.RANK_CODE
+		WHERE V.EMP_EMNO IS NULL
+	</select>
+	
+
+	<!-- 휴가 신청하기 -->
+	<insert id="vacationRequest" parameterType="HashMap">
+	/* vacationRequest Insert(휴가 신청) */
+	
+	INSERT INTO VAC_STATEMENT
+	(
+		EMP_EMNO,					#사원번호
+		ATTENDANCE_C,				#근태코드
+		VAST_C,						#휴가코드
+		VAST_CRT_DATE,				#휴가신청일자
+		VAST_START_DATE,			#휴가시작날짜
+		VAST_END_DATE,				#휴가종료날짜
+		VAST_VAC_UD,				#휴가일수
+		VAST_CONT,					#휴가사유
+		VAST_PROGRESS_SITUATION, 		#전자결재상태
+		VAST_DEL_YN					#삭제여부
+	) VALUES (
+		#{empEmno},					#사원번호
+		'W6',						#근태코드
+		#{vastC},					#휴가코드
+		(SELECT REPLACE(#{vastCrtDate},'-','')),		#휴가신청일자(날짜표기문자열,바꿀문자,바껴서보여줄문자)
+		(SELECT REPLACE(#{vastStartDate},'-','')),		#휴가시작날짜
+		(SELECT REPLACE(#{vastEndDate},'-','')),		#휴가종료날짜
+		#{vastVacUd},									#휴가일수
+		#{vastCont},									#휴가사유
+		#{vastProgressSituation},		
+		'N'												#삭제여부
+	)
+	
+	</insert>
+	
+		
+	<!-- 휴가 조회하기 - 직원 -->
+	
+	<!-- 휴가 조회하기 - 관리자 -->
+	<select id="vacationListAdmin" parameterType="HashMap" resultType="HashMap">
+	/* vacationListAdmin Select(휴가 조회-관리자) */
+	SELECT 
+		EMP_EMNO,					#사원번호
+		ATTENDANCE_C,				#근태코드
+		VAST_C,						#휴가코드
+		VAST_CRT_DATE,				#휴가신청일자
+		VAST_START_DATE,			#휴가시작날짜
+		VAST_END_DATE,				#휴가종료날짜
+		VAST_VAC_UD,				#휴가일수
+		VAST_CONT,					#휴가사유
+		VAST_PROGRESS_SITUATION, 		#전자결재상태
+		VAST_DEL_YN					#삭제여부	
+	FROM VAC_STATEMENT
+	</select>
+
+	<!-- 휴가 신청현황 - 승인대기 개수 -->
+	<select id="vacationProgCntNum" resultType="java.lang.Integer">
+	/* vacationProgCntNum (휴가 승인대기 개수 - 관리자) */
+	
+	SELECT 
+		COUNT(VAST_PROGRESS_SITUATION) AS progCntNum 
+	FROM VAC_STATEMENT
+	WHERE VAST_PROGRESS_SITUATION = '승인대기';
+	
+	</select>
+	
+	
+	<!-- 휴가 신청현황 - 승인대기 리스트 -->
+	<select id="vacationProgressList" parameterType="HashMap" resultType="HashMap">
+	SELECT
+		VS.VAST_SERIAL_NUMBER as vastSerialNumber,		#휴가현황일련번호
+		VS.EMP_EMNO AS empEmno,		#사원번호
+		EMP.EMP_NAME AS empName,	#사원이름
+		DEP.DEPT_NAME AS deptName,	#부서명
+		RAN.RANK_NAME AS rankName,	#직급
+		VS.VAST_CRT_DATE AS vastCrtDate,	#휴가신청날짜
+		VAC.VAST_TYPE AS vastType,			#휴가명
+		VS.VAST_START_DATE AS vastStartDate,	#휴가시작날짜
+		VS.VAST_END_DATE AS vastEndDate,		#휴가종료날짜
+		VS.VAST_VAC_UD AS vastVacUd,			#휴가사용개수
+		VS.VAST_CONT AS vastCont,			#휴가사유
+		VS.VAST_PROGRESS_SITUATION AS vastProgressSituation		#휴가결재상황	
+	FROM VAC_STATEMENT VS, VACATION VAC, EMPLOYEE EMP, DEPARTMENT DEP, RANK RAN
+	WHERE VS.VAST_C = VAC.VAST_C
+	AND VS.EMP_EMNO = EMP.EMP_EMNO
+	AND RAN.DEPT_CODE = DEP.DEPT_CODE
+	</select>
+	
+	
+	<!-- 휴가  '승인대기' -> '승인완료' -->
+	<select id="vacationProgToggle" parameterType="HashMap" resultType="HashMap">
+	
+	</select>
+	
+	
+	
+	<!-- 휴가 개수 계산하기 -->
+	
+	<!-- 휴가 월마감 -->	
+
+
+</mapper>

@@ -1,0 +1,15 @@
+<!--?xml version="1.0" encoding="UTF-8"? -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+	<select id="navList" resultType="HashMap">
+		SELECT
+			MN_NO mnNo, /*메뉴코드*/
+			MN_NAME mnName, /*메뉴명*/
+			MN_IDX mnIdx, /*메뉴순번*/
+			MN_PRNT_NO mnPrntNo, /*상위메뉴코드*/
+			MN_URL mnUrl /*메뉴url*/
+		FROM MENU
+		WHERE MN_DEL_YN='N' /*메뉴삭제여부*/
+		AND MN_USE_YN='Y' /*메뉴사용여부*/
+	</select>
+</mapper>

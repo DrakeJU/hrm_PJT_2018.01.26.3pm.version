@@ -1,0 +1,108 @@
+<!--?xml version="1.0" encoding="UTF-8"? -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="payc">
+
+<!-- 							SELECT								-->
+	<select id="paycList" parameterType="HashMap" resultType="HashMap"> 
+        
+        SELECT *FROM SAL_REGISTER ORDER BY SREG_YYMM DESC;
+           
+    </select>
+    
+    <select id="getEmpemno" parameterType="HashMap" resultType="HashMap">
+		
+		SELECT EMP_EMNO FROM SAL_EMPLOYEE
+	
+	</select>
+	
+	<select id="searchEmym" parameterType="HashMap" resultType="HashMap">
+		
+		SELECT SCAL_EMYM FROM SAL_CALCULATION WHERE SCAL_EMYM = #{emym}
+		
+	</select>
+    
+    <select id ="sal_calList" parameterType="HashMap" resultType="HashMap"> 
+    
+    	
+    </select>
+
+	<select id = "select_payc" parameterType="HashMap" resultType="HashMap">
+		
+		SELECT SCAL_EMYM, E.EMP_EMNO, E.EMP_NAME,SCAL_SAL,SCAL_NW_CST,
+		       SCAL_TAMT,SCAL_BW_CST,SCAL_L_CST,SCAL_EL_CST,SCAL_BNUS,
+		       SCAL_FDEX,SCAL_CMC,SRNK_RAMT,SCAL_VAC_CST,SCAL_ITAX,
+		 	   SCAL_LTAX,SCAL_NPEN,SCAL_HFEE,SCAL_EFEE,SCAL_DAMT,
+		       SCAL_FAMT,SCAL_AAMT,SCAL_SAMT,SCAL_NWH,SCAL_HWH,
+		       SCAL_LH,SCAL_ELH,CMIT_YN,SCAL_VADS
+		       
+  		FROM sal_calculation S ,(SELECT EMP_NAME, EMP_EMNO FROM EMPLOYEE) E
+ 		WHERE S.EMP_EMNO = E.EMP_EMNO AND SCAL_YYMM=#{yymm}
+			
+	</select>
+<!--<select id="departmentSearch" parameterType="HashMap" resultType="HashMap">
+
+		SELECT
+			DEPT_CODE as deptCode
+			,DEPT_NAME as deptName
+		FROM DEPARTMENT WHERE DEPT_NAME LIKE CONCAT('%',#{deptName},'%')
+			
+	</select> -->
+<!-- 							INSERT								-->
+	<insert id="makePaycInsert">
+	
+		INSERT INTO SAL_REGISTER
+		(SREG_YYMM
+		,SREG_NAME
+		,SREG_PDAY
+		,SREG_PYYMM)
+		VALUES(#{pyymm},#{paycname},#{payday},#{payyymm})
+	
+	</insert>
+	
+	<!-- 전체계산 insert 데이터가없을 시 -->
+	<insert id="acalInsert" parameterType="HashMap">		
+		INSERT INTO SAL_CALCULATION(SCAL_EMYM, EMP_EMNO, SCAL_SAL, SCAL_FDEX, SCAL_YYMM)
+     	VALUES (#{emym},
+				
+			(SELECT S.EMP_EMNO
+			    FROM SAL_EMPLOYEE S, EMPLOYEE E
+			    WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
+				
+			(SELECT SEMP_SAL
+				FROM SAL_EMPLOYEE S, EMPLOYEE E
+				WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
+				
+			(SELECT SEMP_FDEX
+  				FROM SAL_EMPLOYEE S, EMPLOYEE E
+ 				WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),		
+				
+			#{yymm})
+	</insert>
+	
+	
+	<!-- 전체계산 update 데이터가 존재할 시 -->
+	<update id="acalUpdate" parameterType="HashMap">	    
+		UPDATE personnelmanagement.SAL_CALCULATION
+		SET 
+			EMP_EMNO = (SELECT S.EMP_EMNO
+			    		FROM SAL_EMPLOYEE S, EMPLOYEE E
+			    		WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
+					
+			SCAL_SAL = 	(SELECT SEMP_SAL
+						FROM SAL_EMPLOYEE S, EMPLOYEE E
+						WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),	
+						
+			SCAL_FDEX = (SELECT SEMP_FDEX
+						FROM SAL_EMPLOYEE S, EMPLOYEE E
+						WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno})
+			
+			WHERE EMP_EMNO = #{emp_emno};
+	
+	</update>
+
+	
+	
+	
+</mapper>

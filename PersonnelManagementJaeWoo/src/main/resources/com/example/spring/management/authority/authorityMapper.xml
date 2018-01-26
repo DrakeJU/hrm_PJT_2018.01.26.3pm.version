@@ -1,0 +1,117 @@
+<!--?xml version="1.0" encoding="UTF-8"? -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="authority">
+	<select id="empMaxNum" parameterType="HashMap" resultType="int">
+		select
+			IFNULL(count(*),0) empMaxNum		
+		from		
+		(select      
+			employee.emp_name emp_name,
+			department.dept_name dept_name,
+			rank.rank_name rank_name
+		from employee join department   
+		on employee.dept_code = department.dept_code   
+		join rank   
+		on employee.rank_code = rank.rank_code     
+		where employee.emp_del_yn ='N' 
+		<if test="searchCnd != null and searchCnd !=''">
+			<choose>
+				<when test="searchCnd == 'deptName'">
+					and dept_name LIKE CONCAT('%',#{searchWd},'%') 
+				</when>
+				<when test="searchCnd == 'rankName'">
+					and rank_name LIKE CONCAT('%',#{searchWd},'%')
+				</when>
+				<when test="searchCnd == 'empName'">
+					and emp_name LIKE CONCAT('%',#{searchWd},'%')
+				</when>
+			</choose>
+		</if>
+		)x
+	</select>
+	<select id="empList" parameterType="HashMap" resultType="HashMap">
+		select
+			x.empEmno,
+			x.empName,
+			x.deptName,
+			x.empRegDate,
+			rank.rank_name rankName
+		from 	
+		(select 
+			emp_emno empEmno,
+			emp_name empName,
+			dept_name deptName,
+			rank_code rankCode,
+			emp_reg_date empRegDate
+		from employee left join department 
+		on employee.dept_code = department.dept_code
+		where employee.emp_del_yn ='N')x left join rank
+		on x.rankCode = rank.rank_code
+		where 1=1
+		<if test="searchCnd !=null and searchCnd !=''">
+			<choose>
+				<when test="searchCnd == 'deptName'">
+					and x.deptName LIKE CONCAT('%',#{searchWd},'%')
+				</when>
+				<when test="searchCnd == 'rankName'">
+					and rank.rank_name LIKE CONCAT('%',#{searchWd},'%')
+				</when>
+				<when test="searchCnd == 'empName'">
+					and x.empName LIKE CONCAT('%',#{searchWd},'%')
+				</when>
+			</choose>
+		</if>
+		limit #{noticeCount},#{viewNoticeMaxNum}
+	</select>
+	<select id="authorityDetail" resultType="HashMap">
+		select
+			x.empEmno,
+			x.empName,
+			x.deptName,
+			rank.rank_name rankName
+		from 	
+		(select 
+			emp_emno empEmno,
+			emp_name empName,
+			dept_name deptName,
+			rank_code rankCode,
+			emp_reg_date empRegDate
+		from employee left join department 
+		on employee.dept_code = department.dept_code
+		where employee.emp_del_yn ='N')x left join rank
+		on x.rankCode = rank.rank_code
+		where x.empEmno = #{empEmno}
+	</select>
+	<update id="empClassUpdate" parameterType="HashMap">
+		update employee set emp_admin_yn=#{empClass} where emp_emno=${empEmno}
+	</update>
+	<select id="authorityMenu" resultType="HashMap">
+		select
+			x.mnNo,
+			menu.MN_NAME mnName,
+			x.authoAttr,
+			x.atrAplyStrt,
+			x.atrAplyFini,
+			x.atrUpdtStrt,
+			x.atrUpdtFini
+		from
+			(select
+				mn_no mnNo,
+				autho_attr authoAttr,
+				atr_aplystrt atrAplyStrt,
+				atr_aplyfini atrAplyFini,
+				atr_updtstrt atrUpdtStrt,
+				atr_updtfini atrUpdtFini
+			from authority
+			where mn_no = #{mnNo}
+			and emp_emno = #{empEmno})x , menu
+		where x.mnNo = menu.mn_no;
+	</select>
+	<select id="menuAttrList" resultType="hashMap">
+		select
+			MN_ATTR mnAttr,
+			MN_NAME mnName
+		from menu
+		where mn_no = #{mnNo}	
+	</select>
+</mapper>

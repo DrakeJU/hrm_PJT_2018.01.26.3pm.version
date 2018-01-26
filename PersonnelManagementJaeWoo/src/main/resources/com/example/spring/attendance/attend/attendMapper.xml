@@ -1,0 +1,105 @@
+<!--?xml version="1.0" encoding="UTF-8"? -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="attend">
+	<!-- ************************************************************************************
+	 * 메뉴명 : [출결관리] - [일일근태등록]
+	 * 개요    : 
+	 * @Author : 이용선
+	 * @Date   : 2018.01.25
+	 ************************************************************************************ -->
+	<insert id="insertDailAttReg" parameterType="HashMap" >
+	
+		INSERT INTO COMM_STM ( 
+			  EMP_EMNO				#사원번호 
+			, ATTENDANCE_C			#근태코드 
+			, SHWK_SHF_C			#교대코드 
+			, COST_WRK_IN			#출근시간
+			, COST_DEL_YN 			#삭제여부 
+			)
+		VALUES('0905000211', 'W1', 'A1', REPLACE(NOW()+0, ',', ''), 'N'); 
+	
+	</insert>
+	
+	<select id="selectDailAttReg" parameterType="HashMap"  resultType="HashMap">
+	
+			SELECT 
+				 C.EMP_EMNO 				as empEmno 
+				,E.EMP_NAME					as empName 
+				,C.COST_WRK_IN 				as wrkIn
+			FROM COMM_STM C 
+ LEFT OUTER JOIN EMPLOYEE E 
+			  ON C.EMP_EMNO = E.EMP_EMNO 
+		ORDER BY COST_WRK_IN DESC
+			
+
+	</select>
+	
+	<!-- ************************************************************************************
+	 * 메뉴명 : [출결관리] - [월간 근태 생성/마감]
+	 * 개요    : 
+	 * @Author : 제영호
+	 * @Date   : 2018.01.??
+	 ************************************************************************************ -->
+	 
+	<!-- attend.readMnthngAttdCrtCls -->
+	<select id="readMnthngAttdCrtCls" parameterType="HashMap" resultType="HashMap">
+			SELECT DISTINCT 
+				   E.EMP_EMNO  								AS empEmno 	/*사원번호*/
+			     , E.EMP_NAME  								AS empName	/*사원이름*/	
+			     , E.RANK_CODE 								AS rankCode	/*직위/직급코드*/		
+			     , E.DEPT_CODE 								AS depCode  /*부서코드*/
+			     , E.EMP_ANL								AS empAnl   /*연차*/
+			  FROM COMM_STM C
+   LEFT OUTER JOIN EMPLOYEE E `
+		        ON C.EMP_EMNO ` E.EMP_EMNO   
+			 WHERE 1=1
+			 <if test="workYyMm != null and workYyMm != ''">
+			   AND SUBSTRING(C.COST_WRK_IN, 1, 6) = REPLACE(#{workYyMm}, '-', '')
+			 </if>
+	</select>
+	
+	<!-- ************************************************************************************
+	 * 메뉴명 : [출결관리] - [월근태현황]
+	 * 개요    : 
+	 * @Author : 이용선
+	 * @Date   : 2018.01.??
+	 ************************************************************************************ -->
+	 
+	<!-- 코드영역 -->
+
+	<!-- ************************************************************************************
+	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]
+	 * 개요    : 
+	 * @Author : 제영호
+	 * @Date   : 2018.01.??
+	 ************************************************************************************ -->
+	
+	<!-- attend.readHdayExtnNightWorkInqr -->
+	<select id="readHdayExtnNightWorkInqr" parameterType="HashMap" resultType="HashMap">
+			SELECT E.EMP_EMNO  								AS empEmno 	/*사원번호*/
+			     , E.EMP_NAME  								AS empName	/*사원이름*/	
+			     , E.RANK_CODE 								AS rankCode	/*직위/직급코드*/		
+			     , E.DEPT_CODE 								AS depCode  /*부서코드*/
+			     , (SELECT A.ATTENDANCE_TYPE 
+			     	  FROM ATTENDANCE A 
+			     	 WHERE 1=1 
+			     	   AND A.ATTENDANCE_C = C.ATTENDANCE_C) AS attendanceType /*근태종류*/
+			     , C.COST_WRK_TIME 							AS costWrkTime    /*근태시간*/
+			     , SUBSTRING(C.COST_WRK_IN, 1, 8) 			AS costWrkIn      /*근태일자*/
+			  FROM COMM_STM C
+   LEFT OUTER JOIN EMPLOYEE E
+		        ON C.EMP_EMNO = E.EMP_EMNO 
+			 WHERE 1=1
+			 <if test="empEmno != null and empEmno != ''">
+			   AND C.EMP_EMNO = #{empEmno}
+			 </if>
+			 <if test="workYyMm != null and workYyMm != ''">
+			   AND SUBSTRING(C.COST_WRK_IN, 1, 6) = REPLACE(#{workYyMm}, '-', '')
+			 </if>
+			   AND C.ATTENDANCE_C IN ('W2', 'W3', 'W4')
+			 ;
+	</select>
+	
+</mapper>
+
