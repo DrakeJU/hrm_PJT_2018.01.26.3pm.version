@@ -56,7 +56,67 @@
 	function insertForm(){
 		$("#insertForm").submit();
 	}
-	
+	//********************************************************//
+	/* start */ //참조해야할것.
+ 	function con_Work_Year_ListModal(){ //사원정보조회 리스트 출력
+ 		$('#empModalTbody').empty(); //이전 리스트 삭제
+ 		
+
+ 		
+		paging.ajaxFormSubmit("", formId, function(rslt){
+			
+ 			console.log("ajaxFormSubmit -> callback");
+ 			console.log("결과데이터:"+JSON.stringify(rslt));
+
+ 			$('#empModalTable').children('thead').css('width','calc(100% - 1em)'); //테이블 스크롤 css
+ 			
+ 			if(rslt == null){
+ 				$('#empModalTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
+ 	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+ 	 			);
+ 			}else if(rslt.success == "Y"){
+ 	 			$.each(rslt.empList, function(k, v) {
+					$('#empModalTbody').append(
+ 	 					"<tr style='display:table;width:100%;table-layout:fixed;'>"+
+								"<td>"+
+							"<label class='fancy-checkbox-inline'>"+
+								"<input type='checkbox' name='emnoChk'>"+ //checkbox
+								"<span></span>"+
+							"</label>"+
+						"</td>"+
+						"<td>"+ v.empEmno +"</td>"+ //사원번호
+						"<td>"+ v.empName +"</td>"+ //사원명
+						"<td>"+ v.deptName +"</td>"+ //부서명
+						"<td>"+ v.rankName +"</td>"+ //직급명
+					"</tr>"
+					);
+ 	 			});
+ 			}
+
+ 	
+		 	//사원선택 체크박스 선택 1개로 제한(라디오버튼처럼)
+			$(function(){
+				$("input[type='checkbox'][name='emnoChk']").click(function(){
+					if($(this).prop("checked")){ //check 이벤트가 발생했는지
+						//체크박스 전체를 checked 해제후 click한 요소만 true로 지정
+						$("input[type='checkbox'][name='emnoChk']").prop("checked", false);
+						$(this).prop("checked",true);
+					}
+				});
+			});
+
+			//테이블 정렬
+			$(function(){
+				$("#empModalTable").tablesorter();
+			});
+			
+			$(function(){ 
+				$("#empModalTable").tablesorter({sortList: [[0,0], [1,0]]});
+			});
+		 	
+		});
+ 	}
+
 	//디비 저장
 	/*
 	function insertDB(formId){
@@ -219,7 +279,7 @@
 		                           </tbody>
 		                        </table>
 		                 
-		                        <button type="button" name="saveButton" class="btn btn-primary ftr" onClick="insertDB('insertForm')">저장</button>
+		                        <button type="button" name="saveButton" class="btn btn-primary ftr" onClick="con_Work_Year_ListModal()">저장</button>
 							</form>
 						</div>
 					</div>	

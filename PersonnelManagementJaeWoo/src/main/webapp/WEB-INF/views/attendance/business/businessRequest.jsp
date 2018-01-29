@@ -102,7 +102,7 @@
  	/* 출장비 예상 금액 end */
  	
  	
- 	/* 사원선택 모달 start */
+ 	/* 사원선택 모달 start */ //참조해야할것.
  	function empListModal(url, formId){ //사원정보조회 리스트 출력
  		$('#empModalTbody').empty(); //이전 리스트 삭제
  		

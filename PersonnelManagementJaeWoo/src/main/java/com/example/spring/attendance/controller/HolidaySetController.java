@@ -71,4 +71,14 @@ public class HolidaySetController {
 	public String vatacionListAdminPage3() {
 		return "conWorkVacSet";
 	}
+	
+	//출장신청 사원정보조회 실바나스 소스 참조할것
+	@RequestMapping(value="/conWorkVacSet")
+	public @ResponseBody HashMap<String, Object> businessRequestEmpList(
+			@RequestParam HashMap<String,Object> map) {
+		
+	
+
+		return map;
+	}
 }
