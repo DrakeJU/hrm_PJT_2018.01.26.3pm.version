@@ -13,10 +13,10 @@
     
     <select id="getEmpemno" parameterType="HashMap" resultType="HashMap">
 		
-		SELECT EMP_EMNO FROM SAL_EMPLOYEE
+		SELECT EMP_EMNO,SEMP_SAL FROM SAL_EMPLOYEE
 	
 	</select>
-	
+		
 	<select id="searchEmym" parameterType="HashMap" resultType="HashMap">
 		
 		SELECT SCAL_EMYM FROM SAL_CALCULATION WHERE SCAL_EMYM = #{emym}
@@ -28,6 +28,7 @@
     	
     </select>
 
+<!-- 							 급여대장 조회 목록 								-->
 	<select id = "select_payc" parameterType="HashMap" resultType="HashMap">
 		
 		SELECT SCAL_EMYM, E.EMP_EMNO, E.EMP_NAME,SCAL_SAL,SCAL_NW_CST,
@@ -40,6 +41,19 @@
   		FROM sal_calculation S ,(SELECT EMP_NAME, EMP_EMNO FROM EMPLOYEE) E
  		WHERE S.EMP_EMNO = E.EMP_EMNO AND SCAL_YYMM=#{yymm}
 			
+	</select>
+	
+	<!-- 							 소득세 조회 									-->
+	<select id ="getitax" parameterType="HashMap" resultType="HashMap">
+	
+		SELECT * FROM income_tax
+ 		WHERE (sal_min between #{sal_min} and #{sal}) and (sal_max between #{sal} and #{sal_max}) 
+	
+	</select>
+	
+	<select id="getfamilyNum" parameterType="HashMap" resultType="HashMap">
+		SELECT fam_seq
+		from family WHERE emp_emno =#{emp_emno}
 	</select>
 <!--<select id="departmentSearch" parameterType="HashMap" resultType="HashMap">
 
@@ -62,33 +76,29 @@
 	</insert>
 	
 	<!-- 전체계산 insert 데이터가없을 시 -->
-	<insert id="acalInsert" parameterType="HashMap">		
-		INSERT INTO SAL_CALCULATION(SCAL_EMYM, EMP_EMNO, SCAL_SAL, SCAL_FDEX, SCAL_YYMM)
-     	VALUES (#{emym},
-				
-			(SELECT S.EMP_EMNO
-			    FROM SAL_EMPLOYEE S, EMPLOYEE E
-			    WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
-				
-			(SELECT SEMP_SAL
-				FROM SAL_EMPLOYEE S, EMPLOYEE E
-				WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
-				
-			(SELECT SEMP_FDEX
-  				FROM SAL_EMPLOYEE S, EMPLOYEE E
- 				WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),		
-				
-			#{yymm})
+	<insert id="acalInsert">		
+		INSERT INTO SAL_CALCULATION(SCAL_EMYM, EMP_EMNO, SCAL_SAL, SCAL_NPEN, SCAL_HFEE,SCAL_ITAX,SCAL_LTAX,SCAL_EFEE,SCAL_DAMT,SCAL_YYMM)
+     	VALUES (	
+     		
+     	 #{emym},
+     	 #{emp_emno},
+     	 #{sal},
+     	 #{npen},
+     	 #{hfee},
+     	 #{itax},
+     	 #{ltax},
+     	 #{efee},
+     	 #{damt},
+    	 #{yymm}
+    	
+     	)
 	</insert>
 	
 	
 	<!-- 전체계산 update 데이터가 존재할 시 -->
-	<update id="acalUpdate" parameterType="HashMap">	    
-		UPDATE personnelmanagement.SAL_CALCULATION
+	<update id="acalUpdate">	    
+		UPDATE SAL_CALCULATION
 		SET 
-			EMP_EMNO = (SELECT S.EMP_EMNO
-			    		FROM SAL_EMPLOYEE S, EMPLOYEE E
-			    		WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
 					
 			SCAL_SAL = 	(SELECT SEMP_SAL
 						FROM SAL_EMPLOYEE S, EMPLOYEE E
@@ -96,8 +106,14 @@
 						
 			SCAL_FDEX = (SELECT SEMP_FDEX
 						FROM SAL_EMPLOYEE S, EMPLOYEE E
-						WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno})
+						WHERE S.EMP_EMNO = E.EMP_EMNO AND S.EMP_EMNO =#{emp_emno}),
 			
+			SCAL_NPEN = #{npen},
+			SCAL_HFEE = #{hfee},
+		 	SCAL_ITAX = #{itax},
+		 	SCAL_LTAX = #{ltax},
+		 	SCAL_EFEE = #{efee},
+		 	SCAL_DAMT = #{damt}
 			WHERE EMP_EMNO = #{emp_emno};
 	
 	</update>

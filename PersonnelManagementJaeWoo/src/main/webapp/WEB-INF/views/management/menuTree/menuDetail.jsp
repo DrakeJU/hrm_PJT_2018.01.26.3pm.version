@@ -31,7 +31,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>공개여부</th>
+				<th>메인여부</th>
 				<td name="mnUseYn">${map.mnUseYn}</td>
 			</tr>
 			<tr>

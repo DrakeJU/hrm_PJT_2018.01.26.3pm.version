@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,12 +23,13 @@ public class CommonController {
 	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 
 	@RequestMapping(value="/navList.ajax")
-	public @ResponseBody HashMap<String,Object> navMenu() {
+	public @ResponseBody HashMap<String,Object> navMenu(@RequestParam HashMap<String,String> map) {
 		
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("navList",commonService.navList());
-
-		return map;
+		HashMap<String,Object> menuMap = new HashMap<String,Object>();
+		menuMap.put("mnPrntMap",commonService.selectMenu(map));
+		menuMap.put("navList",commonService.navList());
+		System.out.println("-----------"+menuMap);
+		return menuMap;
 	}//navMenu
 	
 }//CommonController

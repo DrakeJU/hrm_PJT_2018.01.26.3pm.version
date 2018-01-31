@@ -54,6 +54,16 @@ public class VacationService {
 		return list;
 	}
 	
+	//휴가일수설정 - 사원등록 저장하기
+	public int vacCntEmpSignUpInsert(HashMap<String,Object> map) {
+		
+		int list = vacationDao.vacCntEmpSignUpInsert(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
 	/* 휴가 신청하기 */
 	public int vacationRequest(HashMap<String,String> map) {
 		
@@ -97,17 +107,14 @@ public class VacationService {
 	}
 	
 	
-	/* 휴가 신청현황 승인완료 */
-	public List<HashMap<String,Object>> vacationProgToggle(){
-		logger.info("휴간신청 승인대기 SERVICE 진입 --->>>>");
+	/* 휴가 승인완료 저장 */
+	public int vacationProgressSave(HashMap<String,Object> map){
+		logger.info("휴간신청 승인완료 저장 SERVICE 진입 --->>>>");
 		
-		List<HashMap<String,Object>> map = vacationDao.vacationProgToggle();
+		int list = vacationDao.vacationProgressSave(map);
 			logger.info("승인대기 SERVICE 맵::" + map);
-		return map;
+		return list;
 	}
-	
-	
-	
 	
 	
 	

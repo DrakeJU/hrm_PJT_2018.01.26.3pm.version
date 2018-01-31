@@ -6,15 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>휴일설정</title>
 <!-- fullcalendar -->
-<link
-	href="/spring/resources/common/fullcalendar/css/fullcalendar.min.css"
-	rel="stylesheet" />
-<link
-	href="/spring/resources/common/fullcalendar/css/fullcalendar.print.min.css"
-	rel="stylesheet" media="print" />
+<link href="/spring/resources/common/fullcalendar/css/fullcalendar.min.css" rel="stylesheet" />
+<link href="/spring/resources/common/fullcalendar/css/fullcalendar.print.min.css" rel="stylesheet" media="print" />
 <script src="/spring/resources/common/fullcalendar/js/moment.min.js"></script>
-<script
-	src="/spring/resources/common/fullcalendar/js/fullcalendar.min.js"></script>
+<script src="/spring/resources/common/fullcalendar/js/fullcalendar.min.js"></script>
 <script src="/spring/resources/common/fullcalendar/js/ko.js"></script>
 
 <!-- 한글패치 -->

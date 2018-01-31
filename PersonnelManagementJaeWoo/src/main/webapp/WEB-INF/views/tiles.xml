@@ -39,6 +39,13 @@
        <put-attribute name="scripts" value="/WEB-INF/views/personnel/schedule/script/schedule.jsp"/>
    </definition>
    
+   <!-- [인사관리]-[증명서관리]-[증명서발급] -->
+   <definition name="certificateIssue" extends="base-definition">  
+       <put-attribute name="title" value="증명서발급" />
+       <put-attribute name="body" value="/WEB-INF/views/personnel/certificate/certificateIssue.jsp" />
+       <put-attribute name="scripts" value="/WEB-INF/views/personnel/certificate/script/issue.jsp"/>
+   </definition>
+   
    <!-- [인사관리] END -->
   
    <!--  START [급여관리] -->
@@ -67,6 +74,11 @@
        <put-attribute name="body" value="/WEB-INF/views/SalManager/payc/payc_main.jsp" />  
      </definition>
    
+    <!-- [수당정보] -->
+    <definition name="allowanceData" extends="base-definition">  
+       <put-attribute name="title" value="" />
+       <put-attribute name="body" value="/WEB-INF/views/SalManager/payimf/allowanceData.jsp" />  
+     </definition>
    
    <!--  [급여관리] END -->
    
@@ -113,13 +125,13 @@
        <put-attribute name="title" value="휴가개수설정" />
        <put-attribute name="body" value="/WEB-INF/views/attendance/vacation/vacationCount.jsp" />  
    </definition>
-   
+      
    <!-- [근태관리]-[휴가관리]-[휴가개수설정]-[사원등록] -->
    <definition name="vacationCountEmpSignUp" extends="base-definition">  
        <put-attribute name="title" value="사원등록" />
        <put-attribute name="body" value="/WEB-INF/views/attendance/vacation/vacationCountEmpSignUp.jsp" />  
    </definition>
-       
+
    <!-- [근태관리]-[휴가관리]-[휴가신청] -->
    <definition name="vacationRequest" extends="base-definition">  
        <put-attribute name="title" value="휴가신청" />
@@ -156,6 +168,17 @@
        <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holidaySet.jsp" />  
    </definition>
    
+   <!-- [근태관리]-[근태기초정보설정/조회]-[근무표생성](관리자) -->
+   <definition name="holidayRoster" extends="base-definition">  
+       <put-attribute name="title" value="휴가항목설정" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holidayRoster.jsp" />  
+   </definition>
+   
+      <!-- [근태관리]-[근태기초정보설정/조회]-[근무표생성](관리자) -->
+   <definition name="holidayRosterSetting" extends="base-definition">  
+       <put-attribute name="title" value="휴가항목설정" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holidayRosterSetting.jsp" />  
+   </definition>
    
    
     <!-- [근태관리]-[근태기초정보설정/조회]-[휴가항목설정](사원) -->
@@ -215,11 +238,15 @@
    </definition>
    
    <!-- [권한관리]-[메뉴권한상세] -->
- 	<definition name="authorityMenu" template="/WEB-INF/views/management/authority/authorityMenu.jsp">
+ 	<definition name="authorityData" template="/WEB-INF/views/management/authority/authorityData.jsp">
  	</definition>
 
  	<!-- [권한관리]-[메뉴권한등록폼] -->
- 	<definition name="authorityForm" template="/WEB-INF/views/management/authority/authorityForm.jsp">
+ 	<definition name="authorityInsertForm" template="/WEB-INF/views/management/authority/authorityInsertForm.jsp">
+ 	</definition>
+ 	
+ 	<!-- [권한관리]-[메뉴권한수정폼] -->
+ 	<definition name="authorityUpdateForm" template="/WEB-INF/views/management/authority/authorityUpdateForm.jsp">
  	</definition>
  
    

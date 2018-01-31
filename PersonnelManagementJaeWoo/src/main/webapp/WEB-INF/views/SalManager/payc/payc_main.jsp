@@ -180,7 +180,7 @@
 		var yymm = $("input[name=yymm"+i+"]").val();	
 		var json={"yymm" :yymm};
 		$("[id=paycyymm]").text(yymm+" 급여대장 ");
-		alert(yymm);
+		//alert(yymm);
 		$.ajax({
 
 			url : "/spring/payc_select.ajax",
@@ -196,10 +196,31 @@
 					 $("[id=select_list]").append("<tr><td id=sempname"+i+">"+ data.list[i].EMP_NAME +"</td>"
 					 								  +"<td id=ssal"+i+">"+ data.list[i].SCAL_SAL +"</td>"
 					 								  +"<td id=sfdex"+i+">"+ data.list[i].SCAL_FDEX +"</td>"
+					 								  +"<td></td>"
+					 								  +"<td></td>"
+					 								  +"<td></td>"
+					 								  +"<td>"+data.list[i].SCAL_ITAX+"</td>"
+					 								  +"<td>"+data.list[i].SCAL_LTAX+"</td>"
+					 								  +"<td>"+ data.list[i].SCAL_NPEN +"</td>"
+					 								  +"<td>"+ data.list[i].SCAL_HFEE +"</td>"
+					 								  +"<td></td>"
+					 								
 					 								  +"</tr>");
 			
-					 $("[id=select_list]").append("<tr><td id=sempcode"+i+">"+data.list[i].EMP_EMNO+"</td></tr>");
-					console.log(data.list[i].SCAL_EMYM);
+					 $("[id=select_list]").append("<tr><td id=sempcode"+i+">"+data.list[i].EMP_EMNO+"</td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td>"+ data.list[i].SCAL_EFEE +"</td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td>"+data.list[i].SCAL_DAMT+"</td>"
+													+"<td></td>"
+
+													+"</tr>");
+					//console.log(data.list[i].SCAL_EMYM);
 					
 					
 				}
@@ -218,7 +239,7 @@
 		
 		if(confirm("직원급여 정보를 바탕으로 계산됩니다.")){
 			
-			alert(yymm);
+			//alert(yymm);
 			
 			$.ajax({
 
@@ -243,8 +264,8 @@
 		//alert("직원급여 정보를 바탕으로 계산됩니다.");
 		
 	}
-	
-	//--------------급여 조회 리스트 삭제------------------
+//--------------------------------------------------------------------------------	
+//------------------------ 		급여 조회 리스트 삭제 	 ---------------------------------	
 	function removeSelect(){
 		
 		/* alert(selectrcount);
@@ -254,13 +275,14 @@
 			$("#ssal"+i).remove;
 			$("#sfdex"+i).remove;
 		} */
-		
-		$("td[id*=sempname]").remove();
+		$("[id=select_list]").children().remove();
+	/* 	$("td[id*=sempname]").remove();
 		$("td[id*=ssal]").remove();
 		$("td[id*=sfdex]").remove();
-	    $("td[id*=sempcode]").remove();
+	    $("td[id*=sempcode]").remove(); */
 		
 	}
+//----------------------------------------------------------------------------------	
 </script>
 
 </head>

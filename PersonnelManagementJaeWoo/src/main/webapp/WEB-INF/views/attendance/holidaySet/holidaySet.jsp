@@ -191,27 +191,27 @@
 		var jArray = new Array();
 		
 		$(jsonObj).each(function(index, obj){
-			if(obj.name == 'AnnualLeaveReflectionCheckbox' || obj.name == 'UseOrFailureCheckbox'){
-				jobj[obj.name] = obj.value;
-				//index 0에 divide : 휴가  1에 code : 00 이렇게 들어감. 그래서 json 한세트에 6개 들어가서 6개씩  짤라줌.
-				//{"divide":"휴가","code":"00","title":"휴가(년차)","AnnualLeaveReflection":"false","UseOrFailure":"false","note":""} 6개 넣으면 이렇게 완성됨.
-				if((index+1) % 6 == 0 ){
+			
+			jobj[obj.name] = obj.value;
+			//index 0에 divide : 휴가  1에 code : 00 이렇게 들어감. 그래서 json 한세트에 6개 들어가서 6개씩  짤라줌.
+			//{"divide":"휴가","code":"00","title":"휴가(년차)","AnnualLeaveReflection":"false","UseOrFailure":"false","note":""} 6개 넣으면 이렇게 완성됨.
+			if((index+1) % 6 == 0 ){
 					
-					jArray.push(jobj);
+				jArray.push(jobj);
 					
-					//한번하면 초기화해줘야됨. 그래야 맨밑에있는값들로만 안들어감.
-					jobj = {};
-				}
+				//한번하면 초기화해줘야됨. 그래야 맨밑에있는값들로만 안들어감.
+				jobj = {};
 			}
 			
 			console.log(index + ":" + obj.name +":"+ obj.value);
 		});
-
 		
 		//데이터를 전송할때 Map 형식으로 보내야 하기 때문에 key값과 value값을 나눠서 보냈음.
 		var dataObj = {"jArray":JSON.stringify(jArray)};
 		//var dataObj = jArray;
 
+		console.log(dataObj);
+		
 		paging.ajaxSubmit("/spring/holidaySetDBInset.ajax",dataObj,function(result){
 			
 		});
@@ -449,8 +449,6 @@
 		                                    <input type="hidden" >
 		                                 </td>
 		                                 <td><input type="text" class="form-control w_300"></td>
-		                                 
-		                                 
 		                              </tr>
 		                           </tbody>
 		                        </table>

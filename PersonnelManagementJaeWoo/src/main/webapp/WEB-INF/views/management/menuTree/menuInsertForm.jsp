@@ -32,13 +32,15 @@
 		<div class="form-group row">
 			<label for="staticEmail" class="col-sm-2 col-form-label">메뉴속성</label>
 			<div class="col-sm-10">
-				<input type="checkbox" class="form-check-input" id="attrInsert" name="mnAttr" value="insert">
+				<input type="radio" class="form-check-input" id="attrAll" name="mnAttr" value="all">
+				<label class="form-check-label" for="attrAll">전체</label>
+				<input type="radio" class="form-check-input" id="attrInsert" name="mnAttr" value="insert">
 				<label class="form-check-label" for="attrInsert">등록</label>
-				<input type="checkbox" class="form-check-input" id="attrUpdate" name="mnAttr" value="update">
+				<input type="radio" class="form-check-input" id="attrUpdate" name="mnAttr" value="update">
 				<label class="form-check-label" for="attrUpdate">수정</label>
-				<input type="checkbox" class="form-check-input" id="attrDelete" name="mnAttr" value="delete">
+				<input type="radio" class="form-check-input" id="attrDelete" name="mnAttr" value="delete">
 				<label class="form-check-label" for="attrDelete">삭제</label>
-				<input type="checkbox" class="form-check-input" id="attrView" name="mnAttr" value="view">
+				<input type="radio" class="form-check-input" id="attrView" name="mnAttr" value="view">
 				<label class="form-check-label" for="attrView">조회</label>
 				<input type="hidden" name="mnPrntNo" value="0">
 				<input type="hidden" name="mnIdx" value="">

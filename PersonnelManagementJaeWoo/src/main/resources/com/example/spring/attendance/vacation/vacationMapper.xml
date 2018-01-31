@@ -5,81 +5,22 @@
 <mapper namespace="vacation">
 	
 
-	<!-- 휴가개수설정 사원 리스트 출력 -->
-		<select id="vacationCountEmpList" parameterType="HashMap" resultType="HashMap">
+	<!-- 휴가일수설정 사원 리스트 출력 -->
+	<select id="vacationCountEmpList" parameterType="HashMap" resultType="HashMap">
 		/* vacationCount Employee Select (휴가개수설정 사원 리스트 출력) */
-<!-- 		SELECT -->
-<!-- 			(SELECT CASE WHEN RET.RETR_DEL_YN='N' THEN '재직' ELSE '퇴직' END) AS retrDelYn, -->
-<!-- 			E.EMP_EMNO AS empEmno, -->
-<!-- 			E.EMP_NAME AS empName, -->
-<!-- 			D.DEPT_NAME AS deptName, -->
-<!-- 			R.RANK_NAME AS rankName, -->
-<!-- 			(SELECT CONCAT( -->
-<!-- 				(SELECT LEFT(E.EMP_INCO_DATE,4)), -->
-<!-- 				'-', -->
-<!-- 				(SELECT SUBSTRING(E.EMP_INCO_DATE,5,2)), -->
-<!-- 				'-', -->
-<!-- 				(SELECT RIGHT(E.EMP_INCO_DATE,2)) -->
-<!-- 			)) AS retrIncoDate -->
-<!-- 		FROM EMPLOYEE E -->
-<!-- 		INNER JOIN -->
-<!-- 			RETIREMENT RET -->
-<!-- 		ON RET.EMP_EMNO = E.EMP_EMNO -->
-<!-- 		INNER JOIN -->
-<!-- 			DEPARTMENT D -->
-<!-- 		ON D.DEPT_CODE = E.DEPT_CODE -->
-<!-- 		INNER JOIN -->
-<!-- 			RANK R -->
-<!-- 		ON R.RANK_CODE = E.RANK_CODE -->
-<!-- 		<if test='retrDelYn == "off"'> #default -->
-<!-- 		WHERE -->
-<!-- 			RET.RETR_DEL_YN = 'N' -->
-<!-- 		</if> -->
-<!-- 		<if test="retrDelYn == 'off' and keyword != null and !keyword.equals('')"> -->
-<!-- 		WHERE -->
-<!-- 			RET.RETR_DEL_YN = 'N' -->
-<!-- 		AND -->
-<!-- 			E.EMP_EMNO LIKE CONCAT('%',#{keyword},'%') OR -->
-<!-- 			E.EMP_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
-<!-- 			D.DEPT_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
-<!-- 			R.RANK_NAME LIKE CONCAT('%',#{keyword},'%') -->
-<!-- 		</if> -->
-<!-- 		<if test="retrDelYn == 'on' and keyword != null and !keyword.equals('')"> #검색어, 퇴직자 포함 -->
-<!-- 		WHERE -->
-<!-- 			E.EMP_EMNO LIKE CONCAT('%',#{keyword},'%') OR -->
-<!-- 			E.EMP_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
-<!-- 			D.DEPT_NAME LIKE CONCAT('%',#{keyword},'%') OR -->
-<!-- 			R.RANK_NAME LIKE CONCAT('%',#{keyword},'%') -->
-<!-- 		</if> -->
-	</select>
-	
-	<select id="vacationCountEmpSignUpCntNum" resultType="java.lang.Integer">
 		SELECT
-			COUNT(E.EMP_EMNO) AS EmpSignUpCntNum
-		FROM
-			EMPLOYEE_REMINDING_VAC V
-		RIGHT OUTER JOIN
-			EMPLOYEE E
-		ON V.EMP_EMNO = E.EMP_EMNO
-		WHERE V.EMP_EMNO IS NULL
-	</select>
-	
-	<select id="vacationCountEmpSignUpList" parameterType="HashMap" resultType="HashMap">
-	/* 휴가일수설정 사원등록 사원리스트 출력(사원정보 테이블 != 사원별 잔여휴가 테이블: 비교해서 없는 데이터만 출력) */
-		SELECT
+			(SELECT CASE WHEN RET.RETR_DEL_YN='N' THEN '재직' ELSE '퇴직' END) AS retrDelYn,
 			E.EMP_EMNO AS empEmno,
 			E.EMP_NAME AS empName,
 			D.DEPT_NAME AS deptName,
 			R.RANK_NAME AS rankName,
 			(SELECT CONCAT(
-		 		(SELECT
-				 	LEFT(E.EMP_INCO_DATE,4)), 
-		 			'-', 
-		 			(SELECT SUBSTRING(E.EMP_INCO_DATE,5,2)), 
-		 			'-', 
-		 			(SELECT RIGHT(E.EMP_INCO_DATE,2))
-		 		)
-			) AS retrIncoDate
+				(SELECT LEFT(E.EMP_INCO_DATE,4)),
+				'-',
+				(SELECT SUBSTRING(E.EMP_INCO_DATE,5,2)),
+				'-',
+				(SELECT RIGHT(E.EMP_INCO_DATE,2))
+			)) AS retrIncoDate
 		FROM
 			EMPLOYEE_REMINDING_VAC V
 		RIGHT OUTER JOIN
@@ -91,9 +32,110 @@
 		INNER JOIN
 			RANK R
 		ON R.RANK_CODE = E.RANK_CODE
-		WHERE V.EMP_EMNO IS NULL
+		INNER JOIN
+			RETIREMENT RET
+		ON RET.EMP_EMNO = E.EMP_EMNO
+		WHERE (SELECT V.EMP_EMNO WHERE BASE_YEAR=#{baseYear}) IS NOT NULL
+		<if test='retrDelYn == "off"'> #default
+		AND RET.RETR_DEL_YN = 'N'
+		</if>
+		<if test="seacrchOption == 'empEmno' and keyword != null and !keyword.equals('')">
+		AND E.EMP_EMNO LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="seacrchOption == 'empName' and keyword != null and !keyword.equals('')">
+		AND E.EMP_NAME LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<if test="seacrchOption == 'deptName' and keyword != null and !keyword.equals('')">
+		AND D.DEPT_NAME LIKE CONCAT('%',#{keyword},'%')
+		</if>
+
 	</select>
 	
+	<!-- 휴가일수설정 사원등록 개수 -->
+	<select id="vacationCountEmpSignUpCntNum" resultType="java.lang.Integer">
+	SELECT
+		COUNT(IF((SELECT IF((SELECT E.EMP_EMNO WHERE(SELECT V.EMP_EMNO WHERE BASE_YEAR='2018') IS NULL),'','완료'))='완료', NULL, 1)) AS EmpSignUpCntNum
+	FROM
+		EMPLOYEE_REMINDING_VAC V
+	RIGHT OUTER JOIN
+		EMPLOYEE E
+	ON V.EMP_EMNO = E.EMP_EMNO
+	INNER JOIN
+		RETIREMENT RET
+	ON RET.EMP_EMNO = E.EMP_EMNO
+	WHERE /* 재직자이거나, baseYear에 퇴직한 사람*/
+		RET.RETR_DEL_YN = 'N' OR (CONVERT((SELECT LEFT(RET.RETR_DATE,4)), UNSIGNED)) = (CONVERT('2018', UNSIGNED))
+	</select>
+	
+	<!-- 휴가일수설정 사원등록 사원리스트 출력 -->
+	<select id="vacationCountEmpSignUpList" parameterType="HashMap" resultType="HashMap">
+	/* 휴가일수설정 사원등록 사원리스트 출력 */
+	SELECT
+		E.EMP_EMNO AS empEmno,
+		E.EMP_NAME AS empName,
+		D.DEPT_NAME AS deptName,
+		R.RANK_NAME AS rankName,
+		(SELECT CONCAT(
+	 		(SELECT
+			 	LEFT(E.EMP_INCO_DATE,4)), 
+	 			'-', 
+	 			(SELECT SUBSTRING(E.EMP_INCO_DATE,5,2)), 
+	 			'-', 
+	 			(SELECT RIGHT(E.EMP_INCO_DATE,2))
+	 		)
+		) AS retrIncoDate,
+		(SELECT IF((SELECT E.EMP_EMNO WHERE(SELECT V.EMP_EMNO WHERE BASE_YEAR=#{baseYear}) IS NULL),'','완료')) AS YN
+	FROM
+		EMPLOYEE_REMINDING_VAC V
+	RIGHT OUTER JOIN
+		EMPLOYEE E
+	ON V.EMP_EMNO = E.EMP_EMNO
+	INNER JOIN
+		DEPARTMENT D
+	ON D.DEPT_CODE = E.DEPT_CODE
+	INNER JOIN
+		RANK R
+	ON R.RANK_CODE = E.RANK_CODE
+	INNER JOIN
+		RETIREMENT RET
+	ON RET.EMP_EMNO = E.EMP_EMNO
+	WHERE /* 재직자이거나, baseYear에 퇴직한 사람*/
+		((CONVERT(#{baseYear}, UNSIGNED))<![CDATA[ >= ]]>(CONVERT((SELECT LEFT(E.EMP_INCO_DATE,4)), UNSIGNED))) AND
+		(RET.RETR_DEL_YN = 'N' OR (CONVERT((SELECT LEFT(RET.RETR_DATE,4)), UNSIGNED)) = (CONVERT(#{baseYear}, UNSIGNED)))
+	<if test="seacrchOption == 'empName' and keyword != null and !keyword.equals('')"> #성명 검색
+	AND E.EMP_NAME LIKE CONCAT('%',#{keyword},'%')
+	</if>
+	<if test="seacrchOption == 'empEmno' and keyword != null and !keyword.equals('')"> #사번 검색
+	AND E.EMP_EMNO LIKE CONCAT('%',#{keyword},'%')
+	</if>
+	<if test="seacrchOption == 'deptName' and keyword != null and !keyword.equals('')"> #부서 검색
+	AND D.DEPT_NAME LIKE CONCAT('%',#{keyword},'%')
+	</if>		
+	</select>
+	
+	<!-- 휴가일수설정 사원등록 Insert -->
+	<insert id="vacCntEmpSignUpInsert" parameterType="java.lang.String">
+	/* 휴가일수설정 사원등록 저장하기 */
+	INSERT INTO
+		EMPLOYEE_REMINDING_VAC(
+			EMP_EMNO, #사원번호
+			BASE_YEAR, #기준년도
+			COWY_SERIAL_NUMBER, #근속일련번호
+	 		EMRE_VAC_CNT, #연차개수
+			EMRE_PVAC_UD, #유급휴가사용일수
+			EMRE_UPVAC_UD, #무급휴가사용일수
+			EMRE_DEL_YN #삭제여부
+		)
+	VALUES(
+		#{empEmno},
+		(SELECT LEFT(NOW(),4)),
+		(SELECT (TRUNCATE(((TO_DAYS(CONCAT(LEFT(NOW(),4),SUBSTRING(NOW(),6,2),SUBSTRING(NOW(),9,2))) - TO_DAYS(EMP_INCO_DATE))/365),0)+1) FROM EMPLOYEE WHERE EMP_EMNO = #{empEmno}),
+		0,
+		0,
+		0,
+		'N'
+	);
+	</insert>
 
 	<!-- 휴가 신청하기 -->
 	<insert id="vacationRequest" parameterType="HashMap">
@@ -123,7 +165,6 @@
 		#{vastProgressSituation},		
 		'N'												#삭제여부
 	)
-	
 	</insert>
 	
 		
@@ -181,9 +222,12 @@
 	
 	
 	<!-- 휴가  '승인대기' -> '승인완료' -->
-	<select id="vacationProgToggle" parameterType="HashMap" resultType="HashMap">
-	
-	</select>
+	<update id="vacationProgToggle" parameterType="HashMap">
+	UPDATE VAC_STATEMENT 
+	SET VAST_PROGRESS_SITUATION='승인완료' 
+	WHERE VAST_PROGRESS_SITUATION='승인대기'
+	AND VAST_SERIAL_NUMBER = #{vastSerialNumber}
+	</update>
 	
 	
 	

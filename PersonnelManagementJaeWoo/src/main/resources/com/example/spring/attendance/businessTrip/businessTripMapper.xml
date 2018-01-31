@@ -7,6 +7,7 @@
 		/* businessRequest Employee Select (출장신청 사원정보조회) */
 		
 		SELECT
+			(SELECT CASE WHEN RET.RETR_DEL_YN='N' THEN '재직' ELSE '퇴직' END) AS retrDelYn, #퇴직여부
 			E.EMP_EMNO AS empEmno, #사원번호
 			E.EMP_NAME AS empName, #사원명
 			D.DEPT_NAME AS deptName, #부서명
@@ -18,17 +19,14 @@
 		INNER JOIN
 			RANK R
 		ON R.RANK_CODE = E.RANK_CODE
-		<if test='retrDelYn == "off"'> #default
 		INNER JOIN
 			RETIREMENT RET
 		ON RET.EMP_EMNO = E.EMP_EMNO
+		<if test='retrDelYn == "off"'> #default
 		WHERE
 			RET.RETR_DEL_YN = 'N'
 		</if>
 		<if test="retrDelYn == 'off' and keyword != null and !keyword.equals('')"> #default
-		INNER JOIN
-			RETIREMENT RET
-		ON RET.EMP_EMNO = E.EMP_EMNO
 		WHERE
 			RET.RETR_DEL_YN = 'N'
 		AND

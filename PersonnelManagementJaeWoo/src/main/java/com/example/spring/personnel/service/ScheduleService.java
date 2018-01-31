@@ -2,9 +2,7 @@ package com.example.spring.personnel.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -45,7 +43,6 @@ public class ScheduleService {
 	
 	//개인일정상세보기
 	public List<String> individuaDetail(HashMap<String, String> map){
-		System.out.println("일정상세보기(service)");
 		
 		String start = map.get("start").replaceAll("-", "").replaceAll("T", "").replaceAll(":", "").replaceAll("\"","");
 		String end = map.get("end").replaceAll("-", "").replaceAll("T", "").replaceAll(":", "").replaceAll("\"","");
@@ -61,6 +58,7 @@ public class ScheduleService {
 	//부서일정상세보기
 	public List<String> departmentDetail(HashMap<String, String> map){
 		
+		//20180101로만들기
 		String start = map.get("start").replaceAll("-", "").replaceAll("T", "").replaceAll(":", "").replaceAll("\"","");
 		String end = map.get("end").replaceAll("-", "").replaceAll("T", "").replaceAll(":", "").replaceAll("\"","");
 		
@@ -113,8 +111,8 @@ public class ScheduleService {
 		String endDate = map.get("endDate").replaceAll("-","");
 		String endTime = map.get("endTime").replaceAll(":", "");
 		
-		map.put("startDate", startDate + startTime + "00");
-		map.put("endDate", endDate + endTime + "00");
+		map.put("startDate", startDate + startTime);
+		map.put("endDate", endDate + endTime);
 		
 		int result = scheduleDao.individuaUpdate(map);
 		
@@ -129,10 +127,10 @@ public class ScheduleService {
 		String endDate = map.get("endDate").replaceAll("-","");
 		String endTime = map.get("endTime").replaceAll(":", "");
 		
-		map.put("startDate", startDate + startTime + "00");
-		map.put("endDate", endDate + endTime + "00");
+		map.put("startDate", startDate + startTime);
+		map.put("endDate", endDate + endTime);
 		
-		int result = scheduleDao.individuaUpdate(map);
+		int result = scheduleDao.departmentUpdate(map);
 		
 		return result;
 	}

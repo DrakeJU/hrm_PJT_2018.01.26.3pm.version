@@ -29,7 +29,7 @@ $(document).ready(function () {
 						"<tr>" +
 							"<td>" +
 								"<label class='fancy-checkbox-inline'>" +
-									"<input type='checkbox' name='chk'>" +
+									"<input type='checkbox' name='chk' id='chk'>" +
 									"<span></span>" +
 								"</label>" +
 								"<input type='hidden' id='vastSerialNumber' name='vastSerialNumber' value='" + s.vastSerialNumber+ "'>"+
@@ -81,12 +81,12 @@ function checkAllFunc(obj){ //최상단 체크박스를 click하면
 	$("input[type='checkbox'][name=chk]").each(function() {
 		this.checked = obj.checked;  //name이 chk인 체크박스를 checked로 변경
 	})
-}
+} 
 
 
 
 	
-/* 일괄 승인완료 버튼 */
+/* 체크박스 승인완료 버튼 */
 function toggleOn(){
 	var chk = $("[name=chk]").length; //체크박스 갯수
 
@@ -102,28 +102,48 @@ function toggleOn(){
 			progTd.children().children("#progToggle").prop('checked', true).change();
 		}else{
 			
-		}
-	})
+		}//if
+	});	//name-each
+	
 }//toggleOn
 
 
 
-// /* 휴가 '승인대기' -> '승인완료' 토글버튼 ajax */
-// function toggleBtn(url, formId){
-// 	paging.ajaxFormSubmit("vacationProgSituation.ajax", "progressList", function(rslt){
-// 		console.log("ajaxFormSubmit -> callback");
-// 		console.log("결과데이터: " + JSON.stringify(rslt));
+
+/* 승인완료 후 저장하기  */
+function vacProgSave(){
+	
+	var progToggleResult;	//체크된 것 저장할 변수
+	$("input[type=checkbox][id=progToggle]").each(function(){
+		if($(this).prop('checked')){
+			
+			var chkTr = $(this).closest('tr');	//체크한 것과 가장 가까운 tr
+			var chkHi = chkTr.children().children("input[type=hidden][id=vastSerialNumber]").val();//체크한 것의 히든 value 값
+			
+			if(progToggleResult == null){
+				progToggleResult = chkHi;
+			} else{
+				progToggleResult = progToggleResult +"/"+chkHi;	//히든 value 값을 구분자와 저장
+				console.log("저장::"+progToggleResult);
+			}
+		}//if
+	});//input.each
+	$('#progToggleResult').val(progToggleResult);
+		console.log("저장후::"+$('#progToggleResult').val());
+	
+	paging.ajaxFormSubmit("vacationProgSave.ajax", "f2", function(rslt){
+		console.log("ajaxFormSubmit -> callback");
+		console.log("결과데이터" + JSON.stringify(rslt));
 		
-// 		$("input[type='checkbox'][class='toggle btn btn-primary']").each(function(){
-// 			var test = $(this).val();
-// 			console.log("ttttttt"+test);
-// 		});
-		
-// 	});//paging
-// }//toggleBtn
-
-
-
+		if(rslt == null){
+			alert("저장에 실패하였습니다. 다시 시도해주세요.")
+		} else{
+			alert("저장되었습니다.")
+			window.location.reload();	//새로고침
+		}
+	});	//paging.ajax
+	
+}//vacProgSave
 
 
 /* 달력 */
@@ -150,16 +170,6 @@ function test(){
 }
 
 
-
-/* 휴가조회(관리자) 페이지로 이동 */
-function vacationListAdmin(){
-	alert('저장되었습니다.');
-	window.location.href = "${pageContext.request.contextPath}/vacationListAdmin";
-}
-
-
-
-
 </script>
 </head>
 <body>
@@ -173,7 +183,7 @@ function vacationListAdmin(){
 <!-- 							<p class="subtitle">설명이 필요할 경우 추가 예정</p> -->
 <!-- 					</div> -->
 					<div class="panel-body">
-						<form class="form-inline" name="f1">
+						<form class="form-inline" name="f1" id="f1">
 <!-- 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i>							 -->
 							신청일자
 							<!-- 달력 -->
@@ -205,9 +215,9 @@ function vacationListAdmin(){
 							
 							결재상태
 							<select name="vacationCategories" class="form-control">
-								<option value="dog">전체</option>
-								<option value="dog">승인대기</option>
-								<option value="cat">승인완료</option>
+								<option value="allToggle">전체</option>
+								<option value="progToggle">승인대기</option>
+								<option value="compToggle">승인완료</option>
 <!-- 								<option value="cat">반려</option> -->
 							</select>
 
@@ -223,7 +233,7 @@ function vacationListAdmin(){
 <!-- 					</div> -->
 					<div class="panel-body"> 
 						<div class="list_wrap">
-							<form class="form-inline" name="f2">
+							<form class="form-inline" name="f2" id="f2">
 								<table class="table tablesorter table-bordered" id="progListTable" name="progListTable">
 									<thead>
 										<tr>
@@ -232,6 +242,7 @@ function vacationListAdmin(){
 													<input type="checkbox" onclick="checkAllFunc(this)">
 													<span></span>
 												</label>
+												<input type="hidden" name="progToggleResult" id="progToggleResult" value="">
 											</th>
 											<th>사원번호</th>
 											<th>이름</th>
@@ -257,7 +268,7 @@ function vacationListAdmin(){
 						<!-- 버튼영역 -->
 						<div class="text-center"> 
 							<button type="button" class="btn btn-info" onclick="toggleOn()">승인완료</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<button type="button" class="btn btn-danger" onclick="vacationListAdmin()">저장하기</button>
+							<button type="button" class="btn btn-danger" onclick="vacProgSave()">저장하기</button>
 						</div>
 						<!-- END 버튼영역 -->
 					</div>

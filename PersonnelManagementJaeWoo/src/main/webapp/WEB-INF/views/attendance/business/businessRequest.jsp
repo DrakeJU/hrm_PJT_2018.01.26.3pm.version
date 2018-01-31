@@ -133,6 +133,7 @@
 								"<span></span>"+
 							"</label>"+
 						"</td>"+
+						"<td>"+ v.retrDelYn +"</td>"+ //구분(재직,퇴직)
 						"<td>"+ v.empEmno +"</td>"+ //사원번호
 						"<td>"+ v.empName +"</td>"+ //사원명
 						"<td>"+ v.deptName +"</td>"+ //부서명
@@ -170,10 +171,10 @@
  	//선택한 사원정보를 출장신청 폼에 자동 입력하기
  	function emnoClick(){
  		var chkTr = $("input[name='emnoChk']:checked").closest("tr"); //체크된 체크박스와 가장 가까운 tr
- 		var empEmnoVal = chkTr.children().eq(1).text(); //tr 하부 2번째 td의 텍스트(사번)
- 		var empNameVal = chkTr.children().eq(2).text(); //tr 하부 3번째 td의 텍스트(이름)
- 		var deptNameVal = chkTr.children().eq(3).text(); //tr 하부 4번째 td의 텍스트(부서)
- 		var rankNameVal = chkTr.children().eq(4).text(); //tr 하부 5번째 td의 텍스트(직급)
+ 		var empEmnoVal = chkTr.children().eq(2).text(); //tr 하부 3번째 td의 텍스트(사번)
+ 		var empNameVal = chkTr.children().eq(3).text(); //tr 하부 4번째 td의 텍스트(이름)
+ 		var deptNameVal = chkTr.children().eq(4).text(); //tr 하부 5번째 td의 텍스트(부서)
+ 		var rankNameVal = chkTr.children().eq(5).text(); //tr 하부 6번째 td의 텍스트(직급)
 
  		$('#empEmno').val(empEmnoVal);
  		$('#empName').val(empNameVal);
@@ -211,7 +212,7 @@
 									</td>
 
 									<td>전자결재상태</td>
-									<td><input type="text" class="form-control" readonly></td>
+									<td><input type="text" class="form-control" value="승인대기" readonly></td>
 								</tr>
 	
 								<tr><!-- 신청자도 관리자와 사원 기능 따로 만들기 -->
@@ -275,7 +276,7 @@
 							</div>
 						</form>
 	
-	
+
 						<!-- 사원번호 Modal -->
 						<div id="emnoModal" class="modal fade" role="dialog">
 						  <div class="modal-dialog">
@@ -287,7 +288,7 @@
 									<p class="modal-title">사번 정보 조회</p>
 								</div>
 								<div class="modal-body">
-									<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
+									<div class="search_wrap" style="padding: 0px 10px 20px 15px;">
 										<form class="form-inline" id="empFrm">
 											검색어&nbsp;<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
 											<label class="fancy-checkbox-inline">
@@ -304,6 +305,7 @@
 											<thead style="display:table;width:100%;table-layout:fixed;">
 												<tr>
 													<th></th>
+													<th>구분</th>
 													<th>사원번호</th>
 													<th>이름</th>
 													<th>부서</th>

@@ -107,7 +107,7 @@ $(document).ready(function(){
 					   <form name="f1">
 						<div class="panel-body">
 							<h4>신규계산</h4>
-							<table class="table table-bordered">
+							<table class="table table-bordered table-hover">
 								<thead>
 									<tr>
 										<th><input type="checkbox" id="checkalln" /></th>
@@ -152,7 +152,7 @@ $(document).ready(function(){
 					   <form name="f2">
 						<div class="panel-body">
 						    <h4>기존계산</h4>
-							<table class="table table-bordered">
+							<table class="table table-bordered table-hover">
 								<thead>
 									<tr>
 										<th><input type="checkbox" id="checkalle" /></th>
