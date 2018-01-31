@@ -23,7 +23,7 @@ import com.example.spring.salmanager.service.PaycMenuService;
 public class PaycMenuController {
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PaycMenuController.class);
-	private String PRE_VIEW_PATH = "/SalManager/payc/";
+	//private String PRE_VIEW_PATH = "/SalManager/payc/";
 	@Autowired
 	private PaycMenuService paycMenuService;
 
@@ -156,14 +156,12 @@ public class PaycMenuController {
 
 //---------------------------------------@@@ 전체계산 @@@---------------------------------------------
 	@RequestMapping(value = "/payc_acal.ajax")
-	public @ResponseBody HashMap<String, Object> payc_acal(
-			@RequestParam HashMap<String, Object> map) {
+	public @ResponseBody HashMap<String, String> payc_acal(
+			@RequestParam HashMap<String, String> map) {
 
 		logger.info("map : " + map);
-		//HashMap<String,Object> m1 = paycMenuService.acalPayc(map);
-		//paycMenuService.acalPayc(map);
-		
-		return paycMenuService.acalPayc(map);
+		paycMenuService.acalPayc(map);
+		return map;
 	}
 //-------------------------------------------------------------------------------------------------
 

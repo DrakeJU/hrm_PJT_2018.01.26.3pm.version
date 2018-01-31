@@ -12,10 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.attendance.entity.JsonData;
-import com.example.spring.attendance.entity.JsonDataVac;
 import com.example.spring.attendance.service.HolidaySetService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,7 +33,7 @@ public class HolidaySetController {
 		return "holidaySet";
 	}
 
-	//관리자 - 휴일설정
+	//관리자 - 휴가리스트 조회하기
 	@RequestMapping(value = "/holiDyMng")
 	public String vatacionListAdminPage2() {
 		return "holiDyMng";
@@ -47,8 +45,6 @@ public class HolidaySetController {
 	public @ResponseBody HashMap<String, String> holidaySetDBInsert(@RequestParam HashMap<String,Object> jsonMap) {
 		logger.debug("-----------------------------------------holidaySetDBInsert 들어왔다"+jsonMap);
 
-		System.out.println("여기까지옴");
-		
 		//success 다시 되돌려줄 맵
 		HashMap<String, String> map = new HashMap<String, String>();
 		Gson gson = new Gson();
@@ -57,88 +53,22 @@ public class HolidaySetController {
 
 		String result = (String) jsonMap.get("jArray");
 
-		System.out.println("여기까지옴0");
-		
 		//gson.fromJson : Json 형식으로된 String을 ArrayList로 바꿔주는 역할을 함.
 		//지금 result에는 json형식으로 되어있음.
 		ArrayList<JsonData> list = gson.fromJson(result, type);
 
-		System.out.println("여기까지옴1");
-		
-		//값이 제대로 나오는지 확인해보는 용도
 		for(int i = 0 ; i < list.size() ; i++) {
 			JsonData tmp = (JsonData)list.get(i);
 			System.out.println(tmp.getDivide() + " " + tmp.getCode() + " " + tmp.getAnnualLeaveReflection() + " " + tmp.getTitle() + " " + tmp.getUseOrFailure() + " " + tmp.getNote());
 		}
 
-		System.out.println("여기까지옴2");
-		
-		//list를 이제 서비스쪽으로 보냄.
-		holidaySetService.holidaySetDBInsert(list);
-		
 		map.put("success", "true");
 
 		return map;
 	}
-	//관리자 - 근속연수에 따른 휴가설정
+	//관리자 - 휴가리스트 조회하기
 	@RequestMapping(value = "/conWorkVacSet")
 	public String vatacionListAdminPage3() {
 		return "conWorkVacSet";
 	}
-
-	//관리자 - 근무표생성
-	@RequestMapping(value = "/holidayRoster")
-	public ModelAndView holidaySetRoster(@RequestParam(value="yearMonth") String yearMonth, @RequestParam(value="numberOfPeople") int numberOfPeople) {
-		System.out.println(yearMonth);
-		System.out.println(numberOfPeople);
-		
-		HashMap<String, String> map = new HashMap<String, String>();
-		
-		map.put("yearMonth", yearMonth);
-		map.put("numberOfPeople", String.valueOf(numberOfPeople));
-		
-		System.out.println("----------------------------map : " + map);
-		
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("holidayRoster");
-		mv.addObject("map", map);
-		
-		return mv;
-	}
-	
-	//관리자 - 근무표생성설정
-	@RequestMapping(value = "/holidayRosterSetting")
-	public String holidaySetRosterSetting() {
-		return "holidayRosterSetting";
-	}
-
-	//관리자 - 근속연수에 따른 휴가설정
-	@RequestMapping(value = "/conWorkVacSetDBInsert.ajax")
-	public @ResponseBody HashMap<String, String> conWorkVacSetDBInsert(@RequestParam HashMap<String,Object> jsonMap) {
-		logger.debug("-----------------conWorkVacSetDBInsert 들어왔da."+jsonMap);
-
-		//success 다시 되돌려줄 맵
-		HashMap<String, String> map = new HashMap<String, String>();
-		Gson gson = new Gson();
-		//List<JsonData>로 타입을 만들어주겠다 선언.
-		Type type = new TypeToken<List<JsonDataVac>>() {}.getType();
-
-		String result = (String) jsonMap.get("jArray");
-
-		//gson.fromJson : Json 형식으로된 String을 ArrayList로 바꿔주는 역할을 함.
-		//지금 result에는 json형식으로 되어있음.
-		ArrayList<JsonDataVac> list = gson.fromJson(result, type);
-
-		for(int i = 0 ; i < list.size() ; i++) {
-			JsonDataVac tmp = (JsonDataVac)list.get(i);
-			System.out.println(tmp.getConworkyear()+" "+tmp.getVacofyear()+" "+tmp.getNote());
-		}
-		//list를 이제 서비스쪽으로 보냄.
-		holidaySetService.conWorkVacSetDBInsert(list);
-		
-		map.put("success", "true");
-
-		return map;
-	}
-	
 }

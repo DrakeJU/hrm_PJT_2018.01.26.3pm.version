@@ -29,7 +29,7 @@ public class EmpMenuController {
 	
 	//private String PRE_VIEW_PATH = "/SalManager/emp/";
 
-	@RequestMapping(value = "/emp_main")  					//
+	@RequestMapping(value = "/emp_main")  					//����ȭ��
 	public ModelAndView goEmpMenu(HttpServletRequest request) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -48,7 +48,7 @@ public class EmpMenuController {
 
 
 	// �ϱ�++++++++++++++++++++++++++++++++++++++++++++++++++++
-	@RequestMapping(value = "/new_empcode")	//emp_main -> emp_newsali(üũ�� �ű԰�� �ο��� ��Ÿ���ִ� ��)
+	@RequestMapping(value = "/new_empcode", method = RequestMethod.GET)	//emp_main -> emp_newsali(üũ�� �ű԰�� �ο��� ��Ÿ���ִ� ��)
 	public ModelAndView new_emp(@RequestParam HashMap<String, Object> params, Model model) throws Exception {
 
 		ModelAndView mv = new ModelAndView();
@@ -83,7 +83,7 @@ public class EmpMenuController {
 
 	}
 	
-	@RequestMapping(value = "insert_sal_empcode",method = RequestMethod.GET)  //신규입력 post(방식)
+	@RequestMapping(value = "insert_sal_empcode",method = RequestMethod.POST)  //신규입력 post(방식)
 	public ModelAndView i_sal_emp(@RequestParam HashMap<String, String> map) {
 		ModelAndView mv = new ModelAndView();
 		
@@ -94,12 +94,12 @@ public class EmpMenuController {
 		mv.addObject("count",empMenuService.newEmpList(map).size());
 		mv.addObject("listExi", empMenuService.exiEmpList(map));
 		*/
-		mv.setViewName("/SalManager/emp/mainMove");
+		mv.setViewName("mainMove");
 		//empMenuService.insert_newEmp_code(map);
 		return mv;
 	}
 	
-	@RequestMapping(value = "update_sal_empcode",method = RequestMethod.GET)  //기존입력 post(방식)
+	@RequestMapping(value = "update_sal_empcode",method = RequestMethod.POST)  //기존입력 post(방식)
 	public ModelAndView u_sal_emp(@RequestParam HashMap<String, String> map) {
 		ModelAndView mv = new ModelAndView();
 		
@@ -109,7 +109,7 @@ public class EmpMenuController {
 		mv.addObject("count",empMenuService.newEmpList(map).size());
 		mv.addObject("listExi", empMenuService.exiEmpList(map));*/
 		
-		mv.setViewName("/SalManager/emp/mainMove");
+		mv.setViewName("mainMove");
 		//empMenuService.insert_newEmp_code(map);
 		return mv;
 	}

@@ -24,14 +24,15 @@
 	<select id="selectDailAttReg" parameterType="HashMap"  resultType="HashMap">
 	
 			SELECT 
-				C.EMP_EMNO 					as empEmno 
+				 C.EMP_EMNO 				as empEmno 
 				,E.EMP_NAME					as empName 
 				,C.COST_WRK_IN 				as wrkIn
-			FROM COMM_STM C	 
+			FROM COMM_STM C 
  LEFT OUTER JOIN EMPLOYEE E 
 			  ON C.EMP_EMNO = E.EMP_EMNO 
-		ORDER BY COST_WRK_IN desc limit 1
+		ORDER BY COST_WRK_IN DESC
 			
+
 	</select>
 	
 	<!-- ************************************************************************************

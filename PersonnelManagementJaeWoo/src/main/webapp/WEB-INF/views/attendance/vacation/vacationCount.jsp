@@ -12,60 +12,30 @@
 </style>
 <script type="text/javascript">
 
-var url = "vacationCountEmpList.ajax";
 var formId = "vacCntSelectFrm"; //초기, 검색할 때 id를 기본값으로 세팅
 
 //document.ready
 $(function(){
+// 	vacCntEmpList(); //사원정보 리스트 ajax
 	Calender(); //년도달력
 	vacCntEmpSignUpCntNum(); //사원등록 개수
-	vacCntEmpList(); //사원정보 리스트 ajax
 }); 
 
-//검색을 눌렀을 때
+//검색
 function vacCntEmpListSearch(){
 	vacCntEmpList(); //사원정보 리스트 ajax
 }
 
 //휴가일수 자동계산을 눌렀을때
 function vacCntCalculation(){
-	url = "";
 	formId = "vacCntEmpFrm";
 	vacCntEmpList(); //사원정보 리스트 ajax
 }
 
 //저장을 눌렀을 때
 function vacCntSave(){
-
-	var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
-	
-	$("input[type=checkbox][id=emnoChk]").each(function(){
-		if($(this).prop('checked')){
-
-			var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
-			var chkTdText = chkTr.children().eq(1).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
-		
-			if(empEmnoResult == null){
-				empEmnoResult = chkTdText;
-			}else{
-				empEmnoResult = empEmnoResult + "/" + chkTdText; //사원번호를 구분자와 함께 저장
-			}
-		}
-	});
-	$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
-// 	console.log($('#empEmnoResult').val());
-	
-	paging.ajaxFormSubmit("vacCntEmpSignUpInsert.ajax", "vacCntEmpFrm", function(rslt){
-		console.log("ajaxFormSubmit -> callback");
-		console.log("결과데이터:"+JSON.stringify(rslt));
-		
-		if(rslt == null){
-			alert("저장에 실패하였습니다. 다시 시도해주세요.")
-		}else{
-			alert("저장이 완료되었습니다.");
-			window.location.reload();
-		}
-	});
+	formId = "vacCntEmpFrm";
+	vacCntEmpList(); //사원정보 리스트 ajax
 }
 
 //퇴직자 포함 체크여부
@@ -81,14 +51,14 @@ function retrCheck(){
 function vacCntEmpList(){
 	retrCheck(); //퇴직자 포함 체크여부
 
-	paging.ajaxFormSubmit(url, formId, function(rslt){
+	paging.ajaxFormSubmit("vacationCountEmpList.ajax", formId, function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:"+JSON.stringify(rslt));
 
  		$('#vacCntEmpListTbody').empty(); //이전 리스트 삭제
 		$('#vacCntEmpListTable').children('thead').css('width','calc(100% - 1.1em)'); //테이블 스크롤 css
 
-		if(rslt == null || rslt.success == "N"){
+		if(rslt == null){
 			$('#vacCntEmpListTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
  				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
  			);
@@ -102,8 +72,8 @@ function vacCntEmpList(){
 								"<span></span>"+
 							"</label>"+
 						"</td>"+
-						"<td style='width:12%;'>"+ v.retrDelYn +"</td>"+ //사원번호
-						"<td style='width:12%;'>"+ v.empEmno +"</td>"+ //사원번호
+						"<td style='width:12%;' class='align-middle'>"+ v.retrDelYn +"</td>"+ //사원번호
+						"<td style='width:12%;' class='align-middle'>"+ v.empEmno +"</td>"+ //사원번호
 						"<td style='width:12%;'>"+ v.empName +"</td>"+ //사원명
 						"<td style='width:12%;'>"+ v.deptName +"</td>"+ //부서명
 						"<td style='width:12%;'>"+ v.rankName +"</td>"+ //직급명
@@ -112,19 +82,7 @@ function vacCntEmpList(){
 					"</tr>"
 				);
  			});
- 			
- 			if($('#baseYear').val() != moment().format('YYYY')){ //선택한 년도가 올해가 아니면
- 				$("input[type=checkbox]").prop('disabled',true); //체크박스 선택불가
- 				$('#empIncoDate').prop('readonly',true); //휴가일수 입력불가
- 				$('#vacCntCalculationBtn').prop('disabled',true); //자동계산버튼 선택불가
- 				$('#vacCntSaveBtn').prop('disabled',true); //저장버튼 선택불가
- 			}else{
- 				$("input[type=checkbox]").prop('disabled',false);
- 				$('#empIncoDate').prop('readonly',false);
- 				$('#vacCntCalculationBtn').prop('disabled',false);
- 				$('#vacCntSaveBtn').prop('disabled',false);
- 			}
- 			
+
  			$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
 			//테이블 정렬
 			$(function(){
@@ -153,9 +111,6 @@ function Calender(){
 		viewMode: 'years', //올해 년도 보여줌
 	format: 'YYYY'
 	});
-  
-	//년도의 최대값을 올해로 제한
-	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment());
 }
 
 // 휴가신청현황 페이지로 이동 
@@ -171,6 +126,8 @@ function vacCntEmpSignUpCntNum(){
 		$("#empSignUpCntNum").html(rslt);
 	});	
 }
+
+
 
 </script>
 </head>
@@ -190,18 +147,18 @@ function vacCntEmpSignUpCntNum(){
 							기준년도
 							<!-- 달력 -->
 							<div class="input-group date" id="yearDateTimePicker">
-						  	<input type="text" class="form-control" id="baseYear" name="baseYear">
+						  	<input type="text" class="form-control" id="baseYear"/>
 						    <span class="input-group-addon">
 							    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 						    </span>
 						  </div>&nbsp;&nbsp;&nbsp;
 							검색어
-							<select name="seacrchOption" class="form-control">
-								<option value="empEmno">사번</option>
-								<option value="empName">성명</option>
-								<option value="deptName">부서</option>
+							<select name="" value="seacrchOption" class="form-control">
+								<option value="name">성명</option>
+								<option value="number">사번</option>
+								<option value="">부서</option>
 							</select>
-							<input type="text" class="form-control" name="">
+							<input type="text" class="form-control">
 							&nbsp;&nbsp;&nbsp;
 							<label class="fancy-checkbox-inline">
 								<input type="checkbox" id="retrChk">

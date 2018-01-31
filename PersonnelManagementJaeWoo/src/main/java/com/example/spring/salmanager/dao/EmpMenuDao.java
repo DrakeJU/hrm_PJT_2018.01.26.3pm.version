@@ -71,7 +71,6 @@ public class EmpMenuDao {
 		List<String> insertlist = new ArrayList<String>();
 		HashMap<String, Object> m1 = new HashMap<String, Object>();
 
-		System.out.println("checklist : "+map);
 		for (String mapkey : map.keySet()) {
 			System.out.println("key : " + mapkey + ",value : " + map.get(mapkey));
 			insertlist.add((String) map.get(mapkey));

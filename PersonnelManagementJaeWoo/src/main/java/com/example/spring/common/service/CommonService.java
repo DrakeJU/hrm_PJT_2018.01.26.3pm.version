@@ -18,12 +18,8 @@ public class CommonService {
 	public List<HashMap<String,Object>> navList(){
 		
 		List<HashMap<String,Object>> list =commonDao.navList();
+		
 		return list;
 	}
 	
-	public HashMap<String,Object> selectMenu(HashMap<String,String> map){
-		
-		HashMap<String,Object> mnPrntNo = commonDao.selectMenu(map);
-		return mnPrntNo;
-	}
 }

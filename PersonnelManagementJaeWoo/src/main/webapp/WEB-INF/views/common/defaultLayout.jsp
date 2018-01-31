@@ -3,11 +3,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
-
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 
 <!-- VENDOR CSS -->
 <link rel="stylesheet"
@@ -23,7 +21,7 @@
 <link rel="stylesheet" href="/spring/resources/common/css/jaewoo.css">
 <link rel="stylesheet" href="/spring/resources/common/css/vacation.css">
 <!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
-
+<link rel="stylesheet" href="/spring/resources/common/css/demo.css">
 <!-- GOOGLE FONTS -->
 <link
 	href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700"
@@ -45,7 +43,6 @@
 <body>
 	<script src="/spring/resources/common/vendor/jquery/jquery.min.js"></script>
 	<script src="/spring/resources/common/js/jquery.form.js"></script>
-	
 	<div id="wrapper">
 		<header id="header"> 
 			<tiles:insertAttribute name="header" />

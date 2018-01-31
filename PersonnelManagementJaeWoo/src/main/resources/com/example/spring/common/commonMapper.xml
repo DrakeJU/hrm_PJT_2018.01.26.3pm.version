@@ -12,10 +12,4 @@
 		WHERE MN_DEL_YN='N' /*메뉴삭제여부*/
 		AND MN_USE_YN='Y' /*메뉴사용여부*/
 	</select>
-	<select id="selectMenu" parameterType="HashMap" resultType="HashMap">
-		SELECT
-			MN_PRNT_NO mnPrntNo
-		FROM MENU
-		WHERE MN_URL = #{mnUrl}	
-	</select>
 </mapper>

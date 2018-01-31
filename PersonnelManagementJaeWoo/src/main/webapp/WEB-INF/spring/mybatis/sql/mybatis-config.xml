@@ -8,9 +8,8 @@
 	<typeAliases>
 		<typeAlias alias="String" type="java.lang.String" />											
 		<typeAlias alias="Integer" type="java.lang.Integer" />											
-		<typeAlias alias="HashMap" type="java.util.HashMap"/>			
-		<typeAlias alias="jsonData" type="com.example.spring.attendance.entity.JsonData"/>										
-		<typeAlias alias="jsonDataVac" type="com.example.spring.attendance.entity.JsonDataVac"/>
+		<typeAlias alias="HashMap" type="java.util.HashMap"/>											
+		<typeAlias alias="List" type="java.util.List"/>													
 	</typeAliases>
 	
 	<plugins>
@@ -21,8 +20,6 @@
 		<!-- [인사관리] START -->
 		<!-- [인사관리]-[일정관리] -->
 		<mapper resource="com/example/spring/personnel/scheduleMapper.xml"/>
-		<!-- [인사관리]-[증명서관리]-[증명서발급] -->
-<!-- 		<mapper resource="com/example/spring/personnel/certificateMapper.xml"/> -->
 		<!-- [인사관리] END -->
 		
 		
@@ -34,7 +31,7 @@
 		<!-- [근태관리]-[휴가관리] -->
 		<mapper resource="com/example/spring/attendance/vacation/vacationMapper.xml"/>
 		<!-- [근태관리]-[휴가설정관리] -->
-		<mapper resource="com/example/spring/attendance/holidaySet/holidaySetMapper.xml"/>
+		
 		<!-- 근태관리 END -->
 		
 		
@@ -52,7 +49,6 @@
 		<!-- [급여관리] START  -->
 		<mapper resource="com/example/spring/salmanager/EmpMenuMapper.xml"/>
 		<mapper resource="com/example/spring/salmanager/PaycMenuMapper.xml"/>
-		<mapper resource="com/example/spring/salmanager/paycImfMapper.xml"/>
 		
 		<!-- [급여관리] END  -->
 	</mappers>

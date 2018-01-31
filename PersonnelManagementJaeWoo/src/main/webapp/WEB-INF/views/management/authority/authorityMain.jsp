@@ -16,7 +16,7 @@
 		<div class="main-content">
 			<div class="container-fluid">
 				<h3 class="page-title">권한관리</h3>
-				<!-- 사원 검색 시작 -->
+				<!-- OVERVIEW -->
 				<div class="row">
 					<div class="col-md-10">
 						<div class="panel panel-headline">
@@ -42,10 +42,9 @@
 						</div>
 					</div>
 				</div>
-				<!-- 사원 검색 끝 -->
-				<!-- 사원 리스트 시작 -->
 				<div class="row">
 					<div class="col-md-10">
+					<!-- TABLE STRIPED -->
 						<div class="panel">
 							<div class="panel-heading">
 								<div class="row">
@@ -63,26 +62,20 @@
 											<tbody>
 											</tbody>
 										</table>
-										<!-- 페이징 네비게이션 시작 -->
-										<nav name="pagingNav" aria-label='Page navigation example' align='center'>
-										</nav>
-										<!-- 페이징 네비게이션 끝 -->
+										<nav name="pagingNav" aria-label='Page navigation example' align='center'></nav>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- 사원 리스트 끝-->
 			</div>
 		</div>
 		<!-- END MAIN CONTENT -->
 	</div>
 	<!-- END MAIN -->
-	<!-- hidden form start-->
 	<form action="authorityDetail.do" name="hiddenForm" method="post">
 		<input type="hidden" name="empEmno">
 	</form>
-	<!-- hidden form end-->
 </body>
 </html>

@@ -55,26 +55,6 @@ public class VacationDao {
 		return list;
 	}
 	
-	//휴가일수설정 - 사원등록 저장하기
-	public int vacCntEmpSignUpInsert(HashMap<String,Object> map) {
-		logger.debug("dao >>> "+map);
-		
-		int list = 0;
-		
-		String s1 = (String) map.get("empEmnoResult");
-		String[] words = s1.split("/");
-		
-		for(String empEmno : words) {
-			logger.info("empEmno: " + empEmno);
-			this.sqlSession.insert(nameSpaceName + "vacCntEmpSignUpInsert", empEmno);
-			list++;
-		}
-
-		logger.debug("dao List: "+list);
-		
-		return list;
-	}
-	
 	/* 휴가 신청하기 */
 	public int vacationRequest(HashMap<String,String> map) {
 		
@@ -119,26 +99,16 @@ public class VacationDao {
 	}
 	
 	
-	/* 휴가 승인완료 저장 */
-	public int vacationProgressSave(HashMap<String,Object> map){
+	/* 휴가 신청현황 승인완료 */
+	public List<HashMap<String,Object>> vacationProgToggle(){
 		logger.info("휴간신청 승인대기 DAO 진입 --->>>>");
 		
-		int list = 0;
-		
-		String num = (String) map.get("progToggleResult");
-		String[] obj = num.split("/");
-		
-		//휴가 승인완료된 사람들의 일련번호들
-		for(String vastSerialNumber : obj) {
-			logger.info("vastSerialNumber ::" + vastSerialNumber);
-			this.sqlSession.update(nameSpaceName + "vacationProgToggle", vastSerialNumber);
-			list++;
-		}
-				
-			logger.info("승인대기 DAO list::" + list);
-		return list;
+		List<HashMap<String,Object>> map = this.sqlSession.selectList(nameSpaceName + "vacationProgToggle");
+			logger.info("승인대기 DAO 맵::" + map);
+		return map;
 	}
-
+	
+	
 	
 	/* 휴가 개수 계산하기 */
 	public String vacationCount() {

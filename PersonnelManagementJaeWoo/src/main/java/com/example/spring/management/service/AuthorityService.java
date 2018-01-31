@@ -17,12 +17,10 @@ public class AuthorityService {
 	@Resource(name="authorityDao")
 	private AuthorityDao authorityDao;
 	
-	//사원리스트 max 값
 	public int empMaxNum(HashMap<String,Object> map) {	
 		return authorityDao.empMaxNum(map);
-	}//empMaxNum
+	}
 	
-	//사원리스트 
 	public List<HashMap<String,Object>> empList(HashMap<String,Object> map) {
 		
 		int totalNoticeNum = (Integer)map.get("totalNoticeNum");
@@ -36,48 +34,58 @@ public class AuthorityService {
 		map.put("viewNoticeMaxNum", viewNoticeMaxNum);
 
 		List<HashMap<String,Object>>empList = authorityDao.empList(map);
+		
+		System.out.print("empLsit---->>>>"+empList);
+		
 		return empList;
-	}//empList
+	}
 	
-	//권한에 대한 사원 상세정보
 	public HashMap<String,Object> authorityDetail(HashMap<String,Object> map){
 		
 		HashMap<String,Object> empMap = authorityDao.authorityDetail(map);
+		
 		return empMap;
-	}//authorityDetail
+	}
 	
-	//관리자 권한 업데이트
 	public int empClassUpdate(HashMap<String,Object> map) {
 
 		int result = (int)authorityDao.empClassUpdate(map);
-		return result;
-	}//empClassUdpate
 
-	//메뉴에 대한 권한 상세 데이터
-	public HashMap<String,Object> authorityData(HashMap<String,Object> map){
+		return result;
+	}
 
-		HashMap<String,Object> authorityData = authorityDao.authorityData(map);
-		return authorityData;
-	}//authorityData
+	public HashMap<String,Object> authorityMenu(HashMap<String,Object> map){
+
+		HashMap<String,Object> authorityMap = authorityDao.authorityMenu(map);
+
+		return authorityMap;
+	}
 	
-	//메뉴리스트 
-	public HashMap<String,Object> menuList(HashMap<String,Object> map){
+	public HashMap<String,Object> menuAttrList(HashMap<String,Object> map){
 		
-		HashMap<String,Object> menuMap = authorityDao.menuList(map);
-		return menuMap;
-	}//menuList
+		List<String> menuAttrList  = new ArrayList<String>();
+		
+		HashMap<String,Object> menuAttrMap = authorityDao.menuAttrList(map);
+		
+		String menuAttrStr = (String)menuAttrMap.get("mnAttr");
+		
+		int startNum; // string 시작 index 저장 변수 
+		
+		startNum = 0;
+		
+		for(int i=0; i<menuAttrStr.length(); i++) {
+			if(menuAttrStr.substring(i,i+1).equals("/")) {
+				
+				menuAttrList.add(menuAttrStr.substring(startNum, menuAttrStr.indexOf("/", startNum)));
+				
+				startNum = menuAttrStr.indexOf("/", startNum)+1;
+				i = startNum;
+			}
+		}
+		
+		menuAttrMap.put("menuAttrList", menuAttrList);
+		
+		return menuAttrMap;
+	}
 	
-	//메뉴 권한 등록
-	public int authorityInsert(HashMap<String,Object> map) {
-		
-		int result = authorityDao.authorityInsert(map);
-		return result;
-	}//authorityInsert
-	
-	//메뉴 권한 업데이트
-	public int authorityUpdate(HashMap<String,Object> map) {
-		
-		int result = authorityDao.authorityUpdate(map);
-		return result;
-	}//authorityUpdate
-}//authorityService
+}

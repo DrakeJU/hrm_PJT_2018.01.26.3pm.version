@@ -7,7 +7,6 @@
 		<div class="main-content">
 			<div class="container-fluid">
 				<h3 class="page-title">권한관리</h3>
-				<!-- 권한에 대한 사원 상세정보 table 시작 -->
 				<div class="row">
 					<div class="col-md-12">
 						<div class="panel panel-headline">
@@ -28,8 +27,8 @@
 											<td>
 												<select id="classSelect" class="selectpicker">
 													<option value="">선택</option>
-													<option value="admin" ${data.empAdminYn eq'Y'?'selected':''}>관리자</option>
-													<option value="user" ${data.empAdminYn eq'N'?'selected':''}>사원</option>
+													<option value="admin">관리자</option>
+													<option value="user">사원</option>
 												</select>
 											</td>
 										</tr>
@@ -46,8 +45,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- 권한에 대한 사원 상세정보 table 끝 -->
-				<!-- MENU TREE 시작-->
+				<!-- MENU TREE -->
 				<div class="row">
 					<div class="col-md-4">
 						<div class="panel">
@@ -55,7 +53,8 @@
 							<h3 class="panel-title">메뉴선택</h3>
                                 <div class="tree">
                                 	<ul id="tree">
-                                    	<li id="0"><span>/</span></li>
+                                    	<li id="0"><span>/</span>
+                                        </li>
                                      </ul>
                                 </div>
                              </div>

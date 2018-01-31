@@ -4,16 +4,13 @@
 //side menu 함수
 	(function commMenu(){
 		
-		var pageHref = $(location).attr('href'); //현재 페이지 주소값 저장
-		var pageUrl = pageHref.substring(pageHref.lastIndexOf("/")+1); // 설정된 url 값 저장 
-		
 		//menu list data ajax로 불러오기
-		paging.ajaxSubmit("/spring/navList.ajax",{"mnUrl":pageUrl},function(data){
+		paging.ajaxSubmit("/spring/navList.ajax","",function(data){
 			
 			var mnPrntNo //부모코드 저장 변수
 	    	var mnIdx //menu index 저장 변수 
 	    	var thisId // mnPrntNo의 url 저장변수
-	    	
+
 			//nav 추가 
 			$("#sidebar-nav .sidebar-scroll").append("<nav><ul class='nav'></ul></nav>");
 			
@@ -22,6 +19,7 @@
 				mnPrntNo = dataThis.mnPrntNo; //부모코드 저장 변수
             	mnIdx = dataThis.mnIdx; //menu index 저장 변수 
             	
+            
             	//최상위 메뉴 일때 
             	if(mnPrntNo==0){
 					//index 적용 if else
@@ -53,24 +51,17 @@
 			
 			//drop menu 적용을 위한 속성 지정
 			$("#sidebar-nav a[href^='#']").attr({'data-toggle':'collapse'}).addClass("collapsed").append("<i class='icon-submenu lnr lnr-chevron-left'></i>");
+		
+			var pageHref = $(location).attr('href'); //현재 페이지 주소값 저장
+			var pageUrl = pageHref.substring(pageHref.lastIndexOf("/")+1); // 설정된 url 값 저장 
 
 			if(pageUrl.indexOf("#")!=-1){
 				pageUrl = pageUrl.substring(0,pageUrl.indexOf("#")-1);
-			}//if	
-				
+			}	
+			
 			//현재 페이지의 메뉴에 active 적용 
-			var navPrntDiv = $("#nav"+data.mnPrntMap.mnPrntNo).parents("div.collapse"); 
-			var navChildDiv = $("#nav"+data.mnPrntMap.mnPrntNo).children("div.collapse");
-			
-			if(navPrntDiv.length>0){
-				navPrntDiv.addClass("in");
-				navPrntDiv.prev("a").removeClass("collapsed").addClass("collapse active");
-				$("#nav"+data.mnPrntMap.mnPrntNo).children("a").removeClass("collapsed").addClass("collapse active");
-			}else{
-				navChildDiv.addClass("in");
-				navChildDiv.prev("a").removeClass("collapsed").addClass("collapse active");
-				$("a[href='"+pageUrl+"']").removeClass("collapsed").addClass("collapse active");
-			}//if else
-			
-		});//paging.ajaxSubmit
-	})();//commonMenu
+			$("#sidebar-nav a[href='"+pageUrl+"']").parents("div.collapse").addClass("in");
+			$("#sidebar-nav a[href='"+pageUrl+"']").parents("div.collapse").prev("a").removeClass("collapsed").addClass("collapse active");
+		
+		}); 
+	})();
