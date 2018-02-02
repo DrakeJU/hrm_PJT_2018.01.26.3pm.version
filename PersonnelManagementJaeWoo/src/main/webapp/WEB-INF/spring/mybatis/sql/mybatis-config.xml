@@ -8,9 +8,9 @@
 	<typeAliases>
 		<typeAlias alias="String" type="java.lang.String" />											
 		<typeAlias alias="Integer" type="java.lang.Integer" />											
-		<typeAlias alias="HashMap" type="java.util.HashMap"/>			
+		<typeAlias alias="HashMap" type="java.util.HashMap"/>	
 		<typeAlias alias="jsonData" type="com.example.spring.attendance.entity.JsonData"/>										
-		<typeAlias alias="jsonDataVac" type="com.example.spring.attendance.entity.JsonDataVac"/>
+		<typeAlias alias="jsonDataVac" type="com.example.spring.attendance.entity.JsonDataVac"/>		
 	</typeAliases>
 	
 	<plugins>
