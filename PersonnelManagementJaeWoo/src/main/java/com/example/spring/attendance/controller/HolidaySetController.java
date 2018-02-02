@@ -78,7 +78,6 @@ public class HolidaySetController {
 	public String vatacionListAdminPage3() {
 		return "conWorkVacSet";
 	}
-<<<<<<< HEAD
 
 	//관리자 - 근무표생성
 	@RequestMapping(value = "/holidayRoster")
@@ -150,6 +149,4 @@ public class HolidaySetController {
 		return map;
 	}
 	
-=======
->>>>>>> c0f2d295be92994a164ab95cf7f27f8144e97538
 }
