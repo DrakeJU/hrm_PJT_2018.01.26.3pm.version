@@ -63,7 +63,6 @@
 		tbodyList();
 	})
 	
-<<<<<<< HEAD
 	/* 표 리스트 불러오기 start */
  	function tbodyList(){ //사원정보조회 리스트 출력
  		$('#tbody').empty(); //이전 리스트 삭제
@@ -141,7 +140,6 @@
 				}//for
 			}//if checkbox
 		});
-=======
 	function checkedInsertName(){
 		var checkCount = $("[name=chk]").length;
 		
