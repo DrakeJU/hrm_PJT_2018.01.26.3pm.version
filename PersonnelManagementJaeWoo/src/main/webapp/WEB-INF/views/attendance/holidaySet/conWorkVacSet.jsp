@@ -63,6 +63,7 @@
 		tbodyList();
 	})
 	
+<<<<<<< HEAD
 	/* 표 리스트 불러오기 start */
  	function tbodyList(){ //사원정보조회 리스트 출력
  		$('#tbody').empty(); //이전 리스트 삭제
@@ -140,6 +141,49 @@
 				}//for
 			}//if checkbox
 		});
+=======
+	function checkedInsertName(){
+		var checkCount = $("[name=chk]").length;
+		
+		$("[name=chk]").each(function(){
+			
+		})
+	}
+	
+	function insertForm(){
+		$("#insertForm").submit();
+	}
+	
+	//디비 저장
+	/*
+	function insertDB(formId){
+		var AnnualLeaveReflectionCheckbox = $("input[name='AnnualLeaveReflectionCheckbox']");
+		var UseOrFailureCheckbox = $("input[name='UseOrFailureCheckbox']");
+		var count = AnnualLeaveReflectionCheckbox.size();
+		var AnnualLeaveReflectionCheckboxresult = $("input[name='AnnualLeaveReflectionCheckbox']").prop("checked");
+		var UseOrFailureCheckboxresult = $("input[name='UseOrFailureCheckbox']").prop("checked");
+		var AnnualLeaveReflection = $("input[name='AnnualLeaveReflection']");
+		var UseOrFailure = $("input[name='UseOrFailure']");
+		
+		$("input[name='AnnualLeaveReflectionCheckbox']").val(AnnualLeaveReflectionCheckboxresult);
+		$("input[name='UseOrFailureCheckbox']").val(UseOrFailureCheckboxresult);
+		
+		//checkbox에 체크되어있으면 해당하는 hidden에 true값 넣어주고 아니면 false값 넣어줌.
+		for(var i = 0 ; i < count ; i++){
+			if(AnnualLeaveReflectionCheckbox.eq(i).is(":checked")){
+				AnnualLeaveReflection.eq(i).val('true');
+			}else{
+				AnnualLeaveReflection.eq(i).val('false');
+			}
+			
+			if(UseOrFailureCheckbox.eq(i).is(":checked")){
+				UseOrFailure.eq(i).val('true');
+			}else{
+				UseOrFailure.eq(i).val('false');
+			}
+		}
+		
+>>>>>>> c0f2d295be92994a164ab95cf7f27f8144e97538
 		
 		var json;
 		var obj = new Object();
@@ -189,6 +233,7 @@
 							</select> <span class="ftr">
 								<button type="button" class="btn btn-primary" onClick="">검색</button>
 							</span>
+<<<<<<< HEAD
 						</form>
 					</div>
 				</div>
@@ -226,6 +271,77 @@
 							<button type="button" name="saveButton" class="btn btn-primary ftr" onClick="insertDDBB('insertForm')">저장</button>
 						</form>
 					</div>
+=======
+						</div>	
+						<div class="panel-body mgu_15">
+							<form class="form-inline" name="f2" action="/spring/holidaySetDBInset.do" id="insertForm">
+								
+								<table class="table table-bordered" id="vacationOptionTable" style="980px;">
+   								   <!--  <thead> -->
+		                           <colgroup>
+		                              <col width="3%">
+		                              <col width="10%">
+		                              <col width="10%">
+		                              <col width="20%">
+		                              <col width="10%">
+		                              <col width="10%">
+		                              <col width="37%">
+		                           </colgroup>
+		                           <thead class="scrollHead">
+		                              <tr>
+		                                 <th class="w3">
+		                                    <label class="fancy-checkbox-inline">
+		                                       <input type="checkbox" name="selectAll_chk" onClick="selectAll()">
+		                                       <span></span>
+		                                    </label>
+		                                 </th>
+		                                 <th class="text-center w10"><i class="fa fa-asterisk-red" aria-hidden="true" ></i>근속 연수</th>
+		                                 <th class="text-center w10"><i class="fa fa-asterisk-red" aria-hidden="true" ></i>휴가 일수</th>
+		                                 <th class="text-center w37">비고</th>
+		                              </tr>
+		                           </thead>
+		                           <tbody class="scrollBody" id ="tbody">
+		                              <tr id="headTr">
+		                                 <td class="w3">
+		                                    <label class="fancy-checkbox-inline">
+		                                       <input type="checkbox" name="notDeleteChk">
+		                                       <span></span>
+		                                    </label>
+		                                 </td>
+		                                 <td class="w10"><input type="text" class="form-control w_80" value ="0"name="conWorkYear"></td>
+		                                 <td class="w10"><input type="text" class="form-control w_80" value ="0"name="yearOfVac"></td>
+		                                 <td class="w37"><input type="text" class="form-control w_300" value ="0년차 직원에게는 연차가 지급되지 않습니다."name="note"></td>
+		                              </tr>
+		                              <tr>
+		                                 <td>
+		                                    <label class="fancy-checkbox-inline">
+		                                       <input type="checkbox" name="notDeleteChk">
+		                                       <span></span>
+		                                    </label>
+		                                 </td>
+		                                 <td class="w10"><input type="text" class="form-control w_80" value ="1" name="conWorkYear"></td>
+		                                 <td><input type="text" class="form-control w_80"  value ="10"name="yearOfVac"></td>
+		                                 <td><input type="text" class="form-control w_300" value ="1년차 법정 연차 10일"name="note"></td>
+		                              </tr>
+		                              <tr>
+		                                 <td>
+		                                    <label class="fancy-checkbox-inline">
+		                                       <input type="checkbox" name="notDeleteChk">
+		                                       <span></span>
+		                                    </label>
+		                                 </td>
+		                                 <td><input type="text" class="form-control w_80" value ="2"name="conWorkYear"></td>
+		                                 <td><input type="text" class="form-control w_80" value ="11"name="yearOfVac"></td>
+		                                 <td><input type="text" class="form-control w_300" value ="2년차 법정 연차 11일" name="note"></td>
+		                              </tr>
+		                           </tbody>
+		                        </table>
+		                 
+		                        <button type="button" name="saveButton" class="btn btn-primary ftr" onClick="insertDB('insertForm')">저장</button>
+							</form>
+						</div>
+					</div>	
+>>>>>>> c0f2d295be92994a164ab95cf7f27f8144e97538
 				</div>
 			</div>
 		</div>
