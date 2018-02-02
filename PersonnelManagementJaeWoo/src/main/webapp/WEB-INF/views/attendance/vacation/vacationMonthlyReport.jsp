@@ -116,7 +116,7 @@
 						    
 						<!-- 버튼영역 -->
 						<div class="text-right"> 
-							<button type="button" class="btn btn-danger">마감하기</button>
+							<button type="button" class="btn btn-primary">마감하기</button>
 						</div>
 						<!-- END 버튼영역 -->
 					</div>

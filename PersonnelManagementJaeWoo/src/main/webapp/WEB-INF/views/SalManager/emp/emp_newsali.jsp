@@ -29,22 +29,27 @@
 			if ($("#checkall").prop("checked") ==true) {//input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
 
 				for (var i = 0; i < checklength; i++) {
-						
-				//var code = $('[name=empcode'+i+']').attr('id');
-				/* $("input[name=sali"+i+"]").remove();
-				   $("input[name=tami"+i+"]").remove();
-				   $("input[name=fdei"+i+"]").remove();
-				   $("input[name=cmci"+i+"]").remove(); */
+					
 					if ($("#chk" + i).prop("checked") == false) {
 						$("#chk" + i).prop("checked",true);
-						$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value="${tb.EMP_SAL}">');
+						$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" >');
 						$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ '  onchange="checkChange(this)">');
+						$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${aList.get(0).scomHhCst }" style="visibility:hidden" >');
 						$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ '  onchange="checkChange(this)">');
+						$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${aList.get(0).scomNhCst }" style="visibility:hidden" >');
 						$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ '  onchange="checkChange(this)">');
+						$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" >');
 						$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ '  onchange="checkChange(this)">');
+						$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="${aList.get(0).scomElhCst }" style="visibility:hidden" >');
 						$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ '  onchange="checkChange(this)">');
+						$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="${aList.get(0).sempCmc }" style="visibility:hidden"  >');
 						$("td[name=slctext"+ i+ "]").append('<input type="checkbox" name=slciCk'+ i+ '  onchange="checkChange(this)">');
+						$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${aList.get(0).scomLhCst }" style="visibility:hidden" >');
 						$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
+						
+						//$("input[type=text]").css("width","70px");
+						//$("input[name=sali"+i+"]").css("width","100px");
+						///$("input[name=sbci"+ i+ "]").css("width","100px");
 					}
 				}
 
@@ -53,11 +58,17 @@
 
 				for (var i = 0; i < checklength; i++){
 					$("input[name=sali"+ i + "]").remove();
+					$("input[name=sbci"+ i + "]").remove();
 					$("input[name=sbciCk"+ i + "]").remove();
+					$("input[name=snci"+ i + "]").remove();
 					$("input[name=snciCk"+ i + "]").remove();
+					$("input[name=tami"+ i + "]").remove();
 					$("input[name=tamiCk"+ i + "]").remove();
+					$("input[name=fdei"+ i + "]").remove();
 					$("input[name=fdeiCk"+ i + "]").remove();
+					$("input[name=cmci"+ i + "]").remove();
 					$("input[name=cmciCk"+ i + "]").remove();
+					$("input[name=slci"+ i + "]").remove();
 					$("input[name=slciCk"+ i + "]").remove();
 					$("input[name=code"+ i + "]").remove();
 				}
@@ -71,48 +82,78 @@
 			//alert(list);
 			$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" >');
 			$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ '  onchange="checkChange(this)">');
+			$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${aList.get(0).scomHhCst }" style="visibility:hidden" >');
 			$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ '  onchange="checkChange(this)">');
+			$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${aList.get(0).scomNhCst }" style="visibility:hidden" >');
 			$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ '  onchange="checkChange(this)">');
+			$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" >');
 			$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ '  onchange="checkChange(this)">');
+			$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="${aList.get(0).scomElhCst }" style="visibility:hidden" >');
 			$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ '  onchange="checkChange(this)">');
+			$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="${aList.get(0).sempCmc }" style="visibility:hidden"  >');
 			$("td[name=slctext"+ i+ "]").append('<input type="checkbox" name=slciCk'+ i+ '  onchange="checkChange(this)">');
+			$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${aList.get(0).scomLhCst }" style="visibility:hidden" >');
 			$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
+			
 		} else {
 			$("input[name=sali"+ i + "]").remove();
+			$("input[name=sbci"+ i + "]").remove();
 			$("input[name=sbciCk"+ i + "]").remove();
+			$("input[name=snci"+ i + "]").remove();
 			$("input[name=snciCk"+ i + "]").remove();
+			$("input[name=tami"+ i + "]").remove();
 			$("input[name=tamiCk"+ i + "]").remove();
+			$("input[name=fdei"+ i + "]").remove();
 			$("input[name=fdeiCk"+ i + "]").remove();
+			$("input[name=cmci"+ i + "]").remove();
 			$("input[name=cmciCk"+ i + "]").remove();
+			$("input[name=slci"+ i + "]").remove();
 			$("input[name=slciCk"+ i + "]").remove();
 			$("input[name=code"+ i + "]").remove();
+			
 		}
-
 	}
 	
 	/// 체크 시 인풋 박스 추가삭제
 	function checkChange( obj ){
 		//alert( obj.name );
-		var changeName = obj.name;
-		///
-		changeName2 = changeName.replace("Ck","");
-		changeName2 = changeName2.replace("i","");
-		//alert( changeName );
-		var changeNameLen = changeName2.length;
-		var selNum = changeName2.substring(changeNameLen-1,changeNameLen);
-		var changeName2 = changeName2.replace(selNum,"");
-		//alert( $('[name="'+changeName+'"]').prop("checked") );
-		//alert( changeName2 );
-		//alert( selNum );
+		var inputName = obj.name.replace("Ck","");
 		
-		var setValue = $('[name="'+changeName2+'"]').val();
-		//alert( setValue );
-		if ( $('[name="'+changeName+'"]').prop("checked") == true ) {
-			$("td[name="+changeName2+"text"+ selNum+ "]").append('<input type="text" name='+changeName + "i" + selNum + ' value="'+setValue+'" style="width=100%; text-align:right;" size="10">');
-		} else {
-			$( "input[name="+changeName + "i" + selNum + "]" ).remove();
+		if( $('[name="'+obj.name+'"]').prop("checked") == true ){
+			$('[name="'+inputName+'"]').css('visibility','visible');
+		}else{
+			$('[name="'+inputName+'"]').css('visibility','hidden');
 		}
+	}
+	
+	/// td 더블클릭시 체크 인풋 박스 추가삭제
+	function checkboxChange( obj ){
+		//alert( obj.id );
+		var inputName = obj.id.replace("text","i");
+		var iptNameLen = inputName.length;
+		var inputName1 = inputName.substring(0,iptNameLen-1);
+		var inputName2 = inputName.substring(iptNameLen-1,iptNameLen);
+		inputName3 = inputName1 + "Ck" + inputName2;
+		//alert( inputName );
 		
+		if( $('[name="'+inputName3+'"]').prop("checked") == true ){
+			$('[name="'+inputName+'"]').css('visibility','hidden');
+			$('[name="'+inputName3+'"]').prop("checked",false);
+		}else{
+			$('[name="'+inputName+'"]').css('visibility','visible');
+			$('[name="'+inputName3+'"]').prop("checked",true);
+		}
+	}
+	
+	// mouse over
+	function tdMouseOver( obj ){
+		var tdName = obj.id;
+		$('[name="'+tdName+'"]').mouseover( $('[name="'+tdName+'"]').css('background-color','yellow') );
+	}
+	//	mouse out
+	function tdMouseOut( obj ){
+		var tdName = obj.id;
+		$('[name="'+tdName+'"]').mouseout( $('[name="'+tdName+'"]').css('background-color','white') );
 	}
 	
 /* 	function insert_sal_emp(formId) {
@@ -166,9 +207,21 @@
 				return;
 			}
 			if(checklength-1==i) {
+			
+				$("input[type=checkbox]").prop("checked", true);
+
+				for (var i = 0; i < checklength; i++){
+					$("input[name=sbciCk"+ i + "]").remove();
+					$("input[name=snciCk"+ i + "]").remove();
+					$("input[name=tamiCk"+ i + "]").remove();
+					$("input[name=fdeiCk"+ i + "]").remove();
+					$("input[name=cmciCk"+ i + "]").remove();
+					$("input[name=slciCk"+ i + "]").remove();
+				}
+
 				frm.action ="/spring/insert_sal_empcode";
-				frm.submit(); 
-				
+				frm.submit();
+
 			}
 		}
 		
@@ -176,7 +229,9 @@
 			/* frm.action ="/spring/insert_sal_empcode.do";
 			frm.submit(); */ 
 		 
-	} 
+	}
+	
+	
  		
  
 	 
@@ -191,13 +246,13 @@
 		<div class="container-fluid">
 			<h3 class="page-title">직원급여정보</h3>
 
-			<div class="col-xs-10">
+			<div class="col-xs-12">
 				<div class="panel">
 					<div class="panel-heading">
 
-						<form id="frm" name="f1">
+						<form id="frm" name="f1" method="get">
 							<div class="panel-body">
-								<table class="table table-bordered">
+								<table class="table table-bordered" table-hover">
 									<thead>
 										<th class="text-center"><input type="checkbox" id="checkall" /></th>
 										<th>사번</th>
@@ -217,27 +272,30 @@
 											<td width="5" align="center"><input type="checkbox" id="chk${status.index}" onclick="check('${status.index}')"></td>
 											<td width="50" name="empcode${status.index}" id="${tb.EMP_EMNO}">${tb.EMP_EMNO}</td>
 											<td width="100" >${tb.EMP_NAME}</td>
-											<td width="100" name="saltext${status.index}" align="center"></td>
-											<td width="100" name="sbctext${status.index}" align="center"></td>
-											<td width="100" name="snctext${status.index}" align="center"></td>
-											<td width="100" name="tamtext${status.index}" align="center"></td>
-											<td width="100" name="fdetext${status.index}" align="center"></td>
-											<td width="100" name="cmctext${status.index}" align="center"></td>
-											<td width="100" name="slctext${status.index}" align="center"></td>
+											<td width="100" id="saltext${status.index}" name="saltext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+											<td width="100" id="sbctext${status.index}" name="sbctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+											<td width="100" id="snctext${status.index}" name="snctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+											<td width="100" id="tamtext${status.index}" name="tamtext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+											<td width="100" id="fdetext${status.index}" name="fdetext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+											<td width="100" id="cmctext${status.index}" name="cmctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+											<td width="100" id="slctext${status.index}" name="slctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
 										</tr>
 									</c:forEach>
-									<input type="hidden" name="sbc" value="${aList.get(0).scomHhCst }">
-									<input type="hidden" name="snc" value="${aList.get(0).scomNhCst }">
-									<input type="hidden" name="tam" value="교통비">
-									<input type="hidden" name="fde" value="${aList.get(0).scomElhCst }">
-									<input type="hidden" name="cmc" value="${aList.get(0).sempCmc }">
-									<input type="hidden" name="slc" value="${aList.get(0).scomLhCst }">
+									
 							
 							
 								</table>
 								<input type="button" class="btn btn-info" value="저장" onclick="insert_sal_emp();">
 							</div>
 						</form>
+						
+							<input type="hidden" name="sbc" value="${aList.get(0).scomHhCst }">
+							<input type="hidden" name="snc" value="${aList.get(0).scomNhCst }">
+							<input type="hidden" name="tam" value="교통비">
+							<input type="hidden" name="fde" value="${aList.get(0).scomElhCst }">
+							<input type="hidden" name="cmc" value="${aList.get(0).sempCmc }">
+							<input type="hidden" name="slc" value="${aList.get(0).scomLhCst }">
+									
 					</div>
 				</div>
 			</div>

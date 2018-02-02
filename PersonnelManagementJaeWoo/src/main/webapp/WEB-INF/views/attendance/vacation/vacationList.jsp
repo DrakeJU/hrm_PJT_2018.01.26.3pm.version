@@ -7,13 +7,74 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>휴가조회(사원)</title>
+<style>
+.table > tbody > tr > td { 
+	vertical-align: middle;
+}
+</style>
 <script>
 
-	//테이블 내용 가운데 정렬
-	$(document).ready(function() {
-	    $('.table tr').children().addClass('text-center');
+	$(function() {
+	  $("input[type=hidden][name=empEmno]").val("0905000211"); //사원번호 (강병욱으로 테스트중)
+		vacationListSelect(); //사원별 휴가 개수, 휴가신청내역 ajax
+		$('.table tr').children().addClass('text-center'); //테이블 내용 가운데 정렬
+		
 	});
+	
+	//테이블 정렬
+	function tablesorterFunc(){
+		$("#vacStatementTable").tablesorter();
+		$("#vacStatementTable").tablesorter({sortList: [[0,0], [1,0]]});
+	}
 
+	
+	//사원별 휴가 개수, 휴가신청내역 ajax
+	function vacationListSelect(){
+
+		paging.ajaxFormSubmit("vacationListSelect.ajax", "vacListFrm", function(rslt){
+			console.log("결과데이터:"+JSON.stringify(rslt));
+
+			$('#vacStatementTable').children('thead').css('width','calc(100% - 1.1em)'); //테이블 스크롤 css
+
+			if(rslt == null || rslt.success == "N"){
+				$('#vacStatementTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
+	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+	 			);
+			}else if(rslt.success == "Y"){
+	 			$.each(rslt.empRemindingVacList, function(k, v) {
+	 				$('#empEmno').text($("input[type=hidden][name=empEmno]").val());
+	 				$('#empName').text(v.empName);
+	 				$('#baseDate').text(v.baseDate);
+	 				$('#emreVacCnt').text(v.emreVacCnt);
+	 				$('#emrePvacUd').text(v.emrePvacUd);
+	 				$('#remndrDate').text(v.remndrDate);
+	 			});
+	 			
+	 			var i = 1;
+	 			$.each(rslt.vacationProgressList, function(k, v) {
+					$('#vacStatementTbody').append(
+	 					"<tr style='display:table;width:100%;table-layout:fixed;'>"+
+		 					"<td>"+ i +"</td>"+ //번호
+		 					"<td>"+ v.vastCrtDate +"</td>"+ //신청일
+		 					"<td>"+ v.vastType +"</td>"+ //휴가항목
+		 					"<td>"+ v.vastStartDate +"</td>"+ //시작일
+		 					"<td>"+ v.vastEndDate +"</td>"+ //종료일
+		 					"<td>"+ v.vastVacUd +"</td>"+ //일수
+		 					"<td>"+ v.vastProgressSituation +"</td>"+ //결재상황
+		 					"<td>"+ v.vastCont +"</td>"+ //휴가사유
+						"</tr>"
+					);
+					i++; //번호 1 증가
+					if(v.vastProgressSituation == "승인대기"){ //승인대기면 색상 변경
+						$("#vacStatementTbody tr:last").attr("bgcolor","#f0ad4e");
+					}
+	 			});
+			}
+			$('.table tr').children().addClass('text-center'); //테이블 내용 가운데 정렬
+			tablesorterFunc();
+		});
+	}
+	
 	
 /* 	
 	//테이블 마우스오버시 (행을 지날 때), 색 바뀜
@@ -37,22 +98,25 @@
 			<h3 class="page-title">휴가조회(사원)</h3>
 				<div class="panel">
 					<div class="panel-body">
+						<form id="vacListFrm">
+							<input type="hidden" name="empEmno">
+						</form>
 						<table class="table table-bordered">	
 							<tr>
 								<th>사원번호</th>
-								<td>seongsil</td>
+								<td id="empEmno"></td>
 								<th>성명</th>
-								<td>유성실</td>
+								<td id="empName"></td>
 								<th>연차기간</th>
-								<td>2018.01.01 ~ 2018.12.31</td>
+								<td id="baseDate"></td> <!-- YYYY.MM.DD ~ YYYY.MM.DD -->
 							</tr>
 							<tr>
 								<th>전체일수</th>
-								<td>15</td>
+								<td id="emreVacCnt"></td>
 								<th>사용일수</th>
-								<td>6</td>
+								<td id="emrePvacUd"></td>
 								<th>잔여일수</th>
-								<td>9</td>
+								<td id="remndrDate"></td>
 							</tr>
 						</table>
 					</div>
@@ -66,8 +130,8 @@
 					<div class="panel-body">
 						<!-- list table 영역 -->
 						<div class="list_wrapper">
-							<table class="table table-bordered" id="vacList">
-								<thead>
+							<table class="table tablesorter" id="vacStatementTable">
+								<thead style="display:table;width:100%;table-layout:fixed;">
 									<tr>
 										<th>번호</th>
 										<th>신청일</th>
@@ -79,37 +143,17 @@
 										<th>휴가사유</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td>1</td>
-										<td>2018.01.01</td>
-										<td>연차</td>
-										<td>2018.01.02</td>
-										<td>2018.01.02</td>
-										<td>1</td>
-										<td>승인완료</td>
-										<td>쉬고싶어요</td>
-									</tr>
-									<tr>
-										<td>2</td>
-										<td>2018.01.08</td>
-										<td>경조사휴가</td>
-										<td>2018.01.08</td>
-										<td>2018.01.10</td>
-										<td>3</td>
-										<td>승인완료</td>
-										<td>조부모상</td>
-									</tr>
-									<tr bgcolor="#f0ad4e">
-										<td>3</td>
-										<td>2018.01.15</td>
-										<td>휴가</td>
-										<td>2018.01.18</td>
-										<td>2018.01.19</td>
-										<td>2</td>
-										<td>승인대기</td>
-										<td>개인사유</td>
-									</tr>
+								<tbody id="vacStatementTbody" style="display:block;height:350px;overflow:auto;">
+<!-- 									<tr bgcolor="#f0ad4e"> -->
+<!-- 										<td>3</td> -->
+<!-- 										<td>2018.01.15</td> -->
+<!-- 										<td>휴가</td> -->
+<!-- 										<td>2018.01.18</td> -->
+<!-- 										<td>2018.01.19</td> -->
+<!-- 										<td>2</td> -->
+<!-- 										<td>승인대기</td> -->
+<!-- 										<td>개인사유</td> -->
+<!-- 									</tr> -->
 								</tbody>
 							</table>
 						</div>
@@ -117,8 +161,8 @@
 						    
 						<!-- 버튼영역 -->
 						<div class="text-center"> <!-- 필수 -->
-							<button type="button" class="btn btn-info">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<button type="button" class="btn btn-danger">엑셀다운</button>
+							<button type="button" class="btn btn-primary">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-primary">엑셀다운</button>
 						</div>
 						<!-- END 버튼영역 -->
 								

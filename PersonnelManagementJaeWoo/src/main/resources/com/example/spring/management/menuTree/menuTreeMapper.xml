@@ -35,21 +35,19 @@
 	
 	<select id="menuDetail" parameterType="int" resultType="HashMap">
 		SELECT
-			MN_NO mnNo, /*메뉴코드*/
-			MN_NAME mnName, /*메뉴이름*/
-			MN_IDX mnIdx, /*메뉴순번*/
-			MN_URL mnUrl, /*메뉴url*/
-			MN_PRNT_NO mnPrntNo, /*상위메뉴코드*/
-			(SELECT 
-				MN_NAME mnPrntName
-			FROM MENU  
-			WHERE MN_NO = (SELECT MN_PRNT_NO FROM MENU WHERE MN_NO=#{mnNo})) mnPrntName,
-			MN_USE_YN mnUseYn, /*메뉴사용여부*/
-			MN_CRT mnCrt, /*메뉴생성날짜*/
-			MN_UPDT mnUpdt, /*메뉴업데이트날짜*/
-			MN_ATTR mnAttr /*메뉴속성*/
-		FROM MENU
-		WHERE MN_NO=#{mnNo}; 
+			x.MN_NO mnNo, /*메뉴코드*/
+			x.MN_NAME mnName, /*메뉴이름*/
+			x.MN_IDX mnIdx, /*메뉴순번*/
+			x.MN_URL mnUrl, /*메뉴url*/
+			x.MN_PRNT_NO mnPrntNo, /*상위메뉴코드*/
+			ifnull('',xx.MN_NAME) mnPrntName,
+			x.MN_USE_YN mnUseYn, /*메뉴사용여부*/
+			x.MN_CRT mnCrt, /*메뉴생성날짜*/
+			x.MN_UPDT mnUpdt, /*메뉴업데이트날짜*/
+			x.MN_ATTR mnAttr /*메뉴속성*/
+		FROM MENU x LEFT JOIN MENU xx
+		on x.MN_PRNT_NO = xx.MN_NO
+		WHERE x.MN_NO=#{mnNo} 
 	</select>
 	
 	<update id="menuIndexUpdate" parameterType="HashMap">

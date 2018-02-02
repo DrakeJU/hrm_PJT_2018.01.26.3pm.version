@@ -51,7 +51,7 @@
 								<div class="panel-heading"></div>
 								<div class="row">
 									<div class="col-md-12 text-right" style="padding-right:60px">
-										<button type="button" class="btn btn-default" data-toggle="modal" data-target="#insertModal">등록</button>
+										<button type="button" class="btn btn-default" data-toggle="modal" data-backdrop="static" data-target="#insertModal">등록</button>
 										<button type="button" class="btn btn-default" onclick="location.href='/spring/commonList.do'">목록</button>
 									</div>
 								</div>
@@ -80,7 +80,7 @@
 															<td name="commRegMn">${l.commRegMn}</td>
 															<td name="commCodeCrt">${l.commCodeCrt}</td>
 															<td name="commCodeUpdt">${l.commCodeUpdt}</td>
-															<td name="commDelYn">${l.commDelYn}</td>
+															<td name="commDelYn">Y</td>
 															<td name="commUpdt" onClick="event.cancelBubble = true">
 																<button type="button" class="btn btn-default" name="updateBtn">수정</button>
 																<button type="button" class="btn btn-default" name="deleteBtn">삭제</button>
@@ -117,13 +117,6 @@
 							<div class="col-md-11" style="padding-top:20px;">
 								<form action="/spring/commonInsert.do" id="insertForm">
 									<table class="table table-hover" align="center">
-										<tr>
-											<td> &nbsp;그룹코드</td>
-											<td><input type="text" name="commCode">
-												<span>&nbsp;&nbsp;<input type="button" name="commCodeCheck" value="check"></span>
-												<span name="checkValue"></span>
-											</td>
-										</tr>
 										<tr>
 											<td> &nbsp;그룹코드명</td>
 											<td><input type="text" name="commName"></td>
@@ -206,6 +199,7 @@
 								<table class="table table-hover" style="padding-left:30px;">
 									<thead>
 										<tr>
+											<th>그룹코드</th>
 											<th>코드</th>
 											<th>코드명</th>
 											<th>코드정보</th>
@@ -216,12 +210,11 @@
 										</tr>
 									</thead>
 									<tbody>
-										<!-- <form id="commonInfoForm">
-										</form> -->
+									<!-- <form id="commonInfoForm"></form> -->
 									</tbody>
 								</table>
 								<div class="modal-footer">
-									<button type="button" class="btn btn-default" data-target="#infoInsertModal" data-toggle="modal">등록</button>
+									<button type="button" class="btn btn-default" data-target="#infoInsertModal" data-backdrop="static" data-toggle="modal">등록</button>
 									<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 								</div>
 							</div>
@@ -236,20 +229,13 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">공통코드 등록</h4>
+						<h4 class="modal-title">하위 공통코드 등록</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-11" style="padding-top:20px">
 								<form action="/spring/commonInfoInsert.do" id="infoInsertForm">
 									<table class="table table-hover" align="center">
-										<tr>
-											<td> &nbsp;코드</td>
-											<td><input type="text" name="commCode">
-											<span>&nbsp;&nbsp;<input type="button" name="commCodeCheck" value="check"></span>
-											<span name="checkValue"></span>
-											</td>
-										</tr>
 										<tr>
 											<td> &nbsp;코드명</td>
 											<td><input type="text" name="commName"></td>
@@ -280,7 +266,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">공통코드 수정</h4>
+						<h4 class="modal-title">하위 공통코드 수정</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">

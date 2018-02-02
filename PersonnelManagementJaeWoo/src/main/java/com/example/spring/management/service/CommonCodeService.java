@@ -27,11 +27,12 @@ public class CommonCodeService {
 	int pageNum;
 	
 	public CommonCodeService() {
-		this.postNum = 5;
-		this.pageNum = 5;
+		this.postNum = 10;
+		this.pageNum = 10;
 	}
 
 	
+	//공통코드 등록
 	public int commonInsert(HashMap<String,Object> paramMap) {
 		
 		Calendar calendar = Calendar.getInstance();
@@ -45,33 +46,15 @@ public class CommonCodeService {
 		
 		int result = commonCodeDao.commonInsert(paramMap);
 		
-		
 		return result;
 		
 	}//commonInsert
 	
 	
-	public String commCodeCheck(String commCode) {
-
-		List<String> list = commonCodeDao.commCodeCheck(commCode);
-		
-		String checkValue = "";
-		
-		if(list.size() > 0) {
-			checkValue = "이미 사용 중인 코드입니다.";
-		}else {
-			checkValue = "사용 가능한 코드입니다.";
-		}//if
-		
-		
-		return checkValue;
-		
-	}//getDeptName
-	
-	
+	//공통코드 목록
 	public List<HashMap<String,Object>> commonList(HashMap<String,Object> paramMap){
 		
-		int allPostNum = commonCodeDao.commAllPostNum();
+		int allPostNum = commonCodeDao.commAllPostNum(paramMap);
 		int postNum = this.postNum;
 		int pageNum = this.pageNum;
 		int selectPageNum = Integer.parseInt((String)paramMap.get("selectPageNum"));
@@ -80,24 +63,21 @@ public class CommonCodeService {
 			
 		if(endPost<1) {
 			endPost = 1;
-		}
+		}//if
 		
 		int startPost = (endPost-(postNum-1))-1;
-		
 		
 		paramMap.put("startPost", startPost);
 		paramMap.put("postNum", postNum);
 		
-		
 		List<HashMap<String,Object>> list = commonCodeDao.commonList(paramMap);
-		
 		
 		return list;
 		
 	}//commonList
 	
 	
-	
+	//공통코드,하위 공통코드 수정
 	public int commonUpdate(HashMap<String,Object> paramMap) {
 		
 		Calendar calendar = Calendar.getInstance();
@@ -117,7 +97,7 @@ public class CommonCodeService {
 	}//commonUpdate
 	
 	
-	
+	//공통코드 삭제여부 확인
 	public int commonDeleteCheck(String param) {
 		
 		int commCode = Integer.parseInt(param);
@@ -131,7 +111,7 @@ public class CommonCodeService {
 	}//commonDeleteCheck
 	
 	
-	
+	//공통코드,하위 공통코드 삭제여부
 	public int commonDelete(String param) {
 		
 		int commCode = Integer.parseInt(param);
@@ -143,6 +123,7 @@ public class CommonCodeService {
 	}//commonDelete
 	
 	
+	//하위 공통코드 등록
 	public int commonInfoInsert(HashMap<String,Object> paramMap) {
 		
 		Calendar calendar = Calendar.getInstance();
@@ -157,9 +138,10 @@ public class CommonCodeService {
 		
 		return result;
 		
-	}
+	}//commonInfoInsert
 	
 	
+	//하위 공통코드 목록
 	public List<HashMap<String,Object>> commonInfoList(String param){
 		
 		int commPrntCode = Integer.parseInt(param);
@@ -171,79 +153,32 @@ public class CommonCodeService {
 	}//commonInfoList
 	
 	
-	
-	public int commAllPostNum() {
+	//전체 게시물 개수, 검색했을 때의 게시물 개수
+	public int commAllPostNum(HashMap<String,Object> paramMap) {
 		
-		int allPostNum = commonCodeDao.commAllPostNum();
+		int allPostNum = commonCodeDao.commAllPostNum(paramMap);
 		
 		return allPostNum;
 		
 	}//commAllPostNum
 	
 	
-	/*
-	public List<HashMap<String,Integer>> paging(HashMap<String,Object> paramMap){
+	//페이징
+	public HashMap<String,Integer> paging(HashMap<String,Object> paramMap){
 		
 		HashMap<String,Integer> map = new HashMap<String,Integer>();
-		List<HashMap<String,Integer>> list = new ArrayList<HashMap<String,Integer>>(); 
-		
 		
 		int allPostNum = commonCodeDao.commAllPostNum(paramMap);
 		int postNum = this.postNum;
 		int pageNum = this.pageNum;
-		int selectPageNum = Integer.parseInt((String)paramMap.get("selectPageNum"));
 		
-		int allPageNum = 0;
+		map.put("allPostNum",allPostNum);
+		map.put("postNum",postNum);
+		map.put("pageNum",pageNum);
 		
-		if(allPostNum%postNum == 0) {
-			allPageNum = allPostNum/postNum;
-		}else {
-			allPageNum = (allPostNum/postNum)+1;
-		}//if
-		
-		
-		int startPage = ((selectPageNum/pageNum)*pageNum)+1;
-		
-		if(selectPageNum%pageNum == 0) {
-			startPage = (((selectPageNum/pageNum)-1)*pageNum)+1;
-		}//if
-		
-		
-		int endPage = (startPage+pageNum)-1;
-		
-		if(endPage > allPageNum) {
-			endPage = allPageNum;
-		}//if
-		
-		
-		int prevPage = startPage-1;
-		
-		if(startPage == 1) {
-			prevPage = 1;
-		}//if
-		
-		
-		int nextPage = startPage+pageNum;
-		
-		if(nextPage > allPageNum) {
-			nextPage = allPageNum;
-		}//if
-		
-		map.put("allPageNum", allPageNum);
-		map.put("startPage", startPage);
-		map.put("endPage", endPage);
-		map.put("prevPage", prevPage);
-		map.put("nextPage", nextPage);
-		
-		list.add(map);
-		
-		return list;
+		return map;
 		
 	}//paging
-	*/
-	
-	
-	
 	
 	
 }//class

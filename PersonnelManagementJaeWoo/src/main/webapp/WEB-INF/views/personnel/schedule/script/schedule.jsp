@@ -48,7 +48,7 @@
 		        	return false;
 		        }//구글에서 가져온 공휴일 이벤트 막기
 		        
-		        if(calEvent.id == null){ //개인일정
+		        if(calEvent.id == 10){ //개인일정
 		        	url = "individuaDetail.do";
 		        	$("#viewModal").find("form[id='viewForm']").find("input[name='departmentCheck']").prop("checked",false);
 		        }else{					 //회사일정
@@ -58,7 +58,7 @@
 		        
 		       	paging.ajaxSubmit(url,{"emno":emno,"start":start,"end":end},function(rslt){
 		        	console.log("결과데이터 : " + JSON.stringify(rslt));
-					
+		        	
 		        	var seq = 0; 				//일련번호
 	        		var emno = "";				//사원번호
 	        		var title = "";				//제목
@@ -69,10 +69,10 @@
 	        		var startTime = "";			//시작시간
 	        		var endDate = "";			//종료날짜
 	        		var endTime = "";			//종료시간
+		        	var deptCode = "";			//부서코드
 		        	
 		        	$.each(rslt,function(index){
-		        		 
-		        		if(url == "individuaDetail.ajax"){ //개인일정일시
+		        		if(url == "individuaDetail.do"){ //개인일정일시
 		        			seq = rslt[index].inpnSeq;
 		        			emno = rslt[index].empEmno;
 		        			title = rslt[index].inpnTit;
@@ -108,11 +108,17 @@
 		        		$("#viewModal").find("form[id='viewForm']").find("input[name='endDate']").val(endDate);
 		        		$("#viewModal").find("form[id='viewForm']").find("input[name='endTime']").val(endTime);
 		        	});
-		        		
+		        	
+		        	//종료날짜
+		        	$("[name='endDate']").datetimepicker({ 
+		        		viewMode : 'days',
+		        		format : 'YYYY-MM-DD'
+		        	});
 		        }); 	
 		        
 		        $(this).attr("data-toggle","modal");
 		        $(this).attr("data-target","#viewModal");
+		        
 			},//일정상세보기
 			/*eventMouseover : function(event, jsEvent, view){
 				alert();
@@ -124,6 +130,9 @@
 				
 		        $("table tr td.fc-day,table tr td.fc-day-top").attr("data-toggle","modal");
 				$("table tr td.fc-day,table tr td.fc-day-top").attr("data-target","#insertModal"); //등록모달창띄우기
+				
+				//insert 달력
+				$("[name='startDate']").val(date.format()); //시작날짜
 		    }//일정등록
 		});
 		
@@ -162,18 +171,11 @@
 		});//마우스 이벤트
 	}
 	
-	//insert 달력
-	$(function() {
-		$("[name='startDate']").datetimepicker({ //시작날짜 달력
-			viewMode : 'days',
-			format : 'YYYY-MM-DD'
-		});
-		$("[name='endDate']").datetimepicker({ //종료날짜 달력
-			viewMode : 'days',
-			format : 'YYYY-MM-DD'
-		});
-	});//달력
-	
+	//종료날짜
+	$("[name='endDate']").datetimepicker({ 
+		viewMode : 'days',
+		format : 'YYYY-MM-DD'
+	});
 	//insert 시간선택
 	$("[name='startTime']").timepicker({
 		step: 30,            //시간간격 : 30분
@@ -188,12 +190,6 @@
 	$("#insertBtn").click(function(){
 		var url = "/spring/scheduleInsert.do";
 		//var frim = $("#insertForm").attr("id");
-		
-		if($("input[name='departmentCheck']").prop( "checked" ) == true){
-        	$("input[name='id']").val(2);
-        }else{
-        	$("input[name='id']").val(1);
-        }
 		
 		if(confirm("저장하시겠습니까?") == true){
 			paging.ajaxFormSubmit(url,"insertForm", function(result){
@@ -265,7 +261,7 @@
 				$("#calendar").fullCalendar("addEventSource",rslt);
 			});//회사일정db 가져온다
 		}else{ //회사일정 체크아닐시
-			location.href="/spring/scheduleView.do";
+			$("#calendar").fullCalendar("removeEvents",20);
 		}
 	});
 	

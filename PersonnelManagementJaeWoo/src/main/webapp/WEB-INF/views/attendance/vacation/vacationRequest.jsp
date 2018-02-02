@@ -10,6 +10,10 @@
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/vacation.css" />
 <script>
 
+	$(function(){
+		calender(); //달력
+	});
+
 	/* ajax-INSERT */
 	function check_onclick(url, formId){
 		paging.ajaxFormSubmit(url, formId, function(rslt){
@@ -28,7 +32,7 @@
 
 	
 	/* 달력  */
-	$(function() {
+	function calender() {
 		
 		//오늘 날짜로 보여주기
 		$('#vastCrtDate').val(moment().format('YYYY-MM-DD'));	//휴가 신청일
@@ -75,8 +79,7 @@
 			$('#vastVacUd').val(endDate.diff(startDate, "days")+1 //endDate-startDate를 일수로 출력
 			);
 		});
-		
-	});//달력
+	};//달력
 
 
 	/* 휴가 중 반차 선택시 일수가 0.5로 변경 */
@@ -91,32 +94,94 @@
 	}//halfSelect
 	
 	
- 	/* 사원 선택 모달창 */
-	// 체크박스 선택 1개로 제한(라디오버튼처럼)
-	$(function(){
-		$("input[type='checkbox'][name=emnoChk]").click(function(){
-			if($(this).prop('checked')){ //check 이벤트가 발생했는지
-				//체크박스 전체를 checked 해제후 click한 요소만 true로 지정
-				$("input[type='checkbox'][name=emnoChk]").prop("checked", false);
-				$(this).prop('checked',true);
-			}
-		});
-	});
 	
-	//선택한 사원정보를 출장신청 폼에 자동 입력하기
- 	function emnoClick(){
- 		var chkTr = $('input[name=emnoChk]:checked').closest('tr'); //체크된 체크박스와 가장 가까운 tr
- 		var empEmnoVal = chkTr.children().eq(1).text(); //tr 하부 2번째 td의 텍스트(사번)
- 		var empNameVal = chkTr.children().eq(2).text(); //tr 하부 3번째 td의 텍스트(이름)
- 		var deptNameVal = chkTr.children().eq(3).text(); //tr 하부 4번째 td의 텍스트(부서)
- 		var rankNameVal = chkTr.children().eq(4).text(); //tr 하부 5번째 td의 텍스트(직급)
- 		
-//  		console.log(emnoVal, nameVal, departmentVal, positionVal);
+/* ****************************사원 선택 모달창************************** */
+ 	
+
+
+	
+	
+	//퇴직자 포함 체크 여부
+	function retrCheck(){
+		if(($('#retrChk').prop('checked')) == true){
+			$('#retrDelYn').val('on');
+		} else{
+			$('#retrDelYn').val('off');
+		}
+	}
+		
+	//모달창 : 사원 리스트 ajax(사원 휴가일수 리스트 참조)
+	
+
+	function vacationReqEmpList(){
+		retrCheck();	//퇴직자 포함 체크 여부
+		$("input[type=hidden][name=baseYear]").val(moment().format('YYYY'));	//휴가개수 설정년도
+		$('#vacCntEmpListTbody').empty();	//이전 리스트 삭제
+		
+		paging.ajaxFormSubmit("vacationReqEmpList.ajax","vacEmpListModal", function(rslt){
+			console.log("결과데이터: "+ JSON.stringify(rslt));
+			
+			$('#vacCntEmpListTable').children('thead').css('width','calc(100% - 1.1em)');	//테이블 스크롤 CSS
+			
+			if(rslt.vacationReqEmpList == null || rslt.success == "N"){
+				$('#vacCntEmpListTbody').append(	//리스트가 없을 경우
+					"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"	
+				);
+			} else if(rslt.success == "Y"){
+				$.each(rslt.vacationReqEmpList, function(k, v){
+					$('#vacCntEmpListTbody').append(
+							"<tr style='display:table;width:100%;table-layout:fixed;'>" +
+								"<td>"+
+									"<label class='fancy-checkbox-inline'>" +
+										"<input type='checkbox' name='empEmnoChk'>" +
+										"<span></span>" +
+									"</label>" +
+								"</td>" +
+								"<td>" +v.retrDelYn+"</td>"+	//퇴직자 구분
+								"<td>" +v.empEmno+"</td>"+	//사원번호
+								"<td>" +v.empName+"</td>"+	//사원이름
+								"<td>" +v.deptName+"</td>"+	//부서명
+								"<td>" +v.rankName+"</td>"+	//직급명
+							"</tr>"									
+					);//Tbody
+				}); //each.list
+				
+				$("input[type='checkbox'][name=empEmnoChk]").click(function(){	// 체크박스 선택 1개로 제한(라디오버튼처럼)
+					if($(this).prop('checked')){ //check 이벤트가 발생했는지
+						//체크박스 전체를 checked 해제후 click한 요소만 true로 지정
+						$("input[type='checkbox'][name=empEmnoChk]").prop("checked", false);
+						$(this).prop('checked',true);
+					}
+				});
+				
+				//테이블 내용 가운데 정렬
+				$('#vacCntEmpListTable tr').children().addClass('text-center');
+				
+				$(function(){ //테이블 정렬
+					$("#vacCntEmpListTable").tablesorter();
+				});
+				$(function(){
+					$("#vacCntEmpListTable").tablesorter({sortList: [[0,0], [1,0]]});
+				});
+				
+			}// else if
+		});//paging.ajax
+	}//vacEmpList
+	
+	//선택한 사원정보를 휴가신청 폼에 자동 입력하기
+ 	function empEmnoClick(){
+ 		var chkTr = $('input[name=empEmnoChk]:checked').closest('tr'); //체크된 체크박스와 가장 가까운 tr
+ 		var empEmnoVal = chkTr.children().eq(2).text(); //tr 하부 2번째 td의 텍스트(사번)
+ 		var empNameVal = chkTr.children().eq(3).text(); //tr 하부 3번째 td의 텍스트(이름)
+ 		var deptNameVal = chkTr.children().eq(4).text(); //tr 하부 4번째 td의 텍스트(부서)
+ 		var rankNameVal = chkTr.children().eq(5).text(); //tr 하부 5번째 td의 텍스트(직급)
+//  		console.log(empEmnoVal, nameVal, departmentVal, positionVal);	
  		
  		$('#empEmno').val(empEmnoVal);
  		$('#empName').val(empNameVal);
  		$('#deptName').val(deptNameVal);
  		$('#rankName').val(rankNameVal);
+ 		$(".modal-body input[name=keyword]").val(""); //키워드 내용 지우기
  	}
 	/* 사원선택 모달 END */
  	
@@ -136,7 +201,7 @@
 							
 							<table class="table table-bordered">
 								<tr>
-									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>휴가신청일</td>
+									<td>휴가신청일</td>
 									<td>
 										<!-- 사원 권한: 오늘 날짜 고정 -->
 <!-- 									  <input type="text" class="form-control" name="vastCrtDate" id="tDate" readonly> -->
@@ -150,16 +215,16 @@
 									  </div>
 
 									</td>
-									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>휴가구분</td>
+									<td>휴가구분</td>
 									<td>
 										<select name="vastC" class="form-control" name="vastC" id="vastC" value="vastC" onchange="halfSelect(this.vacReqFrm)">
 											<option value="yearlyVac" selected="selected">선택</option>			
-											<option id="V1" name="vastC" value="V1">연차</option>										
-											<option id="V2" name="vastC" value="V2">반차</option>
-											<option id="V3" name="vastC" value="V3">생리휴가</option>
-											<option id="V4" name="vastC" value="V4">경조휴가</option>
-											<option id="V5" name="vastC" value="V5">출산휴가</option>
-											<option id="V6" name="vastC" value="V6">병가</option>
+											<option id="V1" value="V1">연차</option>										
+											<option id="V2" value="V2">반차</option>
+											<option id="V3" value="V3">생리휴가</option>
+											<option id="V4" value="V4">경조휴가</option>
+											<option id="V5" value="V5">출산휴가</option>
+											<option id="V6" value="V6">병가</option>
 <!-- 											<option value="rewardVac">포상휴가</option> -->
 										</select>
 									</td>
@@ -183,8 +248,8 @@
 									<td colspan="5">
 										<div class="input-group">	
 											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번">
-											<span class="input-group-addon">
-												<span class="glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#emnoModal"></span> <!-- 검색 아이콘 -->
+											<span class="input-group-addon" data-toggle="modal" data-target="#empEmnoModal" style="cursor:pointer" onclick="vacationReqEmpList()">
+												<span class="glyphicon glyphicon-search" aria-hidden="true"></span> <!-- 검색 아이콘 -->
 											</span>
 										</div>
 											<input type="text" class="form-control" id="empName" placeholder="이름">
@@ -195,7 +260,7 @@
 								
 								
 								<tr>
-									<td><i class="fa fa-asterisk-red" aria-hidden="true" ></i>휴가기간</td>
+									<td>휴가기간</td>
 									<td colspan="5">
 										<!-- 달력 start-->
 										<div class="input-group date" id="startDate">
@@ -234,85 +299,73 @@
 					</div>
 				</div>
 				
-				<!-- 사원번호 Modal -->
-				<div id="emnoModal" class="modal fade" role="dialog">
+				<!--*********** 사원번호 Modal***************** -->
+				<div id="empEmnoModal" class="modal fade" role="dialog">
 				  <div class="modal-dialog">
-				  
-				  <!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<p class="modal-title">사번 정보 조회</p>
-						</div>
-						<div class="modal-body">
-							<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
-								<form class="form-inline">
-									검색어&nbsp;<input type="text" class="form-control">&nbsp;&nbsp;&nbsp;
-									<label class="fancy-checkbox-inline">
-										<input type="checkbox" name="">
-										<span>퇴직자 포함</span>
-									</label>
-									<input type="button" class="btn btn-primary" style="float:right;" name="search" onclick="emnoSearch()" value="검색">
-								</form>
+					  
+					  
+					  <!-- Modal content-->
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<p class="modal-title">사번 정보 조회</p>
 							</div>
-				
-							<div class="list_wrap">
-								<table class="table tablesorter table-bordered">
-									<tbody>
-										<thead>
-											<tr>
-												<th></th>
-												<th>사원번호</th>
-												<th>성명</th>
-												<th>부서</th>
-												<th>직급</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>
-													<label class="fancy-checkbox-inline">
-														<input type="checkbox" name="emnoChk">
-														<span></span>
-													</label>
-												</td>
-												<td>0905000211</td>
-												<td>강병욱</td>
-												<td>개발팀</td>
-												<td>사원</td>
-											</tr>
-											<tr>
-												<td>
-													<label class="fancy-checkbox-inline">
-														<input type="checkbox" name="emnoChk">
-														<span></span>
-													</label>
-												</td>
-												<td>2345</td>
-												<td>유성실</td>
-												<td>개발팀</td>
-												<td>사원</td>
-											</tr>
-											<tr>
-												<td>
-													<label class="fancy-checkbox-inline">
-														<input type="checkbox" name="emnoChk">
-														<span></span>
-													</label>
-												</td>
-												<td>17895</td>
-												<td>유성실</td>
-												<td>개발팀</td>
-												<td>사원</td>
-											</tr>
-										</tbody>
-									</table>
+							<div class="modal-body"><!-- 검색부분 -->
+								<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
+									<form class="form-inline" id="vacEmpListModal">
+										검색어
+										<select name="seacrchOption" class="form-control">
+											<option value="empEmno">사번</option>
+											<option value="empName">성명</option>
+											<option value="deptName">부서</option>
+										</select>
+										<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
+										<label class="fancy-checkbox-inline">
+											<input type="checkbox" id="retrChk">
+											<span>퇴직자 포함</span>
+										</label>
+										<input type="hidden" name="retrDelYn" id="retrDelYn">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="hidden" name="baseYear">
+										<input type="button" class="btn btn-primary" style="float:right;" id="searchBtn" onclick="vacationReqEmpList()" value="검색">
+									</form>
 								</div>
+					
+								<div class="list_wrap">
+									<table class="table tablesorter" id="vacCntEmpListTable">
+											<thead style="display:table;width:100%;table-layout:fixed;">
+												<tr>
+													<th class="sorter-false"></th>
+													<th>구분</th>
+													<th>사원번호</th>
+													<th>성명</th>
+													<th>부서</th>
+													<th>직급</th>
+												</tr>
+											</thead>
+											<tbody id="vacCntEmpListTbody" style="display:block;height:200px;overflow:auto;">
+												<!-- 
+												<tr>
+													<td>
+														<label class="fancy-checkbox-inline">
+															<input type="checkbox" name="empEmnoChk">
+															<span></span>
+														</label>
+													</td>
+													<td>0905000211</td>
+													<td>강병욱</td>
+													<td>개발팀</td>
+													<td>사원</td>
+												</tr>
+												 -->
+											</tbody>
+										</table><!-- vacEmpList END -->
+								</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="empEmnoClick()">선택</button>
 							</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="emnoClick()">선택</button>
+							</div>
 						</div>
-					</div>
+
 				</div>
 			</div>
 			<!-- END MODAL -->

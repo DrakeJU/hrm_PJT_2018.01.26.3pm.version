@@ -27,21 +27,23 @@
 			<label for="mnUse" class="col-sm-2 col-form-label">공개여부</label>
 			<div class="col-sm-10" id="mnUse">
 				<input class="form-check-input" type="radio" name="mnUseYn" id="mnUseY" value="Y" <c:out value="${map.mnUseYn eq 'Y' ? 'checked' : ''}"/>>
-				<label class="form-check-label" for="mnUseY">공개</label>
+				<label class="form-check-label" for="mnUseY">메인</label>
 				<input class="form-check-input" type="radio" name="mnUseYn" id="mnUseN" value="N"<c:out value="${map.mnUseYn eq 'N' ? 'checked' : ''}"/>>
-				<label class="form-check-label" for="mnUseN">비공개</label>
+				<label class="form-check-label" for="mnUseN">서브</label>
 			</div>
 		</div>
 		<div class="form-group row">
 			<label class="col-sm-2 col-form-label" for="mnAttr">메뉴속성</label>
 			<div class="col-sm-10" id="mnAttr">
-				<input type="checkbox" class="form-check-input" id="attrInsert" name="mnAttr" value="insert" <c:if test="${fn:indexOf(map.mnAttr, 'insert') != -1}">checked="checked"</c:if>>
+				<input type="radio" class="form-check-input" id="attrAll" name="mnAttr" value="all">
+				<label class="form-check-label" for="attrAll">전체</label>
+				<input type="radio" class="form-check-input" id="attrInsert" name="mnAttr" value="insert" <c:if test="${fn:indexOf(map.mnAttr, 'insert') != -1}">checked="checked"</c:if>>
 				<label class="form-check-label" for="attrInsert">등록</label>
-				<input type="checkbox" class="form-check-input" id="attrUpdate" name="mnAttr" value="update" <c:if test="${fn:indexOf(map.mnAttr, 'update') != -1}">checked="checked"</c:if>>
+				<input type="radio" class="form-check-input" id="attrUpdate" name="mnAttr" value="update" <c:if test="${fn:indexOf(map.mnAttr, 'update') != -1}">checked="checked"</c:if>>
 				<label class="form-check-label" for="attrUpdate">수정</label>
-				<input type="checkbox" class="form-check-input" id="attrDelete" name="mnAttr" value="delete" <c:if test="${fn:indexOf(map.mnAttr, 'delete') != -1}">checked="checked"</c:if>>
+				<input type="radio" class="form-check-input" id="attrDelete" name="mnAttr" value="delete" <c:if test="${fn:indexOf(map.mnAttr, 'delete') != -1}">checked="checked"</c:if>>
 				<label class="form-check-label" for="attrDelete">삭제</label>
-				<input type="checkbox" class="form-check-input" id="attrView" name="mnAttr" value="view" <c:if test="${fn:indexOf(map.mnAttr, 'view') != -1}">checked="checked"</c:if>>
+				<input type="radio" class="form-check-input" id="attrView" name="mnAttr" value="view" <c:if test="${fn:indexOf(map.mnAttr, 'view') != -1}">checked="checked"</c:if>>
 				<label class="form-check-label" for="attrView">조회</label>
 			</div>
 		</div>	

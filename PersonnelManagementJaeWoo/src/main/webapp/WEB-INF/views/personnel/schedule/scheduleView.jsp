@@ -67,9 +67,9 @@
 								<input type="checkbox" name="departmentCheck">회사일정
 								<p>제목<p><input type="text" name="title">
 								<p>내용<p><textarea rows="7" cols="70" name="content" style="resize:none"></textarea>
-								<p>날짜<p><input type="text" size=8 id="startDate" name="startDate">
+								<p>날짜<p><input type="text" size=8 id="startDate" name="startDate" value="">
 										<input type="text" name="startTime" value="" placeholder="시간선택" id="startTime" size="5">
-										~<input type="text" size=8 id="endDate" name="endDate">
+										~<input type="text" size=8 id="endDate" name="endDate" placeholder="날짜선택">
 										<input type="text" name="endTime" value="" placeholder="시간선택" id="endTime" size="5">
 							</form>
 							<div class="modal-footer">

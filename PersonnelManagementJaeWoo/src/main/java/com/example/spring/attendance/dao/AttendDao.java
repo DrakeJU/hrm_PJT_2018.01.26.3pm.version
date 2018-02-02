@@ -23,12 +23,10 @@ public class AttendDao {
 	 * 메뉴명 : [출결관리] - [일일근태등록]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.01.26
 	 ***************************************************************************************/
-	
-
 	/**
-	 * 츨근 정보 입력 함수 
+	 * 츨근 정보 입력 함수  Insert
 	 * @param params
 	 */
 	public void insertDailAttReg(HashMap<String, String> params) {
@@ -36,21 +34,27 @@ public class AttendDao {
 		sqlSession.insert(nameSpaceName +"insertDailAttReg", params);
 	}
 	
-	
 	/**
-	 * 출근 정보 출력 조회
+	 * 출근 정보 출력 조회 Select
 	 * @param params
 	 * @return
 	 */
-	public List<HashMap<String, Object>> selectDailAttReg (HashMap<String, String> params) {
+	public List<HashMap<String, Object>> selectInDailAttReg (HashMap<String, String> params) {
 		
 		List<HashMap<String, Object>> resultList
-			=this.sqlSession.selectList(nameSpaceName +"selectDailAttReg", params);
+			=this.sqlSession.selectList(nameSpaceName +"selectInDailAttReg", params);
 		
 		return resultList;
 	}
 	
-	
+	/**
+	 * 퇴근 정보 입력 함수 Update  
+	 * @param params
+	 * @return 
+	 */
+	public void updateDailAttReg(HashMap<String, String> params) {
+		sqlSession.update(nameSpaceName + "updateDailAttReg", params);
+	}	
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [월간 근태 생성/마감]
@@ -89,5 +93,7 @@ public class AttendDao {
 			= this.sqlSession.selectList(nameSpaceName + "readHdayExtnNightWorkInqr", paramMap);
 		
 		return resultList;
-	}	
+	}
+
+
 }

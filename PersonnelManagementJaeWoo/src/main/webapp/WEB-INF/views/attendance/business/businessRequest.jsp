@@ -102,7 +102,7 @@
  	/* 출장비 예상 금액 end */
  	
  	
- 	/* 사원선택 모달 start */ //참조해야할것.
+ 	/* 사원선택 모달 start */
  	function empListModal(url, formId){ //사원정보조회 리스트 출력
  		$('#empModalTbody').empty(); //이전 리스트 삭제
  		
@@ -127,17 +127,18 @@
  	 			$.each(rslt.empList, function(k, v) {
 					$('#empModalTbody').append(
  	 					"<tr style='display:table;width:100%;table-layout:fixed;'>"+
-								"<td>"+
-							"<label class='fancy-checkbox-inline'>"+
-								"<input type='checkbox' name='emnoChk'>"+ //checkbox
-								"<span></span>"+
-							"</label>"+
-						"</td>"+
-						"<td>"+ v.empEmno +"</td>"+ //사원번호
-						"<td>"+ v.empName +"</td>"+ //사원명
-						"<td>"+ v.deptName +"</td>"+ //부서명
-						"<td>"+ v.rankName +"</td>"+ //직급명
-					"</tr>"
+							"<td>"+
+								"<label class='fancy-checkbox-inline'>"+
+									"<input type='checkbox' name='emnoChk'>"+ //checkbox
+									"<span></span>"+
+								"</label>"+
+							"</td>"+
+							"<td>"+ v.retrDelYn +"</td>"+ //구분(재직,퇴직)
+							"<td>"+ v.empEmno +"</td>"+ //사원번호
+							"<td>"+ v.empName +"</td>"+ //사원명
+							"<td>"+ v.deptName +"</td>"+ //부서명
+							"<td>"+ v.rankName +"</td>"+ //직급명
+						"</tr>"
 					);
  	 			});
  			}
@@ -169,16 +170,17 @@
 
  	//선택한 사원정보를 출장신청 폼에 자동 입력하기
  	function emnoClick(){
- 		var chkTr = $("input[name='emnoChk']:checked").closest("tr"); //체크된 체크박스와 가장 가까운 tr
- 		var empEmnoVal = chkTr.children().eq(1).text(); //tr 하부 2번째 td의 텍스트(사번)
- 		var empNameVal = chkTr.children().eq(2).text(); //tr 하부 3번째 td의 텍스트(이름)
- 		var deptNameVal = chkTr.children().eq(3).text(); //tr 하부 4번째 td의 텍스트(부서)
- 		var rankNameVal = chkTr.children().eq(4).text(); //tr 하부 5번째 td의 텍스트(직급)
+ 		var chkTr = $("input[name=emnoChk]:checked").closest("tr"); //체크된 체크박스와 가장 가까운 tr
+ 		var empEmnoVal = chkTr.children().eq(2).text(); //tr 하부 3번째 td의 텍스트(사번)
+ 		var empNameVal = chkTr.children().eq(3).text(); //tr 하부 4번째 td의 텍스트(이름)
+ 		var deptNameVal = chkTr.children().eq(4).text(); //tr 하부 5번째 td의 텍스트(부서)
+ 		var rankNameVal = chkTr.children().eq(5).text(); //tr 하부 6번째 td의 텍스트(직급)
 
  		$('#empEmno').val(empEmnoVal);
  		$('#empName').val(empNameVal);
  		$('#deptName').val(deptNameVal);
  		$('#rankName').val(rankNameVal);
+ 		$(".modal-body input[name=keyword]").val(""); //키워드 내용 지우기
  	}
  	
  	/* 사원선택 모달 end */
@@ -211,7 +213,7 @@
 									</td>
 
 									<td>전자결재상태</td>
-									<td><input type="text" class="form-control" readonly></td>
+									<td><input type="text" class="form-control" value="승인대기" readonly></td>
 								</tr>
 	
 								<tr><!-- 신청자도 관리자와 사원 기능 따로 만들기 -->
@@ -271,11 +273,11 @@
 								</tr>
 							</table>
 							<div class="text-right">
-								<button type="button" class="btn btn-info" onclick="check_onclick('${pageContext.request.contextPath}/businessRequestInsert.ajax', 'busiFrm')">신청하기</button>
+								<button type="button" class="btn btn-primary" onclick="check_onclick('${pageContext.request.contextPath}/businessRequestInsert.ajax', 'busiFrm')">신청하기</button>
 							</div>
 						</form>
 	
-	
+
 						<!-- 사원번호 Modal -->
 						<div id="emnoModal" class="modal fade" role="dialog">
 						  <div class="modal-dialog">
@@ -287,7 +289,7 @@
 									<p class="modal-title">사번 정보 조회</p>
 								</div>
 								<div class="modal-body">
-									<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
+									<div class="search_wrap" style="padding: 0px 10px 20px 15px;">
 										<form class="form-inline" id="empFrm">
 											검색어&nbsp;<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
 											<label class="fancy-checkbox-inline">
@@ -300,10 +302,11 @@
 									</div>
 			
 									<div class="list_wrap">
-										<table class="table tablesorter table-bordered" id="empModalTable">
+										<table class="table tablesorter" id="empModalTable">
 											<thead style="display:table;width:100%;table-layout:fixed;">
 												<tr>
-													<th></th>
+													<th class="sorter-false"></th>
+													<th>구분</th>
 													<th>사원번호</th>
 													<th>이름</th>
 													<th>부서</th>

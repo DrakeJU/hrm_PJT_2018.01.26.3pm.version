@@ -9,7 +9,6 @@
 <script>
 
 	$(function () {
-		
 		$('#workingDate').datetimepicker({ //근무일자 달력
 			viewMode: 'days',
 			format: 'YYYY-MM-DD'
@@ -23,30 +22,40 @@
 		alert($('#workingdate').val()); //날짜 출력
 	};
 
- /* ajax-INSERT 출근*/
+	/*INSERT 출근*/
+    function attend_In_Action(){
+	 alert("출근처리 되었습니다.");
+   	 var formName = document.dailAttdFrm;
+   	 formName.action="insertDailAttReg";
+   	dailAttdFrm.submit();
+    };
+    
+    /*INSERT 퇴근*/
+    function attend_Out_Action(){
+	 alert("퇴근처리 되었습니다.");
+   	 var formName = document.dailAttdFrm;
+   	 formName.action="updateDailAttReg";
+   	dailAttdFrm.submit();
+    };
+	
+/* ajax-INSERT 출근*/
  /* 
+ //결과값에 대한 ajax alert 띄울시에 사용 
 	function attend_onclick(url, formId){
 		paging.ajaxFormSubmit(url, formId, function(rslt){
 			console.log("ajaxFormSubmit -> callback");
+			console.log("success" + rslt.success);
+			console.log("resultList" + rslt.resultList);
 			console.log("결과데이타" + JSON.stringify(rslt));
-			
 
-			if(rslt !=null ){
+			if(rslt.success =="Y" ){
 				alert("출근처리 되었습니다.");
 			}else{
 				alert("출근 처리 오류");
 			}
 		});
 	}
-     */
-     
-     
-    /*INSERT 출근*/
-    function attend_action(){
-   	 var formName = document.dailAttdFrm;
-   	 formName.action="insertDailAttReg";
-   	dailAttdFrm.submit();
-    };
+ */
 
 </script>
 </head>
@@ -75,9 +84,9 @@
 							</table>
 						</form>
 					<table class="table table-bordered">
-						<input type="button" class="btn btn-danger btn-xs" onClick="" style="float:right;"name="leavework" value="퇴근">
-						<%-- <input type="button" class="btn btn-danger btn-xs" onClick="attend_onclick('${pageContext.request.contextPath}/insertDailAttReg','dailAttdFrm')" style="float:right;"name="attendance" value="출근"> --%>
-						<input type="button" class="btn btn-danger btn-xs" onClick="attend_action()" style="float:right;"name="attendance" value="출근">
+						<input type="button" class="btn btn-danger btn-xs" onClick="attend_Out_Action()" style="float:right;"name="leavework" value="퇴근">
+<%-- 						 <input type="button" class="btn btn-danger btn-xs" onClick="attend_onclick('${pageContext.request.contextPath}/insertDailAttReg','dailAttdFrm')" style="float:right;"name="attendance" value="출근">  --%>
+						<input type="button" class="btn btn-danger btn-xs" onClick="attend_In_Action()" style="float:right;"name="attendance" value="출근">
 					<h4>◈ 일일근태등록</h4>
 						<thead>
 							<tr align="center">
@@ -94,13 +103,11 @@
 									<td>${item.empEmno}</td>
 									<td>${item.empName}</td>
 									<td>${item.wrkIn}</td>
-									<td></td>
-									<td></td>
+									<td>${item.wrkOut}</td>
+									<td>${item.wrkTm}</td>
 								</tr>
 							</c:forEach>
 						</tbody>
-				
-				
 					</table>
 					</div>
 				</div>

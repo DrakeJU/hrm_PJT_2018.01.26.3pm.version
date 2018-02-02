@@ -56,10 +56,4 @@ public class MenuTreeDao {
 		return result;	
 	}//menuDelete
 	
-	//testMenu data 생성
-	public void testMenu(List<HashMap<String,Object>>list) {
-		for(HashMap<String,Object> map : list) {
-			this.sql.insert(namespace+"menuTest",map);
-		}//for
-	}//testMenu
 }//MenuTreeDao

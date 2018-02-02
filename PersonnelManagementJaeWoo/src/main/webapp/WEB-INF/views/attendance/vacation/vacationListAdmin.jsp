@@ -11,69 +11,158 @@
 <!-- <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/theme.default.css" /> -->
 <!-- <script src="/spring/resources/common/js/jquery-latest.min.js"></script> -->
 <!-- <script src="/spring/resources/common/js/jquery.tablesorter.widgets.js"></script> -->
-
 <script>
-	//테이블 내용 가운데 정렬
-	$(document).ready(function() {
-	    $('.table tr').children().addClass('text-center');
-	    console.log('hg');
-	});
-	
-	
-	//테이블 마우스오버시 (행을 지날 때), 색 바뀜
-	$(document).ready(function(){
-		$('table tbody tr').mouseover(function(){ 
-			$(this).css("backgroundColor","#f2f2f2"); 
-		}); 
-		$('table tr').mouseout(function(){ 
-			$(this).css("backgroundColor","#fff"); 
-		});
-	});
-		
-	
-	//달력
-	$(function () {
-		$('#startDate').datetimepicker({ //휴가시작일 달력
-			viewMode: 'days',
-			format: 'YYYY-MM-DD'
-		});
-	    
-		$('#endDate').datetimepicker({ //휴가종료일 달력
-			viewMode: 'days',
-			format: 'YYYY-MM-DD'
-		});
-		
-		//휴가종료날짜가 시작날짜 이전인 날짜는 선택 불가능하도록 제한
-		$('#startDate').on("dp.change", function(e) {
-			$('#endDate').data("DateTimePicker").minDate(e.date);
-		});
-	});	
 
+$(function(){
+	calender();
+	vacEmpList();
+});
 	
-	//테이블 정렬
-	$(function(){
-		$("#vacationTable").tablesorter();
+/* 휴가 조회 리스트  ajax */
+		
+function vacEmpList(){
+
+	paging.ajaxFormSubmit("vacationListAdmin.ajax", "vacListAdminFrm", function(rslt){
+		console.log("ajaxFormSubmit -> callback");
+		console.log("결과데이터:"+JSON.stringify(rslt));
+		
+		//이전 리스트 삭제
+		$('#vacListTbody').empty();
+		//테이블 스크롤 CSS
+		$('#vacListTable').children('thead').css('width','calc(100% - 1.1em)');
+		
+		if(rslt.vacationListAdmin == null){
+			$('#vacListTbody').append(
+				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"	
+			);
+		} else {
+			$.each(rslt.vacationListAdmin, function(k, v){
+				$('#vacListTbody').append(
+					"<tr data-toggle='modal' data-target='#myModal'>"+
+						"<td>"+ v.retrDelYn +"</td>"+	//재직구분
+						"<td>"+ v.empEmno +"</td>"+ //사원번호
+						"<td>"+ v.empName +"</td>"+ //사원명
+						"<td>"+ v.deptName +"</td>"+ //부서명
+						"<td>"+ v.rankName +"</td>"+ //직급명
+						"<td>"+ v.emreVacCnt +"</td>"+ //휴가 전체 일수
+						"<td>"+ v.emrePvacUd +"</td>"+ //휴가 사용 일수
+						"<td>"+ v.remineVacCnt +"</td>"+	//휴가 잔여일수
+					"</tr>"
+				);
+			});//each list
+	
+			//테이블 내용 가운데 정렬	
+			$('#vacListTable').children().addClass('text-center');	
+			//테이블 sort
+			$(function(){
+				$('#vacListTable').tablesorter();
+			});
+			$(function(){
+				$('#vacListTable').tablesorter({sortList: [[0,0], [1,0]]});
+			});
+				
+		}//if-table 생성
+
+		//테이블 마우스오버시 (행을 지날 때), 색 바뀜
+// 		$(document).ready(function(){
+			$('table tbody tr').mouseover(function(){ 
+				$(this).css("backgroundColor","#f2f2f2"); 
+				$(this).click(function(){
+					$(this).css("backgroundColor","#88C9DF");
+				});
+			}); 
+			$('table tr').mouseout(function(){ 
+				$(this).css("backgroundColor","#fff"); 
+			});
+
+//		 		$('table tbody tr').off("click").on("click",function(){
+//		 			if($('table tr').click('active')){
+//		 				$('table tr').removeClass('active');	//원상복구
+//		 			} else{
+//		 				$('table tr').addClass('active');
+//		 			}
+//		 		});
+// 		});
+		
+	});//paging
+		
+};	// vacationAdemin List : END
+	
+
+function searchClick(){
+			
+	vacEmpList();
+};
+
+
+/* 년도 달력 */
+function calender(){
+	$('#baseYear').val(moment().format('YYYY'));	//올해 년도 보여줌
+	$('#yearDateTimePicker').datetimepicker({
+		viewMode: 'years',
+		format: 'YYYY'
 	});
 	
-	$(function(){ 
-		$("#vacationTable").tablesorter({sortList: [[0,0], [1,0]]}); 
+	//년도의 최대값을 올해로 제한
+	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment());
+};	
+	
+	
+/* 휴가신청현황 페이지로 이동 */
+function vacationProgressList() {
+	window.location.href = "${pageContext.request.contextPath}/vacationProgressList";
+}
+
+/* 휴가 신청현황 개수 표시 */
+$(function() {
+	paging.ajaxSubmit("vacationProgCntNum.ajax", "", function(rslt) {
+		console.log("ajaxFormSubmit -> callback");
+		console.log("결과데이터:" + JSON.stringify(rslt));
+		$("#countNum").html(rslt);
 	});
-	
-	
-	/* 휴가신청현황 페이지로 이동 */
-	function vacationProgressList(){
-		window.location.href = "${pageContext.request.contextPath}/vacationProgressList";
+});
+
+
+/* 검색어 입력 후 엔터키 작동 - 아직 안됨 */
+function press(f){
+	if(f.keyCode == 13){	//javaScript에서는 13이 enter키를 의미함
+		vacListAdminFrm.submit();
 	}
+}
 
-	//컨트롤러에서 받은 값을 화면에 나타내는 것
-	 $(function(){
-		paging.ajaxSubmit("vacationProgCntNum.ajax", "", function(rslt){
-	         console.log("ajaxFormSubmit -> callback");
-	         console.log("결과데이터:"+JSON.stringify(rslt));
-	         $("#countNum").html(rslt);
-   		 });
-	 });
+
+//달력
+/* $(function() {
+	$('#startDate').datetimepicker({ //휴가시작일 달력
+		viewMode : 'days',
+		format : 'YYYY-MM-DD'
+	});
+
+	$('#endDate').datetimepicker({ //휴가종료일 달력
+		viewMode : 'days',
+		format : 'YYYY-MM-DD'
+	});
+
+	//휴가종료날짜가 시작날짜 이전인 날짜는 선택 불가능하도록 제한
+	$('#startDate').on("dp.change", function(e) {
+		$('#endDate').data("DateTimePicker").minDate(e.date);
+	});
+}); */
+
+
+/*모달 리스트 START */
+
+function empPerList(){
 	
+	
+}// empPerList
+ 
+ 
+ 
+ 
+ 
+/*모달 리스트 END */
+ 
 
 </script>
 </head>
@@ -88,9 +177,9 @@
 <!-- 							<p class="subtitle">설명이 필요할 경우 추가 예정</p> -->
 <!-- 					</div> -->
 					<div class="panel-body">
-						<form class="form-inline">
+						<form class="form-inline" id="vacListAdminFrm" name="vacListAdminFrm">
 <!-- 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i> -->
-							휴가항목 선택
+							<!-- 휴가항목 선택
 							<select name="vastC" class="form-control" name="vastC" id="vastC" value="vastC" onchange="halfSelect(this.vacReqFrm)">
 								<option value="yearlyVac" selected="selected">선택</option>			
 								<option id="V1" name="vastC" value="V1">연차</option>										
@@ -99,45 +188,54 @@
 								<option id="V4" name="vastC" value="V4">경조휴가</option>
 								<option id="V5" name="vastC" value="V5">출산휴가</option>
 								<option id="V6" name="vastC" value="V6">병가</option>
-							</select>
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<!-- 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i> -->
-							휴가 조회기간
+							</select> -->
+							&nbsp;&nbsp;&nbsp;
+							
+							기준년도
 							<!-- 달력 -->
-							<div class="input-group date" id="startDate">
-								<input type="text" class="form-control" id="vastStartDate" name="vastStartDate"/>
-								<span class="input-group-addon">
+							<div class="input-group date" id="yearDateTimePicker">
+								<input type="text" class="form-control" id="baseYear" name="baseYear" />
+								<span class="input-group-addon"> 
 									<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 								</span>
-							</div>
-							~
-							<!-- 달력 -->
-							<div class="input-group date" id="endDate">
-						  	<input type="text" class="form-control" id="vastEndDate" name="vastEndDate"/>
-						    <span class="input-group-addon">
-							    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
-						    </span>
-						  </div>
+							</div> &nbsp;&nbsp;&nbsp;
+
+<!-- 							휴가 조회기간 -->
+<!-- 							달력 -->
+<!-- 							<div class="input-group date" id="startDate"> -->
+<!-- 								<input type="text" class="form-control" id="vastStartDate" name="vastStartDate"/> -->
+<!-- 								<span class="input-group-addon"> -->
+<!-- 									<span class="glyphicon glyphicon-calendar"></span> 달력 아이콘 -->
+<!-- 								</span> -->
+<!-- 							</div> -->
+<!-- 							~ -->
+<!-- 							달력 -->
+<!-- 							<div class="input-group date" id="endDate"> -->
+<!-- 						  	<input type="text" class="form-control" id="vastEndDate" name="vastEndDate"/> -->
+<!-- 						    <span class="input-group-addon"> -->
+<!-- 							    <span class="glyphicon glyphicon-calendar"></span> 달력 아이콘 -->
+<!-- 						    </span> -->
+<!-- 						  </div> -->
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="text" class="form-control" value="">
-							<input type="button" class="btn btn-primary" name="search" value="검색">
+<!-- 							<select class="form-control" name="searchOption" id="searchOption"> -->
+<!-- 								<option value="empEmno">사번</option> -->
+<!-- 								<option value="empName">이름</option> -->
+<!-- 							</select> -->
+							<input type="text" class="form-control" name="keyword" placeholder="검색어 입력"> 
+							<input type="button" class="btn btn-primary" name="search" value="검색" onclick="searchClick()">
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									
+
 							<!-- 정렬 조건 -->
 							<select name="" value="상태별" class="form-control">
 								<option value="">재직</option>
 								<option value="">퇴직</option>
-							</select>
-							
-							<select name="" value="부서별" class="form-control">
+							</select> <select name="" value="부서별" class="form-control">
 								<option value="">기획부</option>
 								<option value="">인사부</option>
 								<option value="">개발부</option>
 								<option value="">디자인부</option>
 								<option value="">영업부</option>
-							</select>
-							
-							<select name="" value="직급별" class="form-control">
+							</select> <select name="" value="직급별" class="form-control">
 								<option value="">임원진</option>
 								<option value="">부장</option>
 								<option value="">과장</option>
@@ -145,9 +243,9 @@
 								<option value="">주임</option>
 								<option value="">사원</option>
 							</select>
-							<button class="btn btn-danger" type="button" name="prog" style="float:right;" onclick="vacationProgressList()" >
-								휴가신청현황
-								<span class="badge" id="countNum"></span>
+							<button class="btn btn-danger" type="button" name="prog"
+								style="float: right;" onclick="vacationProgressList()">
+								휴가신청현황 <span class="badge" id="countNum"></span>
 							</button>
 						</form>
 					</div>
@@ -159,7 +257,7 @@
 	
 					<div class="panel-body"> 
 						<div class="list_wrapper">
-							<table class="table tablesorter table-bordered" id="vacationTable">
+							<table class="table tablesorter table-bordered" id="vacListTable">
 								<thead>
 									<tr>
 										<th>구분</th>
@@ -167,53 +265,18 @@
 										<th>성명</th>
 										<th>부서</th>
 										<th>직위</th>
-										<th>휴가항목</th>
 										<th>전체</th>
 										<th>사용일수</th>
 										<th>잔여일수</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td>재직</td>
-										<td>123456</td>
-										<td>개츠비</td>
-										<td>개발팀</td>
-										<td>팀장</td>
-										<td>연차</td>
-										<td>25</td>
-										<td>25</td>
-										<td>0</td>
-									</tr>
-									<tr>
-										<td>재직</td>
-										<td>123456</td>
-										<td>데이지</td>
-										<td>기획팀</td>
-										<td>팀장</td>
-										<td>연차</td>
-										<td>25</td>
-										<td>25</td>
-										<td>0</td>
-									</tr>
-									<tr>
-										<td>퇴직</td>
-										<td>123456</td>
-										<td>윌슨</td>
-										<td>디자인</td>
-										<td>대리</td>
-										<td>연차</td>
-										<td>20</td>
-										<td>10</td>
-										<td>10</td>
-									</tr>
+								<tbody id="vacListTbody">
 								</tbody>
 							</table>
 						</div>
 						
-						<!-- Trigger the modal with a button -->
-						<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-						
+		<!-- ***************************************************************************************************************** -->
+					
 						<!-- Modal -->
 						<div id="myModal" class="modal fade" role="dialog">
 						  <div class="modal-dialog">
@@ -276,7 +339,7 @@
 										</div>
 						      </div>
 						      <div class="modal-footer">
-						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<!-- 						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
 						      </div>
 						    </div>
 						

@@ -5,8 +5,8 @@
 
 	<select id="newEmpList" parameterType="HashMap" resultType="HashMap">
 		
-		SELECT EMP_EMNO,EMP_NAME
-		FROM EMPLOYEE WHERE SAL_YN ='N'
+		SELECT E.EMP_EMNO,EMP_NAME
+		FROM EMPLOYEE E,RETIREMENT R WHERE E.EMP_EMNO = R.EMP_EMNO AND SAL_YN ='N' AND RETR_DEL_YN ='N'
 		
 	</select>
 	
@@ -39,13 +39,13 @@
     <select id="exiEmpList" parameterType="HashMap" resultType="HashMap">
 	
 		SELECT S.EMP_EMNO,E.EMP_NAME
-		FROM EMPLOYEE E, SAL_EMPLOYEE S
-		WHERE S.EMP_EMNO = E.EMP_EMNO;
+		FROM EMPLOYEE E, SAL_EMPLOYEE S,RETIREMENT R
+		WHERE S.EMP_EMNO = E.EMP_EMNO AND RETR_DEL_YN ='N' AND R.EMP_EMNO=S.EMP_EMNO
 	</select>
 	
 	<insert id="new_empcode_insert">
 
-		INSERT INTO SAL_EMPLOYEE(EMP_EMNO,SEMP_SAL,SEMP_TAMT,SEMP_FDEX,SEMP_CMC)
+		INSERT INTO SAL_EMPLOYEE(EMP_EMNO, SEMP_SAL, SEMP_TAMT, SEMP_FDEX, SEMP_CMC)
 		VALUES(
 		<foreach collection="list" item="item" index="index" separator= ",">
 			#{item}
@@ -70,7 +70,7 @@
 	<update id="exi_empcode_update">
 	
 		UPDATE SAL_EMPLOYEE 
-			SET  SEMP_SAL = #{sal}
+			SET SEMP_SAL = #{sal}
 				
 			WHERE EMP_EMNO =  #{code}
 		
@@ -81,11 +81,11 @@
 		/* /allowance/allowanceMapper.xml - allowanceList ( allowanceList 기본 조회 ) */
 		SELECT	
 		sal_type as salType	/* 비용종류 */
-		,format(scom_hh_cst,0) as scomHhCst	/*주간근무시간당비용*/
-		,format(scom_nh_cst,0) as scomNhCst	/*야간근무시간당비용*/
-		,format(scom_lh_cst,0) as scomLhCst	/*지각*/
-		,format(scom_elh_cst,0) as scomElhCst	/*식대*/
-		,format(semp_cmc,0) as sempCmc	/*차량유지비*/
+		,scom_hh_cst as scomHhCst	/*주간근무시간당비용*/
+		,scom_nh_cst as scomNhCst	/*야간근무시간당비용*/
+		,scom_lh_cst as scomLhCst	/*지각*/
+		,scom_elh_cst as scomElhCst	/*식대*/
+		,semp_cmc as sempCmc	/*차량유지비*/
 		,scom_yymm as scomYymm	/*등록년월*/
 		FROM    personnelmanagement.sal_common		/* sal_common Table */   
 		WHERE sal_type = #{divSal}

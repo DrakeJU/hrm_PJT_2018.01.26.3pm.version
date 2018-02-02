@@ -6,8 +6,11 @@
 	 * 메뉴명 : [출결관리] - [일일근태등록]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.25
+	 * @Date   : 2018.01.26
 	 ************************************************************************************ -->
+	
+	<!-- 출근버튼 -->
+	<!-- INSERT ==============================================================-->
 	<insert id="insertDailAttReg" parameterType="HashMap" >
 	
 		INSERT INTO COMM_STM ( 
@@ -21,19 +24,43 @@
 	
 	</insert>
 	
-	<select id="selectDailAttReg" parameterType="HashMap"  resultType="HashMap">
+	<!-- SELECT -->
+	<select id="selectInDailAttReg" parameterType="HashMap"  resultType="HashMap">
 	
-			SELECT 
-				 C.EMP_EMNO 				as empEmno 
-				,E.EMP_NAME					as empName 
-				,C.COST_WRK_IN 				as wrkIn
-			FROM COMM_STM C 
+		  SELECT 
+				C.EMP_EMNO 					As empEmno 
+				,E.EMP_NAME					As empName 
+				,C.COST_WRK_IN 				As wrkIn
+				,C.COST_WRK_OUT			    AS wrkOut
+				,C.COST_WRK_TIME		    AS wrkTm
+			FROM COMM_STM C	 
  LEFT OUTER JOIN EMPLOYEE E 
 			  ON C.EMP_EMNO = E.EMP_EMNO 
-		ORDER BY COST_WRK_IN DESC
+		ORDER BY COST_WRK_IN DESC LIMIT 1
 			
-
 	</select>
+	<!-- ===================================================================== -->
+	
+	<!-- 퇴근버튼 -->
+	<!-- UPDATE ==============================================================-->
+	
+	<update id="updateDailAttReg" parameterType="HashMap" >
+	
+		UPDATE COMM_STM
+   			SET COST_WRK_OUT = REPLACE(NOW()+0, ',', ''),
+   				COST_WRK_TIME = TIMEDIFF(DATE_FORMAT(COST_WRK_OUT, '%Y%m%d%H%i%s'), DATE_FORMAT(COST_WRK_IN, '%Y%m%d%H%i%s'))
+			WHERE 1=1
+ 			  AND COST_SERIAL_NUMBER = (SELECT LAST_NUM
+			 FROM (
+				   SELECT MAX(CS.COST_SERIAL_NUMBER) AS LAST_NUM
+ 				   FROM COMM_STM CS
+				   WHERE 1=1
+				   AND CS.COST_WRK_IN > CURDATE() 
+					OR CS.COST_WRK_IN > CURDATE() - INTERVAL 1 DAY
+					ORDER BY CS.COST_WRK_IN DESC LIMIT 2 )TMP
+			);
+			
+	</update>
 	
 	<!-- ************************************************************************************
 	 * 메뉴명 : [출결관리] - [월간 근태 생성/마감]

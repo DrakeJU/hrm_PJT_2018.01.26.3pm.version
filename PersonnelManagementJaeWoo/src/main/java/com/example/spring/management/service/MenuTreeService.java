@@ -29,16 +29,7 @@ public class MenuTreeService {
 	}//menuList
 	
 	//메뉴등록
-	public int menuInsert(HashMap<String,Object> map, List<String> list) {
-		
-		String mnAttr = ""; //메뉴속성 str 저장변수
-		
-		//check 된 값 mnAttr 에 string으로 저장하는 for
-		for(String item : list) {
-			mnAttr+=("/"+item); 
-		}//for
-		
-		map.put("mnAttr", mnAttr); //메뉴속성 map에 저장
+	public int menuInsert(HashMap<String,Object> map) {
 		
 		//결과 값 저장 변수
 		int result = (int)menuTreeDao.menuInsert(map);
@@ -53,17 +44,8 @@ public class MenuTreeService {
 		
 	}//menuDetail
 	
-	public int menuUpdate(HashMap<String,Object>map,List<String> list) {
-		
-		String mnAttr = ""; //메뉴속성 str 저장변수
-		
-		//check 된 값 mnAttr 에 string으로 저장하는 for
-		for(String item : list) {
-			mnAttr+=(item+"/");
-		}//for
-		
-		map.put("mnAttr", mnAttr);
-		
+	public int menuUpdate(HashMap<String,Object>map) {
+
 		String mnIdxStr = (String)map.get("mnIdxStr"); //메뉴 순번 저장 string 저장
 		
 		List<HashMap<String,String>> idxList = new ArrayList<HashMap<String,String>>(); //{메뉴코드 : 메뉴 순번} 저장 리스트
@@ -101,29 +83,5 @@ public class MenuTreeService {
 		int result  = (int)menuTreeDao.menuDelete(mnNo); 
 		return result;
 	}//menuDelete
-	
-	//test data insert 
-	public void testMenu() {
-		
-		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
-		HashMap<String,Object> map;
-	
-		Random ran  = new Random();
-		
-		int ranNum =0;
-		
-		for(int i=102; i<=300; i++) {
-			
-			ranNum = ran.nextInt(100)+21;
-			
-			map = new HashMap<String,Object>();
-			map.put("mnUrl", "test.do");
-			map.put("mnPrntNo",ranNum);
-			map.put("mnName", "test"+i);
-			
-			list.add(map);
-		}//for
-		
-		menuTreeDao.testMenu(list);	
-	}//testMdenu
+
 }

@@ -20,6 +20,9 @@ public class CommonDao {
 		return list;
 	}
 	
-	
-	
+	public HashMap<String,Object> selectMenu(HashMap<String,String> map){
+		
+		HashMap<String,Object> mnPrntNo = this.sql.selectOne(namespace+"selectMenu",map);
+		return mnPrntNo;
+	}
 }

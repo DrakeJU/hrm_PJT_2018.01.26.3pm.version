@@ -50,12 +50,11 @@ public class MenuTreeController {
 	
 	//메뉴등록
 	@RequestMapping(value="/menuInsert.do", method=RequestMethod.POST)
-	public @ResponseBody HashMap<String,String> menuInsert(@RequestParam HashMap<String,Object> map
-									,@RequestParam(value="mnAttr") List<String> list) {
+	public @ResponseBody HashMap<String,String> menuInsert(@RequestParam HashMap<String,Object> map) {
 		
 		HashMap<String,String> resultMap = new HashMap<String,String>();
 		
-		resultMap.put("result",""+menuTreeService.menuInsert(map,list));
+		resultMap.put("result",""+menuTreeService.menuInsert(map));
 
 		return resultMap;
 	}//menuInsert
@@ -90,13 +89,13 @@ public class MenuTreeController {
 	
 	//메뉴 업데이트
 	@RequestMapping(value="/menuUpdate.do")
-	public @ResponseBody HashMap<String,String> menuUpdate(@RequestParam HashMap<String,Object> map,@RequestParam(value="mnAttr") List<String> list) {
+	public @ResponseBody HashMap<String,String> menuUpdate(@RequestParam HashMap<String,Object> map) {
 
-		int result = (int)(menuTreeService.menuUpdate(map,list));
+		int result = (int)(menuTreeService.menuUpdate(map));
 		
 		HashMap<String,String> resultMap = new HashMap<String,String>();
 		
-		resultMap.put("result",""+menuTreeService.menuUpdate(map,list));
+		resultMap.put("result",""+menuTreeService.menuUpdate(map));
 		
 		return resultMap;
 	}//menuUpdate
@@ -115,12 +114,4 @@ public class MenuTreeController {
 		return resultMap;
 	}//menuDelete
 	
-
-	//test data 생성
-	@RequestMapping(value="testMenu.do")
-	public String testMenu() {
-		
-		menuTreeService.testMenu();
-		return "management/menuTree/test";
-	}//testMenu
 }

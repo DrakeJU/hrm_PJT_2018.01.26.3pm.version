@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.attendance.service.AttendService;
@@ -37,34 +38,84 @@ public class AttendController {
 		return "dailAttdReg";
 	}
 	
-	
 	//출결관리 - 일일근태등록
-	//출근버튼
+	//출근버튼====================================================================
 	@RequestMapping(value = "/insertDailAttReg")
-	public String insertDailAttReg(
-			@RequestParam HashMap<String, String> params, Model model) throws Exception{
+	public ModelAndView insertDailAttReg(
+			@RequestParam HashMap<String, String> params) throws Exception{
 	
-		// 1) 값입력
+		// 1) 촐근값입력
 		attendService.insertDailAttReg(params);
 		
-		// 2) 입력값 출력 조회 
-		List<HashMap<String, Object>> resultList = attendService.selectDailAttReg(params);
+		// 2) 출근입력값 출력 조회 
+		ModelAndView mv = new ModelAndView();
 		
+		List<HashMap<String, Object>> resultList = attendService.selectInDailAttReg(params); 
+		
+		mv.addObject("resultList", resultList);
+		mv.setViewName("dailAttdReg");
+		/*	
+		//결과값에 대한 ajax alert 띄울시에 사용 
 		if(resultList == null) {
-			model.addAttribute("success", "N");
+			mv.addObject("success", "N");
 		} else {
-			model.addAttribute("resultList", resultList);
-			model.addAttribute("success", "Y");
+			mv.addObject("resultList", resultList);
+			mv.addObject("success", "Y");
+		}
+		*/
+		return mv;
+	}//insert/select
+	
+	
+	//퇴근버튼====================================================================
+	@RequestMapping(value = "/updateDailAttReg")
+	public ModelAndView updateDailAttReg(
+			@RequestParam HashMap<String, String> params)throws Exception{
+		
+		// 1) 퇴근값입력 update
+		attendService.updateDailAttReg(params);
+		
+		
+		// 2) 퇴근입력값 출력 조회 
+		ModelAndView mv = new ModelAndView();
+		
+		List<HashMap<String, Object>> resultList = attendService.selectInDailAttReg(params);
+		
+		mv.addObject("resultList", resultList);
+		mv.setViewName("dailAttdReg");
+		
+		
+		return mv;
+	}//update
+	
+	/*
+	//ajax 방식 사용
+	@RequestMapping(value = "/insertDailAttReg")
+	public @ResponseBody HashMap<String, Object>dailAttRegInsert(
+			@RequestParam HashMap<String, String> map){
+		
+		attendService.insertDailAttReg(map);
+		List<HashMap<String, Object>> resultList = attendService.selectDailAttReg(map);
+		
+		
+		//A
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		if(resultList == null) {
+			resultMap.put("success", "N");
+		} else {
+			resultMap.put("success", "Y");
+			resultMap.put("resultList", resultList);
 		}
 		
-		return "dailAttdReg";
-	}	
+		return resultMap;
+	}
+	*/
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [월간 근태 생성/마감]
 	 * 개요    : 
 	 * @Author : 제영호
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.01.26
 	 ***************************************************************************************/
 	
 	@RequestMapping(value = "/mnthngAttdCrtCls")

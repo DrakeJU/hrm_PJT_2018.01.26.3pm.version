@@ -22,12 +22,11 @@ public class AttendService {
 	 * 메뉴명 : [출결관리] - [일일근태등록]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.01.26
 	 ***************************************************************************************/
-	
 
 	/**
-	 * 츨근 정보 입력 함수 
+	 * 츨근 정보 입력 함수 Insert
 	 * @param params
 	 */
 	public void insertDailAttReg(HashMap<String, String> params) {
@@ -35,16 +34,40 @@ public class AttendService {
 		attendDao.insertDailAttReg(params);
 	}
 	
-	
 	/**
-	 * 출근 정보 출력 조회
+	 * 출근 정보 출력 조회 Select
 	 * @param params
 	 * @return
 	 */
-	public List<HashMap<String, Object>> selectDailAttReg(HashMap<String, String> params) {
+	public List<HashMap<String, Object>> selectInDailAttReg(HashMap<String, String> params) {
 		// TODO Auto-generated method stub
-		return attendDao.selectDailAttReg(params);
+		return attendDao.selectInDailAttReg(params);
 	}
+	
+	/*
+	 * 퇴근 정보 입력 함수 Update
+	 * @param params
+	 * */
+	
+	public void updateDailAttReg(HashMap<String, String> params) {
+		// TODO Auto-generated method stub
+		attendDao.updateDailAttReg(params);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/***************************************************************************************
@@ -70,7 +93,7 @@ public class AttendService {
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]
-	 * 개요    : 
+	 * 개요    : 7
 	 * @Author : 제영호
 	 * @Date   : 2018.01.??
 	 ***************************************************************************************/
@@ -79,6 +102,9 @@ public class AttendService {
 		// TODO Auto-generated method stub
 		return attendDao.readHdayExtnNightWorkInqr(paramMap);
 	}
+
+
+	
 	
 	
 	

@@ -167,13 +167,13 @@ var checkcount = 0;
 		<div class="container-fluid">
 			<h3 class="page-title">직원급여정보</h3>
 
-			<div class="col-xs-10">
+			<div class="col-lg-12">
 				<div class="panel">
 					<div class="panel-heading">
 
 						<form id="frm" name="f1">
 							<div class="panel-body">
-								<table class="table table-bordered">
+								<table class="table table-bordered table-hover">
 									<thead>
 										<th class="text-center"><input type="checkbox" id="checkall" /></th>
 										<th>사번</th>

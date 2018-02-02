@@ -54,6 +54,16 @@ public class VacationService {
 		return list;
 	}
 	
+	//휴가일수설정 - 사원등록 저장하기
+	public int vacCntEmpSignUpInsert(HashMap<String,Object> map) {
+		
+		int list = vacationDao.vacCntEmpSignUpInsert(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
 	/* 휴가 신청하기 */
 	public int vacationRequest(HashMap<String,String> map) {
 		
@@ -65,15 +75,24 @@ public class VacationService {
 		return list;
 	}
 	
-	/* 휴가 조회하기 - 직원 */
-	public String vacationList() {
-		return "";
+	/* 휴가조회(사원)-사원별 휴가 개수 */
+	public List<HashMap<String,Object>> vacationListEmpRemindingVac(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = vacationDao.vacationListEmpRemindingVac(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
 	}
 		
 	
 	/* 휴가 조회하기 - 관리자 */
-	public String vacationListAdmin() {
-		return "";
+	public List<HashMap<String,Object>> vacationListAdmin(HashMap<String,Object> map) {
+		logger.info("vacation리스트 관리자 SERVICE 진입>>>>" + map);
+		
+		List<HashMap<String,Object>> list = vacationDao.vacationListAdmin(map);
+		
+		return list;
 	}
 
 
@@ -88,26 +107,23 @@ public class VacationService {
 	}
 	
 	/* 휴가 신청현황 리스트 */
-	public List<HashMap<String,Object>> vacationProgressList(){
+	public List<HashMap<String,Object>> vacationProgressList(HashMap<String,Object> map){
 		logger.info("vacation 휴가승인 리스트 SERVICE///////");
 		
-		List<HashMap<String,Object>> list= vacationDao.vacationProgressList();
+		List<HashMap<String,Object>> list= vacationDao.vacationProgressList(map);
 		logger.info("vacationREQ service LIST>> " + list);
 		return list;
 	}
 	
 	
-	/* 휴가 신청현황 승인완료 */
-	public List<HashMap<String,Object>> vacationProgToggle(){
-		logger.info("휴간신청 승인대기 SERVICE 진입 --->>>>");
+	/* 휴가 승인완료 저장 */
+	public int vacationProgressSave(HashMap<String,Object> map){
+		logger.info("휴간신청 승인완료 저장 SERVICE 진입 --->>>>");
 		
-		List<HashMap<String,Object>> map = vacationDao.vacationProgToggle();
+		int list = vacationDao.vacationProgressSave(map);
 			logger.info("승인대기 SERVICE 맵::" + map);
-		return map;
+		return list;
 	}
-	
-	
-	
 	
 	
 	

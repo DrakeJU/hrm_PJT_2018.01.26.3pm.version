@@ -20,33 +20,18 @@ public class CommonCodeDao {
 	private String nameSpaceName = "commonCode.";
 	
 	
+	//공통코드 등록
 	public int commonInsert(HashMap<String,Object> paramMap) {
 		
 		int result = this.sqlSession.insert(nameSpaceName + "commonInsert", paramMap);
-
 		
 		return result;
 		
 	}//commonInsert
 	
 	
-	public List<String> commCodeCheck(String data) {
-		
-		int commCode = Integer.parseInt(data);
-		
-		List<String> list = this.sqlSession.selectList(nameSpaceName + "commCodeCheck", commCode);
-		
-		
-		return list;
-		
-	}//getDeptName
-	
-	
+	//공통코드 목록
 	public List<HashMap<String,Object>> commonList(HashMap<String,Object> paramMap){
-		
-		/*for(int i=0; i<list.size(); i++) {
-			logger.debug("~~~~~~~~~~~~~~~~~deptCode~~~~~~~~~~~~~~~~~~~~~~~~~" + String.valueOf(list.get(i).get("deptCode")));
-		}//for*/
 		
 		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "commonList", paramMap);
 
@@ -55,7 +40,7 @@ public class CommonCodeDao {
 	}//commonList
 	
 	
-	
+	//공통코드,하위 공통코드 수정
 	public int commonUpdate(HashMap<String,Object> paramMap) {
 		
 		int result = this.sqlSession.update(nameSpaceName + "commonUpdate",paramMap);
@@ -65,7 +50,7 @@ public class CommonCodeDao {
 	}//commonUpdate
 	
 	
-	
+	//공통코드 삭제여부 확인
 	public List<HashMap<String,Integer>> commonDeleteCheck(int commCode){		
 		
 		List<HashMap<String,Integer>> list = this.sqlSession.selectList(nameSpaceName + "commonDeleteCheck", commCode);
@@ -75,7 +60,7 @@ public class CommonCodeDao {
 	}//commonDeleteCheck
 	
 	
-	
+	//공통코드,하위 공통코드 삭제
 	public int commonDelete(int commCode) {
 		
 		int result = this.sqlSession.update(nameSpaceName + "commonDelete", commCode);
@@ -85,6 +70,7 @@ public class CommonCodeDao {
 	}//commonDelete
 	
 	
+	//하위 공통코드 등록
 	public int commonInfoInsert(HashMap<String,Object> paramMap) {
 		
 		int result = this.sqlSession.insert(nameSpaceName + "commonInfoInsert", paramMap);
@@ -94,25 +80,24 @@ public class CommonCodeDao {
 	}//commonInfoInsert
 	
 
+	//하위 공통코드 목록
 	public List<HashMap<String,Object>> commonInfoList(int commPrntCode) {
 		
 		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "commonInfoList", commPrntCode);
-		
 		
 		return list;
 		
 	}//commonInfoList
 	
 	
-	
-	public int commAllPostNum() {
+	//전체 게시물 개수, 검색 했을 때의 게시물 개수
+	public int commAllPostNum(HashMap<String,Object> paramMap) {
 		
-		int allPostNum = this.sqlSession.selectOne(nameSpaceName + "commAllPostNum");
+		int allPostNum = this.sqlSession.selectOne(nameSpaceName + "commAllPostNum", paramMap);
 		
 		return allPostNum;
 		
-	}
-	
+	}//commAllPostNum
 	
 }//class
 

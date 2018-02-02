@@ -16,7 +16,6 @@ public class ScheduleDao {
 	
 	//일정등록 dao
 	public int scheduleInsert(HashMap<String, String> map) {
-		System.out.println("일정등록 dao map : " + map);
 		
 		int result = 0;
 		
@@ -31,11 +30,9 @@ public class ScheduleDao {
 	
 	//개인일정상세보기
 	public List<String> individuaDetail(HashMap<String, String> map){
-		System.out.println("dao 상세보기");
-		System.out.println("map : " + map);
 		
 		List<String> list = this.sql.selectList(namespace+"individuaDetail",map);
-		System.out.println("list : " + list);
+
 		return list;
 	}
 	
@@ -51,7 +48,7 @@ public class ScheduleDao {
 	public List<String> individuaSchedule(String emno){
 		
 		List<String> list = this.sql.selectList(namespace+"individuaSchedule",emno);
-
+		
 		return list;
 	}
 	

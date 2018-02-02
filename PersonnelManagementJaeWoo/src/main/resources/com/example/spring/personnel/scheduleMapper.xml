@@ -65,6 +65,8 @@
 			INPN_TIT AS title											/*제목*/
 			,DATE_FORMAT(INPN_STRT_DATE,"%Y-%m-%dT%H:%i:%s") AS start	/*시작날짜*/
 			,DATE_FORMAT(INPN_END_DATE,"%Y-%m-%dT%H:%i:%s") AS end		/*종료날짜*/
+			,'#378006' as color											/*가상컬럼*/
+			,'10' as id													/*가상컬럼*/		
 		FROM INDIVIDUAL_PLAN
 		WHERE EMP_EMNO = #{emno} 
 		      AND INPN_DEL_YN = 'N'
@@ -74,10 +76,10 @@
 	<select id="departmentSchedule" parameterType="HashMap" resultType="HashMap">
 		/* /personnel/schedule/scheduleMapper.xml - departmentSchedule(부서일정가져오기) */
 		SELECT 
-			DEPN_SEQ AS id 												/*일련번호*/
-			,DEPN_TIT AS title											/*제목*/
+			DEPN_TIT AS title											/*제목*/
 			,DATE_FORMAT(DEPN_STRT_DATE,"%Y-%m-%dT%H:%i:%s") AS start	/*시작날짜*/
 			,DATE_FORMAT(DEPN_END_DATE,"%Y-%m-%dT%H:%i:%s") AS end		/*종료날짜*/
+			,'20' as id													/*가상컬럼*/
 		FROM DEPARTMENT_PLAN
 		WHERE EMP_EMNO = #{emno} 
 			  AND DEPT_CODE = #{deptCode}
@@ -132,7 +134,7 @@
 			INPN_DEL_YN = "Y"
 			,INPN_UPDT_DATE = DATE_FORMAT(now(),"%Y%m%d%H%i%s")
 		WHERE 
-			INPN_SEQ = #{inpnSeq}
+			INPN_SEQ = #{seq}
 	</update>
 	
 	<!-- 부서일정삭제 -->
@@ -144,7 +146,7 @@
 			DEPN_DEL_YN = "Y"
 			,DEPN_UPDT_DATE = DATE_FORMAT(now(),"%Y%m%d%H%i%s")
 		WHERE 
-			DEPN_SEQ = #{depnSeq}
+			DEPN_SEQ = #{seq}
 	</update>
 	
 	<!-- 개인일정수정 -->
@@ -159,7 +161,7 @@
 			,INPN_END_DATE = #{endDate}
 			,INPN_UPDT_DATE = DATE_FORMAT(now(),"%Y%m%d%H%i%s")
 		WHERE
-			INPN_SEQ = #{inpnSeq}
+			INPN_SEQ = #{seq}
 	</update>
 	
 	<!-- 부서일정수정 -->
@@ -174,7 +176,7 @@
 			,DEPN_END_DATE = #{endDate}
 			,DEPN_UPDT_DATE = DATE_FORMAT(now(),"%Y%m%d%H%i%s")
 		WHERE
-			DEPN_SEQ = #{depnSeq}
+			DEPN_SEQ = #{seq}
 	</update>
 	
 </mapper>
