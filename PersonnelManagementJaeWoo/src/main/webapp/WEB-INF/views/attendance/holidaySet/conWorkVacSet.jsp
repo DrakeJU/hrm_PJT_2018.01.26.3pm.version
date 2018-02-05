@@ -20,7 +20,7 @@
 	*/
 	
 	//표 행 생성 
-	$(document).on("click", "button[name=addTr]", function(){
+	$(document).on("click", "button[id=addTr]", function(){
 		var addTrText =  "<tr name='vacationOption' style='display:table;width:100%;table-layout:fixed;'>"+
 							"<td style='width:6%;'>"+
 								'<label class="fancy-checkbox-inline">'+
@@ -128,7 +128,7 @@
 					//tr안에 몇번째 td인지 체크해주는것
 					var progTd = progTr.children().eq(i);
 
-					//1,2번 td에는 input type 이 text이기때문에 children() 한번해줌?
+					//1,2번 td에는 input type 이 text이기때문에 children() 한번해줌
 					if (i == 1 || i == 2 || i == 3) {
 						var inputName = progTd.children();
 
@@ -140,6 +140,8 @@
 				}//for
 			}//if checkbox
 		});
+		
+		
 		
 		var json;
 		var obj = new Object();
@@ -223,7 +225,12 @@
 									<!-- <tr id="headTr"></tr> -->
 								</tbody>
 							</table>
-							<button type="button" name="saveButton" class="btn btn-primary ftr" onClick="insertDDBB('insertForm')">저장</button>
+							<div id="low_buttons">
+								<span class="ftr">
+								<button type="button" name="saveButton" class="btn btn-primary ftr" onClick="insertDDBB('insertForm')">저장</button>
+								<button type="button" name="refreshButton" class="btn btn-primary ftr" onClick="tbodyList()">새로고침</button>
+								</span>
+							</div>
 						</form>
 					</div>
 				</div>
