@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.spring.attendance.entity.EventsData;
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.EventsData;
 
 
 @Repository("holidaySetDao")
@@ -34,6 +36,41 @@ public class HolidaySetDao {
 			result = this.sqlSession.insert(nameSpaceName + "holidaySetDBInsert", tmp);
 		}
 
+		return result;
+	}
+	
+	public int holidayRoster(HashMap<String,Object> infoMap) {
+		int result = -1;
+		
+		result = this.sqlSession.insert(nameSpaceName + "holidayRoster", infoMap);
+		
+		return result;
+	}
+	
+	public HashMap<String, String> holidayRosterList(){
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map = this.sqlSession.selectOne(nameSpaceName + "holidayRosterList");
+		
+		return map;
+		
+	}
+	
+	public List<HashMap<String,String>> holidayRosterEventsList(){
+		List<HashMap<String,String>> list = this.sqlSession.selectList(nameSpaceName + "holidayRosterEventsList");
+		
+		return list;
+	}
+	
+	public int holidayRosterDBInsert(ArrayList<EventsData> eventsArrayList) {
+		int result = -1;
+		
+		for(int i = 0 ; i < eventsArrayList.size() ; i++) {
+			EventsData tmp = (EventsData)eventsArrayList.get(i);
+			
+			result = this.sqlSession.insert(nameSpaceName + "holidayRosterDBInsert", tmp);
+		}
+		
 		return result;
 	}
 	

@@ -6,38 +6,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>월간 근태 생성/마감</title>
-<script>
-
-	//테이블 내용 가운데정렬
-	$(document).ready(function() { 
-	    $('.table tr').children().addClass('text-center');
-	    console.log('hg');
-	});
-	
-	//달력
-	$(function () {
-	    $('#monthDate').datetimepicker({
-	    	viewMode: 'months',
-	    	format: 'YYYY-MM'
-	    });
-	});
-
-
-</script>
 </head>
 <body>
 	<div class="main">
 		<div class="main-content">
 			<div class="container-fluid">
 				<h3 class="page-title">월간 근태 생성/마감</h3>
-				
 				<div class="panel">
 					<div class="panel-body">
 						<form class="form-inline" action="/spring/readMnthngAttdCrtCls">
 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i>근무년월
 							<!-- 달력 -->
 							<div class="input-group date" id="monthDate">
-							  	<input type="text" class="form-control" id="modeApplicationDate" name="workYyMm"/>
+							  	<input type="text" class="form-control" id="modeApplicationDate" name="workYyMm" value="${workYyMm}"/>
 							    <span class="input-group-addon">
 								    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 							    </span>
@@ -55,7 +36,7 @@
 					</div>
 					<div class="panel-body">
 						<div class="list_wrapper">
-							<table class="table tablesorter table-bordered" id="">
+							<table class="table tablesorter table-bordered table-hover" id="empInfoTable">
 								<thead>
 									<tr>
 										<th>사원번호</th>
@@ -111,25 +92,25 @@
 								<tr>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>총근무일수</td>
 									<td>
-										<input type="text" class="form-control" id="" placeholder="총근무일수">
+										<input type="text" class="form-control" id="totWorkdayCnt" placeholder="총근무일수" value="${resultSttsMap.totWorkdayCnt}">
 									</td>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>평일근무일수</td>
 									<td>
-										<input type="text" class="form-control" id="" placeholder="평일근무일수">
+										<input type="text" class="form-control" id="wkWorkdayCnt" placeholder="평일근무일수" value="${resultSttsMap.wkWorkdayCnt}">
 									</td>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>휴일근무일수</td>
 									<td>
-										<input type="text" class="form-control" id="" placeholder="휴일근무일수">
+										<input type="text" class="form-control" id="hoilWorkdayCnt" placeholder="휴일근무일수" value="${resultSttsMap.hoilWorkdayCnt}">
 									</td>
 								</tr>
 								<tr>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>휴가사용일수</td>
 									<td>
-										<input type="text" class="form-control" id="" placeholder="휴가사용일수">
+										<input type="text" class="form-control" id="vacUsedayCnt" placeholder="휴가사용일수" value="${resultSttsMap.vacUsedayCnt}">
 									</td>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>기타휴가일수</td>
 									<td>
-										<input type="text" class="form-control" id="" placeholder="기타휴가일수">
+										<input type="text" class="form-control" id="etcUsedayCnt" placeholder="기타휴가일수" value="${resultSttsMap.etcUsedayCnt}">
 									</td>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>결근일수</td>
 									<td>
@@ -152,7 +133,7 @@
 								<tr>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>평일연장</td>
 									<td>
-										<input type="text" class="form-control" id="" placeholder="평일연장">
+										<input type="time" pattern="[0-9]{2}:[0-9]{2}" class="form-control" id="" placeholder="평일연장">
 									</td>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>평일야간</td>
 									<td>
@@ -201,5 +182,73 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+		//테이블 내용 가운데정렬
+		$(document).ready(function() { 
+		    $('.table tr').children().addClass('text-center');
+		    console.log('hg');
+		});
+		
+		//달력
+		$(function () {
+		    $('#monthDate').datetimepicker({
+		    	viewMode: 'months',
+		    	format: 'YYYY-MM'
+		    });
+		});
+		
+		// 테이블에서 선택된 행 값 얻어오기 :(이 기능은 화면 로딩 이후에 실행해야 정상동작)
+		$('#empInfoTable tr').click(function(){    
+			console.log('table row clikc 함수 진입');	
+			
+				var tr = $(this);
+				var td = tr.children();
+				
+				var empEmno = td.eq(0).text();
+				var workYyMm = $('#modeApplicationDate').val();
+		
+				$.ajax({
+					  type : "POST"
+					, url : "/spring/readMnthngAttdCrtClsStts"
+					, data : {"empEmno":empEmno, "workYyMm":workYyMm}
+					, dataType : "json"
+					, success : function(data){
+						console.log("성공");
+						var resultSttsMap = data.resultSttsMap;
+						
+						$(resultSttsMap).each(function(index, element){
+							console.log(element.wkWorkdayCnt);
+							console.log(element.vacUsedayCnt);
+							console.log(element.etcUsedayCnt);
+							console.log(element.totWorkdayCnt);
+							console.log(element.hoilWorkdayCnt);
+							
+							$("#totWorkdayCnt").val(element.totWorkdayCnt);
+							$("#wkWorkdayCnt").val(element.wkWorkdayCnt);
+							$("#hoilWorkdayCnt").val(element.hoilWorkdayCnt);
+							$("#vacUsedayCnt").val(element.vacUsedayCnt);
+							$("#etcUsedayCnt").val(element.etcUsedayCnt);
+						});
+						
+					}
+					, error : function (xhr, status, error){
+						console.log("에러발생 ");
+						console.log("xhr : " + JSON.stringify(xhr));
+						console.log("status : " + status);
+						console.log("error : " + error);
+					}
+					, complete : function (event, request, settings){
+						console.log("완료");
+						console.log("event : " + JSON.stringify(event));
+						console.log("request : " + request);
+						console.log("settings : " + settings);
+					}
+				});		
+				
+			}		
+		);
+	</script>
+	
 </body>
 </html>

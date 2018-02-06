@@ -1,5 +1,8 @@
 package com.example.spring.attendance.dao;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +33,107 @@ public class VacationDao {
 			= this.sqlSession.selectList(nameSpaceName + "vacationCountEmpList", map);
 		
 		logger.debug("dao List: "+list);
+		
+		return list;
+	}
+	
+	/*  휴가일수설정  자동 계산   */
+	public List<HashMap<String,Object>> vacationCountAutoCalculation(HashMap<String,Object> map) {
+
+		//출퇴근내역
+		this.sqlSession.insert(nameSpaceName + "attrTest", map);
+		
+		
+		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		HashMap<String,Object> calMap = new HashMap<String,Object>();
+		
+		int cowyCnt = 0; //근속연수((오늘-입사일자)/365)
+		int empIncoMonth = 0; //입사년월
+		int monthSize = 0; //현재월 -입사월
+		int cowyMonthCnt = 0; //개근 월 개수(한달단위로 for문 돌림)
+		int vacCnt = 0; //휴가개수
+		int beforeYearPvacUd = 0; //전년도 휴가 사용 개수
+		int cowyUpdate = 0; //근속연수 +1 업데이트
+		int cowyYn = 0; //전년도 근속일수가 80% 넘는지
+		
+		String s1 = (String) map.get("empEmnoResult");
+		String[] words = s1.split("/");
+		
+		for(String empEmno : words) {
+			logger.info("empEmno: " + empEmno);
+			map.put("empEmno", empEmno);
+			
+			cowyCnt = this.sqlSession.selectOne(nameSpaceName + "cowyCnt", empEmno);
+			empIncoMonth = this.sqlSession.selectOne(nameSpaceName + "empIncoMonth", empEmno);
+			monthSize = Integer.parseInt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("YYYYMM")))-empIncoMonth;
+			System.out.println(monthSize);
+			
+			//휴가일수 자동 계산 로직
+			if(cowyCnt == 0){ //1년 미만
+				for(int i=0; i<monthSize; i++) {
+					map.put("cowyMonthCnt", empIncoMonth);
+					cowyMonthCnt = this.sqlSession.selectOne(nameSpaceName + "cowyMonthCnt", map);
+					
+					if(cowyMonthCnt == 1) { //1개월 개근했으면                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+						vacCnt++; //휴가개수+1
+					}
+					empIncoMonth++; //월+1(다음월)
+				}
+
+//				일사월부터 1개월 개근시 연차 1일 생성
+//				입사일자 월부터 현재월까지 정상근무 월과 비교
+//				근태공통코드 W7(결근)이 아닌 날만 한달치 개수 비교
+//				개수가 똑같거나 큰 날만큼 연차 생성
+
+			}else if(cowyCnt == 1){ //1년
+			
+				if(cowyYn == 0){ //전년도 80% 미만 출근(정상근무 개수 80% 미만)
+					empIncoMonth = Integer.parseInt(LocalDateTime.now().minusYears(1).format(DateTimeFormatter.ofPattern("YYYY"))+"01"); //작년 1월
+					for(int i=1; i<=12; i++) {
+						map.put("cowyMonthCnt", empIncoMonth);
+						cowyMonthCnt = this.sqlSession.selectOne(nameSpaceName + "empIncoMonth", map);
+						
+						if(cowyMonthCnt == 1) { //1개월 개근했으면
+							vacCnt++; //1월부터 1개월 개근시 연차 1일 생성
+						}
+						empIncoMonth++; //월+1(다음월)
+					}
+				}else{ //전년도 80% 이상 출근
+					map.put("cowyCnt", cowyCnt);
+					cowyUpdate = this.sqlSession.update(nameSpaceName + "empIncoMonth", map); //근속연수 +1
+					
+					beforeYearPvacUd = this.sqlSession.selectOne(nameSpaceName + "beforeYearPvacUd", empEmno);
+					if(beforeYearPvacUd == 0){ //전년도 휴가 사용 일수가 0이면
+						vacCnt = 15;
+					}else{ //전년도 휴가 사용 일수가 있으면
+						vacCnt = 15 - beforeYearPvacUd; //15일-전년도 휴가 사용일
+					}
+				}
+			}else{ //2년 이상								
+				if(cowyYn == 0){ //전년도 80% 미만 출근
+					empIncoMonth = Integer.parseInt(LocalDateTime.now().minusYears(1).format(DateTimeFormatter.ofPattern("YYYY"))+"01"); //작년 1월
+					for(int i=1; i<=12; i++) {
+						map.put("cowyMonthCnt", empIncoMonth);
+						cowyMonthCnt = this.sqlSession.selectOne(nameSpaceName + "empIncoMonth", map);
+						
+						if(cowyMonthCnt == 1) { //1개월 개근했으면
+							vacCnt++; //1월부터 1개월 개근시 연차 1일 생성
+						}
+						empIncoMonth++; //월+1(다음월)
+					}
+				}else{ //전년도 80% 이상 출근
+					map.put("cowyCnt", cowyCnt);
+					cowyUpdate = this.sqlSession.update(nameSpaceName + "empIncoMonth", map); //근속연수 +1
+					
+					vacCnt = this.sqlSession.selectOne(nameSpaceName + "cowyVacDays", empEmno); //근속연수 연차개수
+				}
+			}
+			//로직 끝
+
+			calMap.put("empEmno", empEmno); //사원번호
+			calMap.put("vacCnt", vacCnt); //연차개수
+			list.add(calMap); //사원별로 연차개수 리스트에 담기
+		}
 		
 		return list;
 	}
@@ -107,6 +211,46 @@ public class VacationDao {
 		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "vacationListAdmin", map);
 
 		logger.info("휴가조회 관리자 DAO list>><<<<" + list);
+		return list;
+	}
+	
+	/* 휴가 조회 - 퇴직 여부 셀렉박스 */
+	public List<HashMap<String,Object>> retTypeList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "retTypeList", map);
+		return list;
+	}
+	/* 휴가 조회 - 부서 리스트 셀렉박스 */
+	public List<HashMap<String,Object>> deptNameList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "deptNameList", map);
+		return list;
+	}
+	/* 휴가 조회 - 직급 리스트 셀렉박스 */
+	public List<HashMap<String,Object>> rankNameList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "rankNameList", map);
+		return list;
+	}
+	
+	
+	/* 휴가조회-관리자 : 모달 - 상단 사원 정보 */
+	public List<HashMap<String,Object>> empInfo(HashMap<String,Object> map){
+		logger.info("휴가조회관리자 모달 사원 정보 DAO::::"+map);
+		
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "empInfo", map);
+		//logger.info("휴가조회관리자 모달 사원 정보아아아ㅏ아 DAO::::"+list);
+		
+		return list;
+	}
+	
+	/* 휴가조회-관리자 : 모달 - 휴가 사용 정보 */
+	public List<HashMap<String,Object>> empVacList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "empVacList", map);
+		logger.info("휴가관리자 모달 사원!!!!!!!!~~!" + list);
+		return list;
+	}
+	
+	/* 휴가조회-관리자 : 모달 - 하단 휴가 개수 */
+	public List<HashMap<String,Object>> empVacNum(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "empVacNum", map);
 		return list;
 	}
 	

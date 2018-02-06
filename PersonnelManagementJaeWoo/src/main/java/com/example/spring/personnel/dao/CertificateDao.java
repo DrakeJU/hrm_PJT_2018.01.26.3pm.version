@@ -15,21 +15,51 @@ public class CertificateDao {
 	private String namespace = "certificate.";
 	
 	//증명서전체정보가져오기
-	public List<String> certificateIssue(){
+	public List<String> certificateWhole(){
 		
-		List<String> list = this.sql.selectList(namespace+"certificateIssue");
+		List<String> list = this.sql.selectList(namespace+"certificateWhole");
 		
 		return list;
 	}
 	
-	//신청시 사원정보가져오기
-	public HashMap<String, Object> insertData(String emno){
+	//증명서 공통코드 가져오기
+	public int certificateCommCode(HashMap<String, Object> map) {
+		
+		int result = this.sql.selectOne(namespace + "certificateCommCode",map);
+		
+		return result;
+	}
+	
+	//검색된 증명서 정보 가져오기
+	public List<String> certificateSearch(HashMap<String, Object> map){
+
+		List<String> list = this.sql.selectList(namespace+"certificateSearch",map);
+		
+		return list;
+	}
+	
+	//사원정보가져오기
+	public HashMap<String, Object> empInfo(String emno){
 			
-		HashMap<String, Object> map = this.sql.selectOne(namespace+"insertData",emno);
+		HashMap<String, Object> map = this.sql.selectOne(namespace+"empInfo",emno);
 		
 		return map;
 	}
 	
+	//증명서 신청
+	public int certificateInsert(HashMap<String, Object> map) {
+		
+		int result = this.sql.insert(namespace + "certificateInsert", map);
+		
+		return result;
+	}
 	
+	//증명서 삭제
+	public int certificateDelete(HashMap<String, Object> map) {
+		
+		int result = 0;
+		
+		return result;
+	}
 	
 }

@@ -50,25 +50,51 @@
 					</c:when>
 				</c:choose>
 			</c:forEach>
-			
+			<input type="hidden" name="events"> 
 			<div id="dp"></div>
 			
-			<input type="hidden" name="events"> 
+			<input type="hidden" name="empName2" value="">
+			<input type="hidden" name="yearMonth2" value="">
+			<input type="button" name="saveBtn" class="btn btn-primary" value="저장하기" onClick="saveRosterBtn()">
+			
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
     var dp;
-
-	function validate(){
- 		var empName = $('input[name=empName]').val();
- 		var yearMonth = $('input[name=yearMonth]').val();
- 		
+    var options;
+    var option2;
+    var jArray;
+    var ojb;
+    var empName;
+    var yearMonth
+    
+	function validate(){	
+    	paging.ajaxSubmit("/spring/holidayRosterList.ajax", "", function(result){
+    		$('input[name=empName2]').val(result.empName);
+			$('input[name=yearMonth2]').val(result.yearMonth);
+			//console.log($('input[name=empName2]').val());
+			console.log("ss : " + result.empName);
+    	}, false);
+    	
+    	var empName;
+    	var yearMonth;
+    	
+    	//관리자는 Setting 페이지로 들어오고 컨트롤러에서 @ResponseBody로 값이 전해져 온거라서 input name=empName이 생기는데 일반사원은
+    	//Roster로 들어와서 input name=empName이 안생기기때문에 empName2를 사용해야함.
+    	if($('input[name=empName]').val() == undefined){
+    		empName = $('input[name=empName2]').val();
+     		yearMonth = $('input[name=yearMonth2]').val();
+    	}else{
+    		empName = $('input[name=empName]').val();
+     		yearMonth = $('input[name=yearMonth]').val();
+    	}
+    	
  		//empName이 ex)[김재우, 박민찬, 진두환] 이런형식으로 있기때문에 이름 하나만 이용하려면은 split으로 짤라주어야함. 그거를 배열로 만든거.
  		var empNameArray = empName.split(",");
- 		var obj = new Object();
-		var jArray = new Array();
+ 		obj = new Object();
+		jArray = new Array();
  		
 		//배열을 하나 만들어줘서 배열에 계속 저장
  		for(var i = 0 ; i < empNameArray.length ; i++){
@@ -77,23 +103,13 @@
  			jArray.push(obj);
 			obj = {};
  		}
- 		
-		
-		
-		//근무자 수 설정한 인원값에 맞게 json 데이터 형식으로 맞춰주는 데이터
-// 		for(var i = 0 ; i < numberOfPeople ; i++){
-// 			obj.name = "근무자" + (i+1);
-// 			obj.id = (i+1);
-// 			jArray.push(obj);
-// 			obj = {};
-// 		}
 		
 		console.log(jArray);
 		
-// 		console.log(empName);
-// 		console.log(yearMonth);
+		console.log(empName);
+		console.log(yearMonth);
 		
-		var options = {
+		options = {
             startDate: "",
             days: 31,
             scale: "Day",
@@ -133,31 +149,32 @@
             */
 
             events: [
-                {
-                    start: "2014-01-25T00:00:00",
-                    end: "2014-01-25T12:00:00",
-                    id: DayPilot.guid(),
-                    resource: "강병욱",
-                    text: "Event"
-                },
-				{
-					start: "2014-01-25T00:00:00",
-                    end: "2014-01-26T00:00:00",
-                    id: DayPilot.guid(),
-                    resource: "신지연",
-                    text: "D"
-				}
+//                 {
+//                     start: "2014-01-25T00:00:00",
+//                     end: "2014-01-25T12:00:00",
+//                     id: DayPilot.guid(),
+//                     resource: "강병욱",
+//                     text: "Event"
+//                 },
+// 				{
+// 					start: "2014-01-25T00:00:00",
+//                     end: "2014-01-26T00:00:00",
+//                     id: DayPilot.guid(),
+//                     resource: "신지연",
+//                     text: "D"
+// 				}
             ],
 
             // event moving
             onEventMoved: function (args) {
                 dp.message("Moved: " + args.e.text());
+                //$("input[name='events']").val(JSON.stringify(options.events));
             },
 
             // event resizing
             onEventResized: function (args) {
                 dp.message("Resized: " + args.e.text());
-				
+                //$("input[name='events']").val(JSON.stringify(options.events));
             },
 
             // event creating
@@ -179,24 +196,35 @@
             scrollTo: "2014-03-25"
 
         };
-		//console.log(JSON.stringify(options.events));
 
+		var eventsObj = new Object();
+		var eventsArray = new Array();
+		
+		paging.ajaxSubmit("/spring/holidayRosterEventsList.ajax", "", function(result){
+			for(var i = 0 ; i < result.length ; i++){
+				eventsObj.start = result[i].start;
+				eventsObj.end = result[i].end;
+				eventsObj.text = result[i].text;
+				eventsObj.id = DayPilot.guid();
+				eventsObj.resource = result[i].resource;
+				eventsArray.push(eventsObj);
+				eventsObj = {};
+			}
+			
+			options.events = eventsArray;
+			
+    	}, false);
+		
 		options.resources = jArray;
-		
-		//console.log(JSON.stringify(options.resources));
-		
 		options.startDate = yearMonth;
 		
-		$("input[name='events']").val(options.events);
-		
-// 		console.log(options.startDate);
-// 		console.log(yearMonth);
+		console.log("events : " + JSON.stringify(options.events));
 		
 		return options;
 	}
-
+	
     $(document).ready(function() {
-		var option2 = validate();
+		option2 = validate();
 		
         dp = $("#dp").daypilotScheduler(option2);
 		dp.allowEventOverlap = false;
@@ -205,26 +233,61 @@
 		dp.resourceBubble = new DayPilot.Bubble();
 
 		dp.contextMenu = new DayPilot.Menu({items: [
-        {text:"Edit", onClick: function(args) { dp.events.edit(args.source); } },
-        {text:"Delete", onClick: function(args) { dp.events.remove(args.source); } },
-        {text:"-"},
-        {text:"Select", onClick: function(args) { dp.multiselect.add(args.source); } },
-		]});
-
-		console.log(JSON.stringify(option2.events));
+        	{text:"Edit", onClick: function(args) { 
+        		dp.events.edit(args.source); } },
+        	{text:"Delete", onClick: function(args) { 
+        		console.log("delete : " + JSON.stringify(args.source));
+        		dp.events.remove(args.source); } },
+        	{text:"-"},
+        	{text:"Select", onClick: function(args) { 
+        		dp.multiselect.add(args.source); } },
+		]}
+		);
+		
+		console.log("ss : " + JSON.stringify(option2.events));
+		
     });
-
+	
+    function saveRosterBtn(){
+    	$("input[name='events']").val(JSON.stringify(options.events));
+    	//$("form[name='hiddenForm']").submit();
+    	
+    	//var dataObj = {"eventsArray":JSON.stringify($("input[name='events']").val())};
+    	var data = JSON.stringify($("input[name='events']").val());
+    	
+    	//특정문자 '\'를 제거해주는 작업
+		data = data.replace(/\\/g,'');
+    	
+    	//map 형식으로 만들어줌.
+    	var dataObj = {"eventsArray":data};
+    	
+    	//console.log(dataObj);
+    	
+		paging.ajaxSubmit("/spring/holidayRosterDBInsert.ajax",dataObj,function(result){
+			console.log(result);
+		});
+    }
+    
+    function loadRosterBtn(){
+    	option2.startDate = "2018-01-05";
+   		
+    	location.reload();
+    	
+    	console.log("새로고침 : " + JSON.stringify(option2.startDate));
+    }
+    
 </script>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    var url = window.location.href;
-    var filename = url.substring(url.lastIndexOf('/')+1);
-    if (filename === "") filename = "index.html";
-    $(".menu a[href='" + filename + "']").addClass("selected");
-});
+<!-- <script type="text/javascript"> -->
+<!-- // $(document).ready(function() { -->
+<!-- //     var url = window.location.href; -->
+<!-- //     var filename = url.substring(url.lastIndexOf('/')+1); -->
+<!-- //     if (filename === "") filename = "index.html"; -->
+<!-- //     $(".menu a[href='" + filename + "']").addClass("selected"); -->
+    
+<!-- // }); -->
         
-</script>
+<!-- </script> -->
 	<!-- /bottom -->
 
 </body>

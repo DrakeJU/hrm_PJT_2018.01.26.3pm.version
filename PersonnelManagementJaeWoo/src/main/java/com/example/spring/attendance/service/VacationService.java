@@ -34,6 +34,16 @@ public class VacationService {
 		return list;
 	}
 	
+	/* 휴가일수설정  자동 계산 */
+	public List<HashMap<String,Object>> vacationCountAutoCalculation(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = vacationDao.vacationCountAutoCalculation(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
 	/* 휴가일수설정 - 사원등록 필요 개수 */
 	public int vacationCountEmpSignUpCntNum() {
 		
@@ -89,9 +99,46 @@ public class VacationService {
 	/* 휴가 조회하기 - 관리자 */
 	public List<HashMap<String,Object>> vacationListAdmin(HashMap<String,Object> map) {
 		logger.info("vacation리스트 관리자 SERVICE 진입>>>>" + map);
+		 
+		List<HashMap<String,Object>> list = vacationDao.vacationListAdmin(map);	
+		return list;
+	}
+	
+	/* 휴가 조회 - 퇴직 여부 셀렉박스 */
+	public List<HashMap<String,Object>> retTypeList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.retTypeList(map);
+		return list;
+	}
+	
+	/* 휴가 조회 - 부서 리스트 셀렉박스 */
+	public List<HashMap<String,Object>> deptNameList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.deptNameList(map);
+		return list;
+	}
+	/* 휴가 조회 - 직급 리스트 셀렉박스 */
+	public List<HashMap<String,Object>> rankNameList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.rankNameList(map);
+		return list;
+	}
+	
+	
+	/* 휴가조회-관리자 : 모달 - 상단 사원 정보 */
+	public List<HashMap<String,Object>> empInfo(HashMap<String,Object> map){
+		logger.info("휴가조회관리자 모달 사원정보 SERvice-------" + map);
 		
-		List<HashMap<String,Object>> list = vacationDao.vacationListAdmin(map);
-		
+		List<HashMap<String,Object>> list = vacationDao.empInfo(map);
+		return list;
+	}
+	
+	/* 휴가조회-관리자 : 모달 - 휴가 사용 정보 */
+	public List<HashMap<String,Object>> empVacList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.empVacList(map);
+		return list;
+	}
+	
+	/* 휴가조회-관리자 : 모달 - 하단 휴가 개수 */
+	public List<HashMap<String,Object>> empVacNum(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.empVacNum(map);
 		return list;
 	}
 

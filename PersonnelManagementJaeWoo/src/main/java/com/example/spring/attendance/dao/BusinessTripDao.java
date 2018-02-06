@@ -41,9 +41,4 @@ public class BusinessTripDao {
 		
 		return list;
 	}
-	
-	//출장정산 select
-	public List businessAdj(HashMap<String, Object> map) { 
-		return this.sqlSession.selectList(nameSpaceName + "businessAdj", map);
-	}
 }

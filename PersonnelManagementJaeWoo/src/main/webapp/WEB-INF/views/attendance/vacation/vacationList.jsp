@@ -123,10 +123,10 @@
 				</div>
 				
 				<div class="panel panel-headline"> 
-					<div class="panel-heading"> 
-						<h4 class="panel-title">휴가내역</h4>
+<!-- 					<div class="panel-heading">  -->
+<!-- 						<h5 class="panel-title">휴가내역</h4> -->
 <!-- 							<p class="subtitle">설명이 필요할 경우 추가 예정</p> -->
-					</div>
+<!-- 					</div> -->
 					<div class="panel-body">
 						<!-- list table 영역 -->
 						<div class="list_wrapper">

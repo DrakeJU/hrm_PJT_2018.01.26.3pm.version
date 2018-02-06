@@ -20,24 +20,55 @@ public class CertificateController {
 	
 	//증명서발급메인화면 
 	@RequestMapping(value="certificateIssue.do")
-	public ModelAndView certificateIssue() {
+	public String certificateIssue() {
 		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("list",certificateService.certificateIssue());
-		mv.setViewName("certificateIssue");
-		
-		return mv;
+		return "certificateIssue";
 	}
 	
-	//신청시 사원정보가져오기
-	@RequestMapping(value="insertData.do")
-	public @ResponseBody HashMap<String, Object> insertData(@RequestParam String emno){
+	//증명서 전체정보 가져오기
+	@RequestMapping(value="certificateWhole.do")
+	public @ResponseBody List<String> certificateWhole(){
 		
-		//사원정보
-		HashMap<String, Object> map = certificateService.insertData(emno);
+		List<String> list = certificateService.certificateWhole();
+		
+		return list;
+	}
+	
+	//검색된 증명서 정보 가져오기
+	@RequestMapping(value="certificateSearch.do")
+	public @ResponseBody List<String> certificateSearch(@RequestParam HashMap<String, Object> map){
+		System.out.println("컨트롤러 map : " + map);
+		
+		List<String> list = certificateService.certificateSearch(map);
+		
+		return list;
+	}
+	
+	//사원정보가져오기
+	@RequestMapping(value="empInfo.do")
+	public @ResponseBody HashMap<String, Object> empInfo(@RequestParam String emno){
+		
+		HashMap<String, Object> map = certificateService.empInfo(emno);
 		
 		return map;
 	}
 	
+	//증명서 신청
+	@RequestMapping(value="certificateInsert.do")
+	public @ResponseBody int certificateInsert(@RequestParam HashMap<String, Object> map) {
+		
+		int result = certificateService.certificateInsert(map);
+			
+		return result;
+	}
+	
+	//증명서 삭제
+	@RequestMapping(value="certificateDelete.do")
+	public @ResponseBody int certificateDelete(@RequestParam HashMap<String, Object> map) {
+		
+		int result = certificateService.certificateDelete(map);
+		
+		return result;
+	}
 	
 }

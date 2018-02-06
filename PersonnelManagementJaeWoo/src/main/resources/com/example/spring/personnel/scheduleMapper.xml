@@ -86,7 +86,7 @@
 			  AND DEPN_DEL_YN = 'N'
 	</select>
 	
-	<!-- 개인일정상세보기 -->
+	<!-- 개인일정상세보기 --> 
 	<select id="individuaDetail" parameterType="HashMap" resultType="HashMap">
 		/* /personnel/schedule/scheduleMapper.xml - individuaDetail(개인일정상세보기) */
 		SELECT 

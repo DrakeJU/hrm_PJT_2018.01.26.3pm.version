@@ -11,6 +11,7 @@
 		<typeAlias alias="HashMap" type="java.util.HashMap"/>			
 		<typeAlias alias="jsonData" type="com.example.spring.attendance.entity.JsonData"/>										
 		<typeAlias alias="jsonDataVac" type="com.example.spring.attendance.entity.JsonDataVac"/>
+		<typeAlias alias="eventsData" type="com.example.spring.attendance.entity.EventsData"/>
 	</typeAliases>
 	
 	<plugins>

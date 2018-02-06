@@ -3,10 +3,10 @@
 
 <mapper namespace="certificate">
 	<!-- 증명서전체정보 가져오기 -->
-	<select id="certificateIssue" resultType="HashMap">
-		/* /personnel/certificate/certificateMapper.xml - certificateIssue(증명서전체정보 가져오기) */
+	<select id="certificateWhole" parameterType="HashMap" resultType="HashMap">
+		/* /personnel/certificate/certificateMapper.xml - certificateWhole(증명서전체정보 가져오기) */
 		SELECT
-			XX.CRTF_ISNO AS crtfIsno 							/*발행번호*/
+			XX.CRTF_SEQ AS crtfSeq 								/*일련번호*/
 			,XX.EMP_EMNO AS empEmno 							/*사원번호*/
 			,XX.EMP_NAME AS empName 							/*성명*/
 			,COMM_NAME AS commName 								/*증명서종류*/
@@ -25,9 +25,48 @@
 		ORDER BY XX.CRTF_SEQ DESC
 	</select>
 	
-	<!-- 신청시 사원정보가져오기 -->
-	<select id="insertData" parameterType="String" resultType="HashMap">
-		/* /personnel/certificate/certificateMapper.xml - insertData(신청시 사원정보가져오기) */
+	<!-- 증명서코드가져오기 -->
+	<select id="certificateCommCode" parameterType="HashMap" resultType="Integer">
+		/* /personnel/certificate/certificateMapper.xml - certificateCommCode(증명서코드가져오기) */
+		SELECT COMM_CODE /*증명서코드*/
+		FROM COMMON
+		WHERE COMM_NAME = #{select}
+	</select>
+	
+	<!-- 검색된 증명서 정보 가져오기 -->
+	<select id="certificateSearch" parameterType="HashMap" resultType="HashMap">
+		/* /personnel/certificate/certificateMapper.xml - certificateSearch(검색된 증명서 정보 가져오기) */
+		SELECT
+			XX.CRTF_SEQ AS crtfSeq 								/*일련번호*/
+			,XX.EMP_EMNO AS empEmno 							/*사원번호*/
+			,XX.EMP_NAME AS empName 							/*성명*/
+			,COMM_NAME AS commName 								/*증명서종류*/
+			,XX.CRTF_USE AS crtfUse 							/*용도*/
+			,DATE_FORMAT(XX.CRTF_DATE,"%Y-%m-%d") AS crtfDate 	/*발행일*/
+		FROM (
+			SELECT X.*,EMP_NAME
+			FROM (
+				SELECT *
+				FROM CERTIFICATE
+				WHERE CRTF_DEL_YN = "N"
+					<choose>
+						<when test="commCode != null">
+							AND COMM_CODE = #{commCode}
+						</when>
+						<when test="!startDate.equals('') and !endDate.equals('')">
+							AND DATE_FORMAT(CRTF_DATE,"%Y-%m-%d") BETWEEN #{startDate} AND #{endDate}
+						</when>
+					</choose>
+				)X, EMPLOYEE E
+				WHERE X.EMP_EMNO = E.EMP_EMNO
+			)XX, COMMON C
+		WHERE XX.COMM_CODE = C.COMM_CODE
+		ORDER BY XX.CRTF_SEQ DESC
+	</select>
+	
+	<!-- 사원정보가져오기 -->
+	<select id="empInfo" parameterType="String" resultType="HashMap">
+		/* /personnel/certificate/certificateMapper.xml - empInfo(사원정보가져오기) */
 		SELECT
 			XX.EMP_EMNO AS empEmno 		/*사원번호*/
 			,XX.EMP_NAME AS empName 	/*성명*/
@@ -46,5 +85,26 @@
 			)XX, DEPARTMENT D
 		WHERE XX.DEPT_CODE = D.DEPT_CODE
 	</select>
+	
+	<!-- 증명서신청 -->
+	<insert id="certificateInsert" parameterType="HashMap">
+		/* /personnel/certificate/certificateMapper.xml - certificateInsert(증명서신청) */
+			INSERT INTO CERTIFICATE
+				(
+					EMP_EMNO		/*사원번호*/
+					,COMM_CODE		/*공통파일코드*/
+					,CRTF_USE		/*용도*/
+					,CRTF_DATE		/*발행일*/
+					,CRTF_DEL_YN	/*삭제여부*/				
+				)
+			VALUES
+				(
+					#{empEmno}										/*사원번호*/
+					,#{commCode}									/*공통파일코드*/
+					,#{use}											/*용도*/
+					,DATE_FORMAT(now(),"%Y%m%d%H%i%s")				/*발행일*/
+					,#{delYn}										/*삭제여부*/
+				)
+	</insert>
 	
 </mapper>

@@ -40,22 +40,21 @@ var checkcount = 0;
 							$("#chk" + i).prop("checked",true);
 							
 							$('td[name=saltext'+ i +']').text("");
+							$('td[name=bsttext'+ i +']').text("");
+							$('td[name=nsttext'+ i +']').text("");
 							$('td[name=tamtext'+ i +']').text("");
 							$('td[name=fdetext'+ i +']').text("");
 							$('td[name=cmctext'+ i +']').text("");
-							$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=saltext'+i+']').attr('id')+'>');
-							
-						
-							$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=tamtext'+i+']').attr('id')+'>');
-							
-				
-							$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=fdetext'+i+']').attr('id')+'>');
-							
-						
-							$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=cmctext'+i+']').attr('id')+'>');
-							
+							$('td[name=lsttext'+ i +']').text("");
 							
 							$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
+							$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=saltext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+							$("td[name=bsttext" + i + "]").append('<input type="text" name=bsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=bsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+							$("td[name=nsttext" + i + "]").append('<input type="text" name=nsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=nsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+							$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=tamtext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+							$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=fdetext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+							$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=cmctext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+							$("td[name=lsttext" + i + "]").append('<input type="text" name=lsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=lsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 							//$('td[name=saltext'+ i +']').text("");
 					   }
 				}
@@ -65,20 +64,29 @@ var checkcount = 0;
 				
 				for (var i = 0; i < checklength; i++) {
 				
-							$('td[name=saltext'+ i +']').text($('[name=saltext'+i+']').attr('id'));
-							$('td[name=tamtext'+ i +']').text($('[name=tamtext'+i+']').attr('id'));
-							$('td[name=fdetext'+ i +']').text($('[name=fdetext'+i+']').attr('id'));
-							$('td[name=cmctext'+ i +']').text($('[name=cmctext'+i+']').attr('id'));
+					$("input[name=code" + i + "]").remove();
+					
+					$('td[name=saltext'+ i +']').text($('[name=saltext'+i+']').attr('id'));
+					$("input[name=sali" + i + "]").remove();
+					
+					$("td[name=bsttext" + i + "]").text($('[name=bsttext'+i+']').attr('id'));
+					$("input[name=bsti" + i + "]").remove();
+					
+					$("td[name=nsttext" + i + "]").text($('[name=nsttext'+i+']').attr('id'));
+					$("input[name=nsti" + i + "]").remove();
+					
+					$('td[name=tamtext'+ i +']').text($('[name=tamtext'+i+']').attr('id'));
+					$("input[name=tami" + i + "]").remove();
+					
+					$('td[name=fdetext'+ i +']').text($('[name=fdetext'+i+']').attr('id'));
+					$("input[name=fdei" + i + "]").remove();
+					
+					$('td[name=cmctext'+ i +']').text($('[name=cmctext'+i+']').attr('id'));
+					$("input[name=cmci" + i + "]").remove();
+					
+					$("td[name=lsttext" + i + "]").text($('[name=lsttext'+i+']').attr('id'));
+					$("input[name=lsti" + i + "]").remove();
 							
-							$("input[name=sali"+ i + "]").remove();
-
-							$("input[name=tami"+ i + "]").remove();
-							
-							$("input[name=fdei"+ i + "]").remove();
-
-							$("input[name=cmci"+ i + "]").remove();
-							
-							$("input[name=code"+ i + "]").remove();
 				}
 	
 			}
@@ -90,26 +98,33 @@ var checkcount = 0;
 		if ($("#chk" + i).prop("checked") == true) {
 			//alert(list);
 			$('td[name=saltext'+ i +']').text("");
+			$('td[name=bsttext'+ i +']').text("");
+			$('td[name=nsttext'+ i +']').text("");
 			$('td[name=tamtext'+ i +']').text("");
 			$('td[name=fdetext'+ i +']').text("");
 			$('td[name=fdetext'+ i +']').text("");
 			$('td[name=cmctext'+ i +']').text("");
-			$("td[name=saltext" + i + "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=saltext'+i+']').attr('id')+'>');
+			$('td[name=lsttext'+ i +']').text("");
 			
-		
-			$("td[name=tamtext" + i + "]").append('<input type="text" name=tami'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=tamtext'+i+']').attr('id')+'>');
-			
-			
-			$("td[name=fdetext" + i + "]").append('<input type="text" name=fdei'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=fdetext'+i+']').attr('id')+'>');
-			
-			$('td[name=cmtext'+ i +']').text("");
-			$("td[name=cmctext" + i + "]").append('<input type="text" name=cmci'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=cmctext'+i+']').attr('id')+'>');
-			
-			$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
+			$("td[name=empcode" + i + "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
+			$("td[name=saltext" + i + "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=saltext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=bsttext" + i + "]").append('<input type="text" name=bsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=bsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=nsttext" + i + "]").append('<input type="text" name=nsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=nsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=tamtext" + i + "]").append('<input type="text" name=tami'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=tamtext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=fdetext" + i + "]").append('<input type="text" name=fdei'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=fdetext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=cmctext" + i + "]").append('<input type="text" name=cmci'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=cmctext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=lsttext" + i + "]").append('<input type="text" name=lsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=lsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 		} else {
+			$("input[name=code" + i + "]").remove();
 			
 			$('td[name=saltext'+ i +']').text($('[name=saltext'+i+']').attr('id'));
 			$("input[name=sali" + i + "]").remove();
+			
+			$("td[name=bsttext" + i + "]").text($('[name=bsttext'+i+']').attr('id'));
+			$("input[name=bsti" + i + "]").remove();
+			
+			$("td[name=nsttext" + i + "]").text($('[name=nsttext'+i+']').attr('id'));
+			$("input[name=nsti" + i + "]").remove();
 			
 			$('td[name=tamtext'+ i +']').text($('[name=tamtext'+i+']').attr('id'));
 			$("input[name=tami" + i + "]").remove();
@@ -120,7 +135,9 @@ var checkcount = 0;
 			$('td[name=cmctext'+ i +']').text($('[name=cmctext'+i+']').attr('id'));
 			$("input[name=cmci" + i + "]").remove();
 			
-			$("input[name=code" + i + "]").remove();
+			$("td[name=lsttext" + i + "]").text($('[name=lsttext'+i+']').attr('id'));
+			$("input[name=lsti" + i + "]").remove();
+			
 		
 		}
 
@@ -153,7 +170,24 @@ var checkcount = 0;
 				
 			}
 		}
-	} 
+	}
+	// 숫자만 입력, 콤마찍기, 첫자리 숫자 0 입력 안되게
+	//콤마찍기
+	function comma(str) {
+	    str = String(str);
+	    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+	}
+	//콤마풀기
+	function uncomma(str) {
+	    str = String(str);
+	    return str.replace(/[^\d]+/g, '');
+	}
+	function onlyMoneyNumber(obj) {	//	obj 는 this 값 입니다
+		$(obj).val($(obj).val().replace(/[^0-9]/g,"").replace(/(^0+)/, "") );
+		$(obj).keyup(function(){			
+			obj.value = comma(uncomma(obj.value));
+	    });
+	}
 
 
 </script>
@@ -179,6 +213,8 @@ var checkcount = 0;
 										<th>사번</th>
 										<th>사원이름</th>
 										<th>급여</th>
+										<th>주휴근무수당</th>
+										<th>연장근무수당</th>
 										<th>교통비</th>
 										<th>식대</th>
 										<th>차량유지비</th>
@@ -192,10 +228,12 @@ var checkcount = 0;
 											<td width="50" name="empcode${status.index}" id="${tb.EMP_EMNO}">${tb.EMP_EMNO}</td>
 											<td width="100" >${tb.EMP_NAME}</td>
 											<td width="100" name="saltext${status.index}" id="${tb.SEMP_SAL}" align="center">${tb.SEMP_SAL}</td>
+											<td width="100" name="bsttext${status.index}" id="${tb.SEMP_BW_CST}" align="center">${tb.SEMP_BW_CST}</td>
+											<td width="100" name="nsttext${status.index}" id="${tb.SEMP_NW_CST}" align="center">${tb.SEMP_NW_CST}</td>
 											<td width="100" name="tamtext${status.index}" id="${tb.SEMP_TAMT}" align="center">${tb.SEMP_TAMT}</td>
 											<td width="100" name="fdetext${status.index}" id="${tb.SEMP_FDEX}" align="center">${tb.SEMP_FDEX}</td>
 											<td width="100" name="cmctext${status.index}" id="${tb.SEMP_CMC}" align="center">${tb.SEMP_CMC}</td>
-											<td width="100"></td>
+											<td width="100" name="lsttext${status.index}" id="${tb.SEMP_L_CST}" align="center">${tb.SEMP_L_CST}</td>
 										</tr>	
 									</c:forEach>
 								</table>

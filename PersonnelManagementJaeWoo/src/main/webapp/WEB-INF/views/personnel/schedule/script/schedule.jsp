@@ -56,7 +56,12 @@
 		        	$("#viewModal").find("form[id='viewForm']").find("input[name='departmentCheck']").prop("checked",true);
 		        }
 		        
-		       	paging.ajaxSubmit(url,{"emno":emno,"start":start,"end":end},function(rslt){
+		        var obj = {};
+				obj.emno = emno;
+				obj.start = start;
+				obj.end = end;
+		        
+		       	paging.ajaxSubmit(url,obj,function(rslt){
 		        	console.log("결과데이터 : " + JSON.stringify(rslt));
 		        	
 		        	var seq = 0; 				//일련번호

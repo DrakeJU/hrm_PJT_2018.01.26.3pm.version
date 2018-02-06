@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.example.spring.attendance.dao.HolidaySetDao;
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.EventsData;
 
 
 @Service
@@ -29,6 +30,32 @@ public class HolidaySetService {
 		return result;
 	}
 
+	public int holidayRoster(HashMap<String,Object> infoMap) {
+		int result = holidaySetDao.holidayRoster(infoMap);
+		
+		return result;
+	}
+	
+	public List<HashMap<String,String>> holidayRosterEventsList(){
+		List<HashMap<String,String>> list = holidaySetDao.holidayRosterEventsList();
+		
+		return list;
+	}
+	
+	public HashMap<String, String> holidayRosterList(){
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		map = holidaySetDao.holidayRosterList();
+		
+		return map;
+	}
+	
+	public int holidayRosterDBInsert(ArrayList<EventsData> eventsArrayList) {
+		int result = holidaySetDao.holidayRosterDBInsert(eventsArrayList);
+				
+		return result;
+	}
+	
 	//년차수에 따른 연차 디비 Insert
 	public int conWorkVacSetDBInsert(ArrayList<JsonDataVac>jsonArrayList) {
 		int result = holidaySetDao.conWorkVacSetDBInsert(jsonArrayList);

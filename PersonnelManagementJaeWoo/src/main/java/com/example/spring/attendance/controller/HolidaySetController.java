@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.EventsData;
 import com.example.spring.attendance.service.HolidaySetService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,8 +65,6 @@ public class HolidaySetController {
 			System.out.println(tmp.getDivide() + " " + tmp.getCode() + " " + tmp.getAnnualLeaveReflection() + " " + tmp.getTitle() + " " + tmp.getUseOrFailure() + " " + tmp.getNote());
 		}
 
-		System.out.println("여기까지옴2");
-		
 		//list를 이제 서비스쪽으로 보냄.
 		holidaySetService.holidaySetDBInsert(list);
 		
@@ -79,24 +78,105 @@ public class HolidaySetController {
 		return "conWorkVacSet";
 	}
 
-	//관리자 - 근무표생성
+	//관리자 - 근무표 페이지
 	@RequestMapping(value = "/holidayRoster")
-	public ModelAndView holidaySetRoster(@RequestParam HashMap<String,Object> infoMap) {
+	public ModelAndView holidayRoster() {
 		//HashMap<String, String> empNameMap = new HashMap<String, String>();
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("holidayRoster");
-		mv.addObject("infoMap", infoMap);
+		
+		//holidaySetService.holidayRoster(infoMap);
 		
 		return mv;
 	}
 	
+	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
+	@RequestMapping(value = "/holidayRosterSettingDBInsert")
+	public ModelAndView holidayRosterSettingDBInsert(@RequestParam HashMap<String,Object> infoMap) {
+		//HashMap<String, String> empNameMap = new HashMap<String, String>();
+			
+		System.out.println("---------------------" + infoMap);
+			
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("holidayRoster");
+		mv.addObject("infoMap", infoMap);
+			
+		holidaySetService.holidayRoster(infoMap);
+			
+		return mv;
+	}
+	
+	//관리자 - 근무표 근무 인원 db에서 불러오는 컨트롤러.
+	@RequestMapping(value = "/holidayRosterEventsList.ajax")
+	public @ResponseBody List<HashMap<String, String>> holidayRosterEventsList() {
+		List<HashMap<String, String>> map = new ArrayList<HashMap<String, String>>();
+		map = holidaySetService.holidayRosterEventsList();
+		
+		System.out.println("------------- holidayRosterEventsList : "+map);
+
+		return map;
+	}
+	
+	//관리자 - 근무표 근무 인원 db에서 불러오는 컨트롤러.
+	@RequestMapping(value = "/holidayRosterList.ajax")
+	public @ResponseBody HashMap<String, String> holidayRosterList() {
+		HashMap<String, String> map = new HashMap<String, String>();
+			
+		map = holidaySetService.holidayRosterList();
+		
+		System.out.println("------------- map : "+map);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("holidayRoster");
+		mv.addObject("infoMap", map);
+			
+		map.put("success", "true");
+		
+		return map;
+	}
+	
 	//관리자 - 근무표생성설정
 	@RequestMapping(value = "/holidayRosterSetting")
-	public String holidaySetRosterSetting() {
+	public String holidayRosterSetting() {
 		return "holidayRosterSetting";
 	}
 
+	//관리자 - 근무표 db 입력
+	@RequestMapping(value = "/holidayRosterDBInsert.ajax")
+	public @ResponseBody HashMap<String, String> holidayRosterDBInsert(@RequestParam HashMap<String,Object> eventsMap) {
+		System.out.println("---------------------" + eventsMap);
+		
+		//success 다시 되돌려줄 맵
+		HashMap<String, String> map = new HashMap<String, String>();
+		Gson gson = new Gson();
+		//List<EventsData>로 타입을 만들어주겠다 선언.
+		Type type = new TypeToken<List<EventsData>>() {}.getType();
+
+		String result = (String) eventsMap.get("eventsArray");
+		
+		//지금 string result 속에 jsp에서 넘어온 데이터가 앞뒤로 "가 있어서 이것을 제외해주는 작업 
+		result = result.replaceFirst("\"", "");
+		result = replaceLast(result, "\"", "");
+		
+		//gson.fromJson : Json 형식으로된 String을 ArrayList로 바꿔주는 역할을 함.
+		//지금 result에는 json형식으로 되어있음.
+		ArrayList<EventsData> list = gson.fromJson(result, type);
+
+//		for(int i = 0 ; i < list.size() ; i++) {
+//			EventsData tmp = (EventsData)list.get(i);
+//			System.out.println(tmp.getStart() + "," + tmp.getEnd() + "," + tmp.getId() + "," + tmp.getResource() + "," + tmp.getText());
+//		}
+		//list를 이제 서비스쪽으로 보냄.
+		
+		holidaySetService.holidayRosterDBInsert(list);
+		
+		map.put("success", "true");
+
+		return map;
+		
+	}
+	
 	//관리자 - 근속연수에 따른 휴가설정
 	@RequestMapping(value = "/conWorkVacSetDBInsert.ajax")
 	public @ResponseBody HashMap<String, String> conWorkVacSetDBInsert(@RequestParam HashMap<String,Object> jsonMap) {
@@ -149,4 +229,14 @@ public class HolidaySetController {
 		return map;
 	}
 	
+	//이 함수는 replaceFirst는 있는데 replaceLast라는 함수는 없어서 직접 만들어준 함수. 문장 끝에서부터 내가 원하는 문자열을 찾고 바꿔주는 함수이다.
+	private static String replaceLast(String string, String toReplace, String replacement) {    
+		int pos = string.lastIndexOf(toReplace);     
+
+		if (pos > -1) {        
+		return string.substring(0, pos)+ replacement + string.substring(pos +   toReplace.length(), string.length());     
+		} else { 
+			return string;     
+		} 
+	} 
 }

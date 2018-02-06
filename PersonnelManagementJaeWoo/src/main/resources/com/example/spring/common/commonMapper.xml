@@ -19,4 +19,25 @@
 		FROM MENU
 		WHERE MN_URL = #{mnUrl}	
 	</select>
+	<select id="loginProcess" parameterType="HashMap" resultType="HashMap">
+		select 
+			emp_emno empEmno,
+			emp_admin_yn empAdminYn,
+			emp_id empId
+		from employee
+		where emp_id = #{empId}
+		and emp_pswd = #{empPswd}	
+	</select>
+	<select id="authorityProcess" parameterType="HashMap" resultType="HashMap">
+		select
+			mn_url mnUrl,
+			atr_attr atrAttr,
+			atr_aplystrt atrAplystrt,
+			atr_aplyfini atrAplyfini,
+			atr_updtstrt atrUpdtstrt,
+			atr_updtfini atrUpdtFini
+		from authority left join menu
+		on authority.MN_NO = menu.MN_NO
+		where emp_emno =  #{emp_emno}	
+	</select>
 </mapper>

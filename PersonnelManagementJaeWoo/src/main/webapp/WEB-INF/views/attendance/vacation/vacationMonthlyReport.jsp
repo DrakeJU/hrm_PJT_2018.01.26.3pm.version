@@ -8,21 +8,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>휴가 월마감</title>
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/vacation.css" />
+<script src="/spring/resources/common/js/pagingNav.js"></script>
 <script>
 
-	//테이블 내용 가운데정렬
-	$(document).ready(function() { 
-	    $('.table tr').children().addClass('text-center');
-	    console.log('hg');
+	
+	$(function() { 
+		calender();
+		$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
 	});
 	
 	//달력
-	$(function () {
-	    $('#monthDate').datetimepicker({
-	    	viewMode: 'months',
-	    	format: 'YYYY-MM'
-	    });
-	});
+	function calender() {
+		$('#baseYear').val(moment().format('YYYY-MM'));
+    $('#monthDate').datetimepicker({
+    	viewMode: 'months',
+    	format: 'YYYY-MM'
+    });
+	};
 
 
 </script>
@@ -39,10 +41,10 @@
 <!-- 					</div> -->
 					<div class="panel-body">
 						<form class="form-inline">
-							<i class="fa fa-asterisk-red" aria-hidden="true" ></i>마감일자
+							마감일자
 							<!-- 달력 -->
 							<div class="input-group date" id="monthDate">
-						  	<input type="text" class="form-control" id="modeApplicationDate"/>
+						  	<input type="text" class="form-control" id="baseYear"/>
 						    <span class="input-group-addon">
 							    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 						    </span>
@@ -113,7 +115,12 @@
 							</table>
 						</div>
 						<!-- END list table 영역 -->
-						    
+						
+						<!-- 페이징 네비게이션 시작 -->
+						<nav name="pagingNav" aria-label='Page navigation example' align='center'>
+						</nav>
+						<!-- 페이징 네비게이션 끝 -->
+						
 						<!-- 버튼영역 -->
 						<div class="text-right"> 
 							<button type="button" class="btn btn-primary">마감하기</button>

@@ -29,9 +29,40 @@ function vacCntEmpListSearch(){
 
 //휴가일수 자동계산을 눌렀을때
 function vacCntCalculation(){
-	url = "";
-	formId = "vacCntEmpFrm";
-	vacCntEmpList(); //사원정보 리스트 ajax
+// 	url = "";
+// 	formId = "vacCntEmpFrm";
+// 	vacCntEmpList(); //사원정보 리스트 ajax
+	var empIncoDate = new Date('');
+	
+	var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
+	
+	$("input[type=checkbox][id=emnoChk]").each(function(){
+		if($(this).prop('checked')){
+
+			var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
+			var chkTdText = chkTr.children().eq(2).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
+
+			if(empEmnoResult == null){
+				empEmnoResult = chkTdText;
+			}else{
+				empEmnoResult = empEmnoResult + "/" + chkTdText; //사원번호를 구분자와 함께 저장
+			}
+		}
+	});
+	
+	$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
+	console.log($('#empEmnoResult').val());
+	
+	paging.ajaxFormSubmit("vacationCountAutoCalculation.ajax", "vacCntEmpFrm", function(rslt){
+		console.log("결과데이터:"+JSON.stringify(rslt));
+		
+// 		if(rslt == null){
+// 			console.log('');
+// 		}else{
+// 			alert("저장이 완료되었습니다.");
+// 			window.location.reload();
+// 		}
+	});
 }
 
 //저장을 눌렀을 때
@@ -233,6 +264,7 @@ function vacCntEmpSignUpCntNum(){
 													<span></span>
 												</label>
 												<input type="hidden" name="retrDelYn" id="retrDelYn">
+												<input type="hidden" name="empEmnoResult" id="empEmnoResult">
 											</th>
 											<th style='width:12%;'>구분</th>
 											<th style='width:12%;'>사원번호</th>

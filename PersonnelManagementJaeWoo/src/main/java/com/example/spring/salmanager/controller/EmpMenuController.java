@@ -67,7 +67,7 @@ public class EmpMenuController {
 
 	}
 	
-	@RequestMapping(value = "/exi_empcode", method = RequestMethod.GET)//emp_main -> emp_exisali(üũ�� ������� �ο��� ��Ÿ������)
+	@RequestMapping(value = "/exi_empcode", method = RequestMethod.GET)//emp_main -> emp_exisali()
 	public ModelAndView exi_emp(@RequestParam HashMap<String, String> params, Model model) throws Exception {
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -87,6 +87,7 @@ public class EmpMenuController {
 	public ModelAndView i_sal_emp(@RequestParam HashMap<String, String> map) {
 		ModelAndView mv = new ModelAndView();
 		
+		System.out.println("emp_newsali : "+map);
 		empMenuService.insert_newEmp_code(map);
 		
 		//System.out.println("insertsal map: "+map);
@@ -104,6 +105,8 @@ public class EmpMenuController {
 		ModelAndView mv = new ModelAndView();
 		
 		empMenuService.update_newEmp_code(map);
+		
+		
 		//System.out.println("insertsal map: "+map);
 		/*mv.addObject("listNew", empMenuService.newEmpList(map));
 		mv.addObject("count",empMenuService.newEmpList(map).size());

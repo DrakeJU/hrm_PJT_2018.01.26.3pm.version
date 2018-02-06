@@ -35,12 +35,12 @@ public class PaycMenuDao {
     	HashMap<String,Object> m1 = new HashMap<String,Object>();
     	List<HashMap<String,Object>> deduction= new ArrayList();
     
-    	//List<HashMap<String, Object>> getEmpemnoSal = this.sqlSession.selectList(nameSpaceName + "getEmpemno",map);
+    	//List<HashMap<String, Object>> getBasicSal = this.sqlSession.selectList(nameSpaceName + "getEmpemno",map);
     	
     	deduction=(List<HashMap<String,Object>>) map.get("list");
     	
     	
-    	//System.out.println("getMap : "+deduction);
+    	System.out.println("getMap : "+deduction);
     	//map.put("list", getEmpemnoSal);
     	//map.put("yymm",map.get("yymm"));
     	//System.out.println("getempemno : "+m1);
@@ -61,7 +61,7 @@ public class PaycMenuDao {
     		
     	
     		m1.put("emym",deduction.get(i).get("emym"));
-    		System.out.println("getMap : "+m1);
+    		//System.out.println("getMap : "+m1);
     		
     		List<HashMap<String, Object>> searchEmym = this.sqlSession.selectList(nameSpaceName + "searchEmym",m1);
     		
@@ -70,6 +70,14 @@ public class PaycMenuDao {
     		m1.put("emp_emno",deduction.get(i).get("EMP_EMNO"));
     		
     		m1.put("sal",deduction.get(i).get("SEMP_SAL"));
+    		
+    		m1.put("tamt", deduction.get(i).get("SEMP_TAMT"));
+    		m1.put("fdex",deduction.get(i).get("SEMP_FDEX"));
+    		m1.put("snc",deduction.get(i).get("SEMP_NW_CST"));
+    		m1.put("sbc",deduction.get(i).get("SEMP_BW_CST"));
+    		m1.put("slc",deduction.get(i).get("SEMP_L_CST"));
+    		m1.put("cmc",deduction.get(i).get("SEMP_CMC"));
+    		
      		m1.put("npen",deduction.get(i).get("npen"));
     		m1.put("hfee",deduction.get(i).get("hfee"));
     		m1.put("efee",deduction.get(i).get("efee"));

@@ -25,7 +25,18 @@
 	</select>
 	
 	<select id="exi_checkbox_Choice" parameterType="HashMap" resultType="HashMap">
-		SELECT S.EMP_EMNO,SEMP_SAL,E.EMP_NAME
+		SELECT 
+		
+		S.EMP_EMNO,
+		EMP_NAME ,
+		format(SEMP_SAL,0) as SEMP_SAL, 
+		format(SEMP_BW_CST, 0)as SEMP_BW_CST,
+		format(SEMP_NW_CST,0)as SEMP_NW_CST,
+		format(SEMP_TAMT,0)as SEMP_TAMT,
+		format(SEMP_FDEX,0)as SEMP_FDEX,
+		format(SEMP_CMC,0)as SEMP_CMC,
+		format(SEMP_L_CST,0)as SEMP_L_CST
+		
 		FROM SAL_EMPLOYEE S, EMPLOYEE E WHERE S.EMP_EMNO = E.EMP_EMNO AND  (
 		
 		<foreach collection="list" item="item" index="index" separator= "or">
@@ -41,14 +52,29 @@
 		SELECT S.EMP_EMNO,E.EMP_NAME
 		FROM EMPLOYEE E, SAL_EMPLOYEE S,RETIREMENT R
 		WHERE S.EMP_EMNO = E.EMP_EMNO AND RETR_DEL_YN ='N' AND R.EMP_EMNO=S.EMP_EMNO
+		
+	</select>
+	
+	<select id="allowanceList" parameterType="String" resultType="HashMap">
+		/* /allowance/allowanceMapper.xml - allowanceList ( allowanceList 기본 조회 ) */
+		SELECT	
+		sal_type as salType	/* 비용종류 */
+		,format(scom_hh_cst,0) as scomHhCst	/*주간근무시간당비용*/
+		,format(scom_nh_cst,0) as scomNhCst	/*야간근무시간당비용*/
+		,format(scom_lh_cst,0) as scomLhCst	/*지각*/
+		,format(scom_elh_cst,0) as scomElhCst	/*식대*/
+		,format(semp_cmc,0) as sempCmc	/*차량유지비*/
+		,format(scom_yymm,0) as scomYymm	/*등록년월*/
+		FROM personnelmanagement.sal_common		/* sal_common Table */   
+		WHERE sal_type = #{divSal}
 	</select>
 	
 	<insert id="new_empcode_insert">
 
-		INSERT INTO SAL_EMPLOYEE(EMP_EMNO, SEMP_SAL, SEMP_TAMT, SEMP_FDEX, SEMP_CMC)
+		INSERT INTO SAL_EMPLOYEE(EMP_EMNO, SEMP_SAL, SEMP_BW_CST, SEMP_NW_CST, SEMP_TAMT, SEMP_FDEX, SEMP_CMC,SEMP_L_CST)
 		VALUES(
 		<foreach collection="list" item="item" index="index" separator= ",">
-			#{item}
+			replace(#{item},",","")
 		</foreach>
 		)
 		 
@@ -70,26 +96,20 @@
 	<update id="exi_empcode_update">
 	
 		UPDATE SAL_EMPLOYEE 
-			SET SEMP_SAL = #{sal}
+			SET SEMP_SAL = replace(#{sal},",",""),
+				SEMP_BW_CST = replace(#{sbc},",",""),
+				SEMP_NW_CST= replace(#{snc},",",""), 
+				SEMP_TAMT= replace(#{tami},",",""), 
+				SEMP_FDEX= replace(#{fdei},",",""), 
+				SEMP_CMC= replace(#{cmci},",",""),
+				SEMP_L_CST= replace(#{slc},",","")
 				
-			WHERE EMP_EMNO =  #{code}
+		WHERE EMP_EMNO =  #{code}
 		
 	</update>
 	
 	
-	<select id="allowanceList" parameterType="String" resultType="HashMap">
-		/* /allowance/allowanceMapper.xml - allowanceList ( allowanceList 기본 조회 ) */
-		SELECT	
-		sal_type as salType	/* 비용종류 */
-		,scom_hh_cst as scomHhCst	/*주간근무시간당비용*/
-		,scom_nh_cst as scomNhCst	/*야간근무시간당비용*/
-		,scom_lh_cst as scomLhCst	/*지각*/
-		,scom_elh_cst as scomElhCst	/*식대*/
-		,semp_cmc as sempCmc	/*차량유지비*/
-		,scom_yymm as scomYymm	/*등록년월*/
-		FROM    personnelmanagement.sal_common		/* sal_common Table */   
-		WHERE sal_type = #{divSal}
-	</select>
+
 	
 
 </mapper>

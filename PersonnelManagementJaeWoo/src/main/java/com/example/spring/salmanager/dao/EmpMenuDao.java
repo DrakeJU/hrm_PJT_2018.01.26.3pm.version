@@ -71,14 +71,24 @@ public class EmpMenuDao {
 		List<String> insertlist = new ArrayList<String>();
 		HashMap<String, Object> m1 = new HashMap<String, Object>();
 
+		/* code = 사번
+		 * sal = 급여
+		 * sbci 주간근무수당
+		 * snci 야간근무수당
+		 * tami 교통비
+		 * fdei 식대
+		 * cmci 차량유지비
+		 * slci 지각
+		 * */
 		System.out.println("checklist : "+map);
 		for (String mapkey : map.keySet()) {
 			System.out.println("key : " + mapkey + ",value : " + map.get(mapkey));
 			insertlist.add((String) map.get(mapkey));
 
-			if (insertlist.size() == 5) {
+			if (insertlist.size() == 8) {
 				m1.put("list", insertlist);
-				System.out.println("m1 " + m1);
+			
+				System.out.println("insertList : "+m1);
 				this.sqlSession.insert(nameSpaceName + "new_empcode_insert", m1);
 				m1.clear();
 
@@ -118,26 +128,36 @@ public class EmpMenuDao {
 			if((key.substring(0, 4)).equals("code") == true) {
 				m1.put("code", map.get(key));
 			}
-			if((key.substring(0, 4)).equals("sali") == true) {
+			else if((key.substring(0, 4)).equals("sali") == true) {
 				m1.put("sal",map.get(key));
 			}
+			else if(key.substring(0,4).equals("bsti") == true) {
+				m1.put("sbc", map.get(key));
+			}
+			else if(key.substring(0,4).equals("nsti") == true) {
+				m1.put("snc", map.get(key));
+			}
 			
-			if((key.substring(0,4)).equals("tami") == true) {
+			else if((key.substring(0,4)).equals("tami") == true) {
 				m1.put("tam",map.get(key));
 			}
 		
 			
-			if(key.substring(0,4).equals("fdei") == true) {
+			else if(key.substring(0,4).equals("fdei") == true) {
 				m1.put("fde",map.get(key));
 			}
 			
 			
-			if(key.substring(0,4).equals("cmci") == true) {
+			else if(key.substring(0,4).equals("cmci") == true) {
 				m1.put("cmc",map.get(key));
 			}
 			
+			else if(key.substring(0,4).equals("lsti") == true) {
+				m1.put("slc", map.get(key));
+			}
+
 			System.out.println("m1 : "+m1);
-			if(m1.size()==5) {
+			if(m1.size()==8) {
 				
 				this.sqlSession.update(nameSpaceName + "exi_empcode_update", m1);
 				m1.clear();

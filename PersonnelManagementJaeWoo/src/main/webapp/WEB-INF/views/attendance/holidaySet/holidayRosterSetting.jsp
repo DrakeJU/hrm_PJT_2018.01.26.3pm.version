@@ -169,7 +169,7 @@
 			$("input[name='empEmno']").val(workerCode);
 			$("input[name='empName']").val(workerName);
 			
-			alert($("input[name='empName']").val());
+			console.log($("input[name='empName']").val());
 		});
 	
 	}//detailEvent
@@ -252,7 +252,7 @@
 
 	<input type="hidden" name="empEmno">
 
-	<form action="holidayRoster" name="hiddenForm" method="post">
+	<form action="holidayRosterSettingDBInsert" name="hiddenForm" method="post">
 		<input type="hidden" name="empName">
 		<input type="hidden" name="yearMonth">
 	</form>

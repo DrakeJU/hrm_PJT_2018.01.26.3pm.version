@@ -1,6 +1,6 @@
 package com.example.spring.attendance.controller;
 
-import java.util.HashMap;
+import java.util.HashMap; 
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class AttendController {
 	 * 메뉴명 : [출결관리] - [일일근태등록]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.02.02
 	 ***************************************************************************************/
 	
 	//출결관리 - 일일근태등록
@@ -79,14 +79,26 @@ public class AttendController {
 		// 2) 퇴근입력값 출력 조회 
 		ModelAndView mv = new ModelAndView();
 		
-		List<HashMap<String, Object>> resultList = attendService.selectInDailAttReg(params);
-		
-		mv.addObject("resultList", resultList);
+		mv.addObject("resultList", attendService.selectInDailAttReg(params));
 		mv.setViewName("dailAttdReg");
-		
-		
 		return mv;
 	}//update
+	
+	
+	//검색버튼====================================================================
+	@RequestMapping(value="/readDailAttdReg")
+	public ModelAndView readDailAttdReg(
+			@RequestParam HashMap<String, String> params)throws Exception {
+		
+		
+		logger.debug("attendedDate :" + params.get("attendedDate"));
+		logger.debug("empEmno : " + params.get("empEmno"));
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("resultList", attendService.selectInDailAttReg(params));
+		mv.setViewName("dailAttdReg");
+		return mv;
+	}
 	
 	/*
 	//ajax 방식 사용
@@ -132,10 +144,26 @@ public class AttendController {
 		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
 		
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("workYyMm", paramMap.get("workYyMm"));
 		mv.addObject("resultList", attendService.readMnthngAttdCrtCls(paramMap));
+		mv.addObject("resultSttsMap", attendService.readMnthngAttdCrtClsStts(paramMap));
 		mv.setViewName("mnthngAttdCrtCls");
 		
 		return mv;
+	}
+	
+	@RequestMapping(value="/readMnthngAttdCrtClsStts")
+	public @ResponseBody HashMap<String, Object> readMnthngAttdCrtClsStts(
+			@RequestParam HashMap<String, String> paramMap
+			) {
+		
+		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
+		logger.debug("empEmno : " + paramMap.get("empEmno"));
+
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("resultSttsMap", attendService.readMnthngAttdCrtClsStts(paramMap));
+
+		return resultMap;
 	}
 	
 	/***************************************************************************************

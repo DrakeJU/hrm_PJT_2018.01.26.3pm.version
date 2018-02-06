@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	 <%response.sendRedirect("/spring/emp_main"); %>
+	 <%response.sendRedirect("/spring/emp_main.do"); %>
 </body>
 </html>

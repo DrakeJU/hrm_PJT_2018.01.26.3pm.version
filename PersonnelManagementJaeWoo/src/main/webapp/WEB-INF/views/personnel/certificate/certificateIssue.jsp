@@ -20,13 +20,13 @@
 						<div class="panel panel-headline">
 							<div class="panel-heading">
 								<div class="col-md-3">
-								<form id="">
+								<form id="formId">
 										증명서구분
-										<select name="">
-											<option value="whole">전체</option>
-											<option value="">재직증명서</option>
-											<option value="">경력증명서</option>
-											<option value="">퇴직증명서</option>
+										<select name="select">
+											<option value="전체">전체</option>
+											<option value="재직증명서">재직증명서</option>
+											<option value="경력증명서">경력증명서</option>
+											<option value="퇴직증명서">퇴직증명서</option>
 										</select>
 								</div>
 								<div class="col-md-4">
@@ -34,7 +34,7 @@
 									<input type="text" name="startDate" size="8" placeholder="날짜선택">
 									~&nbsp;<input type="text" name="endDate" size="8" placeholder="날짜선택">
 								</div>
-									<input type="submit" value="검색">
+									<input type="button" value="검색" onclick="search()">
 								</form>
 							</div>
 						</div>
@@ -66,17 +66,7 @@
 													<th>발행일자</th>
 												</tr>
 											</thead>
-											<tbody>
-												<c:forEach var="l" items="${list}">
-												<tr>
-													<td name="crtfIsno">${l.crtfIsno}</td>
-													<td name="empEmno">${l.empEmno}</td>
-													<td name="empName">${l.empName}</td>
-													<td name="commName">${l.commName}</td>
-													<td name="crtfUse">${l.crtfUse}</td>
-													<td name="crtfDate">${l.crtfDate}</td>
-												</tr>
-												</c:forEach>
+											<tbody id="tbodyId">
 											</tbody>
 										</table>
 										<!-- <input type="button" value="전자결제" name=""> -->
@@ -98,22 +88,23 @@
 								<div class="row">
 									<div class="col-md-10" style="padding-top:20px;">
 										<form id="insertForm">
+											<input type="hidden" name="crtfCode" value="">
 										<table class="table table-hover">
 											<tbody>
 												<tr>
 													<th>증명서구분</th>
 													<td>
-														<select>
-															<option value="default">증명서종류</option>
-															<option value="work">재직증명서</option>
-															<option value="career">경력증명서</option>
-															<option value="retirement">퇴직증명서</option>
+														<select name="select">
+															<option value="증명서종류">증명서종류</option>
+															<option value="재직증명서">재직증명서</option>
+															<option value="경력증명서">경력증명서</option>
+															<option value="퇴직증명서">퇴직증명서</option>
 														</select>
 													</td>
 												</tr>
 												<tr>
 													<th>사원번호</th>
-													<td><input type="text" name="empEmno" value="" disabled></td>
+													<td><input type="text" name="empEmno" value="" readonly></td>
 												</tr>
 												<tr>
 													<th>성명</th>
@@ -140,6 +131,70 @@
 									</table>
 										<div class="modal-footer">
 											<button type="button" id="insertBtn" class="btn btn-default" data-dismiss="modal">신청</button>
+											<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+										</div>
+									</div>
+								</div>
+							</div>	
+    					</div>
+  					</div>
+				</div>
+				
+				<!-- View Modal -->
+				<div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  					<div class="modal-dialog">
+    					<div class="modal-content">
+     						<div class="modal-header">
+								<h4 class="modal-title">증명서 상세보기</h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-10" style="padding-top:20px;">
+										<form id="viewForm">
+											<input type="hidden" name="crtfSeq" value="">
+										<table class="table table-hover">
+											<tbody>
+												<tr>
+													<th>증명서구분</th>
+													<td>
+														<select name="select" disabled="disabled">
+															<option value="증명서종류">증명서종류</option>
+															<option value="재직증명서">재직증명서</option>
+															<option value="경력증명서">경력증명서</option>
+															<option value="퇴직증명서">퇴직증명서</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<th>사원번호</th>
+													<td><input type="text" name="empEmno" value="" readonly></td>
+												</tr>
+												<tr>
+													<th>성명</th>
+													<td><input type="text" name="empName" value="" readonly></td>
+												</tr>
+												<tr>
+													<th>부서명</th>
+													<td><input type="text" name="deptName" value="" readonly></td>
+												</tr>
+												<tr>
+													<th>직위/직급</th>
+													<td><input type="text" name="rankName" value="" readonly></td>
+												</tr>
+												<tr>
+													<th>용도</th>
+													<td><input type="text" value=""name="use" size="20" readonly></td>
+												</tr>
+												<tr>
+													<th>신청일자</th>
+													<td><input type="text" name="application" readonly></td>
+												</tr>
+											</tbody>
+										</form>
+									</table>
+										<div class="modal-footer">
+											<button type="button" id="" class="btn btn-default" data-dismiss="modal">보기</button>
+											<button type="button" id="" class="btn btn-default" data-dismiss="modal">삭제</button>
 											<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 										</div>
 									</div>

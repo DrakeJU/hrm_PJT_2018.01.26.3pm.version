@@ -3,7 +3,7 @@
 
 <!-- 출장신청 사원정보조회 -->
 <mapper namespace="holidaySet">
-	<insert id=  "holidaySetDBInsert" parameterType="jsonData" >
+	<insert id = "holidaySetDBInsert" parameterType="jsonData" >
 		INSERT INTO VACATION(VAST_C, VAST_TYPE, YRYC_REFL_YN, VAST_NOTE)
 		VALUES(#{code}, #{title}, #{AnnualLeaveReflection}, #{note})
 		WHERE NOT EXISTS ( SELECT * FROM VACATION WHERE VAST_C = #{code})
@@ -22,6 +22,32 @@
 			,'N'						#삭제여부
 			,#{note});
 			
+	</insert>
+	
+	<insert id="holidayRoster" parameterType="HashMap">
+		INSERT INTO
+			holidayRosterSetting
+			(EMPNAME,
+			 YEARMONTH)
+		VALUES
+			(#{empName},
+			 #{yearMonth}
+			);
+	</insert>
+	
+	<select id="holidayRosterList" resultType="HashMap">
+		SELECT * FROM holidayrostersetting
+		order by holidayRosterSettingSerialNumber desc
+		limit 1;
+	</select>
+	
+	<select id="holidayRosterEventsList" resultType="HashMap">
+		SELECT DISTINCT start, end, text, resource FROM workroster
+	</select>
+	
+	<insert id = "holidayRosterDBInsert" parameterType="eventsData" >
+		INSERT INTO WORKROSTER(START, END, ID, RESOURCE, TEXT)
+		VALUES(#{start}, #{end}, #{id}, #{resource}, #{text})
 	</insert>
 	
 	<!-- 연차에 따른 휴가일수 리스트 불러오기 -->

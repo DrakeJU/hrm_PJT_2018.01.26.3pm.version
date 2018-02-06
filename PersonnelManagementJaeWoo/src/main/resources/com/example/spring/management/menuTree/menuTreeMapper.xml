@@ -8,7 +8,8 @@
 			MN_IDX mnIdx, /*메뉴순번*/
 			MN_PRNT_NO mnPrntNo /*상위메뉴코드*/
 		FROM MENU
-		WHERE MN_DEL_YN='N'; /*메뉴삭제여부*/	
+		WHERE MN_DEL_YN='N' /*메뉴삭제여부*/
+		ORDER BY MN_PRNT_NO ASC, MN_IDX ASC	
 	</select>
 	
 	<insert id="menuInsert">

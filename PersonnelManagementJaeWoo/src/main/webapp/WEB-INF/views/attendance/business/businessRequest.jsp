@@ -16,7 +16,7 @@
  			 rankName.value == ""|| btstBtArea.value == "" || btstBtPf.value == "" ||
  			 btstBtP.value == "" || btstCont.value == ""){
  			
- 			alert("빈 칸을 입력해주십시오.");		
+ 			alert("빈 칸을 입력해주십시오.");
  		} else{
  			paging.ajaxFormSubmit(url, formId, function(rslt){
  				console.log("ajaxFormSubmit -> callback");
@@ -65,16 +65,16 @@
 		$('#endCalender').on("dp.change", function() { //종료날짜를 변경할 때마다
 			var startDate = moment($('#btstBtStartDate').val(), "YYYYMMDD");
 			var endDate = moment($('#btstBtEndDate').val(), "YYYYMMDD");
-			
+
 			//endDate-startDate를 'n박 n일'로 출력
 			$('#busiNight').val(endDate.diff(startDate, "days"));
 			$('#busiDay').val(endDate.diff(startDate, "days")+1);
 		});
-		
+
 		$('#startCalender').on("dp.change", function() { //시작날짜를 변경할 때마다
 			var startDate = moment($('#btstBtStartDate').val(), "YYYYMMDD");
 			var endDate = moment($('#btstBtEndDate').val(), "YYYYMMDD");
-			
+
 			//endDate-startDate를 'n박 n일'로 출력
 			$('#busiNight').val(endDate.diff(startDate, "days"));
 			$('#busiDay').val(endDate.diff(startDate, "days")+1);
@@ -82,14 +82,13 @@
 
 //		$('#datetimepicker').datetimepicker('setDaysOfWeekDisabled', [0 , 6]); 
 		//Number(data_value).toLocaleString('en').split(".")[0]
-
 	});
- 	
+
  	/* 출장비 천단위마다 자동 콤마 start */
  	function inputPay(obj) { 
 		obj.value = comma(uncomma(obj.value)); 
  	}
- 
+
 	function comma(str) { 
     str = String(str); 
     return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'); 
@@ -100,9 +99,10 @@
     return str.replace(/[^\d]+/g, ''); 
 	}
  	/* 출장비 예상 금액 end */
- 	
+
  	
  	/* 사원선택 모달 start */
+ 	
  	function empListModal(url, formId){ //사원정보조회 리스트 출력
  		$('#empModalTbody').empty(); //이전 리스트 삭제
  		
@@ -111,6 +111,14 @@
  			$('#retrDelYn').val('on');
  		}else{
  			$('#retrDelYn').val('off');
+ 		}
+ 		
+ 		if($('#word').val() == '재직'){
+ 			$('input[type=hidden][name=retrKeyword]').val('N');
+ 		}else if($('#word').val() == '퇴직'){
+ 			$('input[type=hidden][name=retrKeyword]').val('Y');
+ 		}else{
+ 			$('input[name=keyword]').val($('#word').val());
  		}
  		
 		paging.ajaxFormSubmit(url, formId, function(rslt){
@@ -181,6 +189,7 @@
  		$('#deptName').val(deptNameVal);
  		$('#rankName').val(rankNameVal);
  		$(".modal-body input[name=keyword]").val(""); //키워드 내용 지우기
+ 		$('#word').val("");
  	}
  	
  	/* 사원선택 모달 end */
@@ -291,7 +300,9 @@
 								<div class="modal-body">
 									<div class="search_wrap" style="padding: 0px 10px 20px 15px;">
 										<form class="form-inline" id="empFrm">
-											검색어&nbsp;<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
+											검색어&nbsp;<input type="text" class="form-control" id="word">&nbsp;&nbsp;&nbsp;
+											<input type="hidden" name="keyword">
+											<input type="hidden" name="retrKeyword">
 											<label class="fancy-checkbox-inline">
 												<input type="checkbox" id="retrChk">
 												<span>퇴직자 포함</span>

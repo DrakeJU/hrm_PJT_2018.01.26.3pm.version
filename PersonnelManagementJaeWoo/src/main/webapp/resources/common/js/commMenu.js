@@ -56,22 +56,32 @@
 
 			if(pageUrl.indexOf("#")!=-1){
 				pageUrl = pageUrl.substring(0,pageUrl.indexOf("#")-1);
-			}//if	
-				
-			//현재 페이지의 메뉴에 active 적용 
-			var navPrntDiv = $("#nav"+data.mnPrntMap.mnPrntNo).parents("div.collapse"); 
-			var navChildDiv = $("#nav"+data.mnPrntMap.mnPrntNo).children("div.collapse");
-			
-			if(navPrntDiv.length>0){
-				navPrntDiv.addClass("in");
-				navPrntDiv.prev("a").removeClass("collapsed").addClass("collapse active");
-				$("#nav"+data.mnPrntMap.mnPrntNo).children("a").removeClass("collapsed").addClass("collapse active");
 			}//if
-				
-			navChildDiv.addClass("in");	
-			navChildDiv.prev("a").removeClass("collapsed").addClass("collapse active");
-			$("a[href='"+pageUrl+"']").removeClass("collapsed").addClass("collapse active");
-			 
 			
+			var navPrntDiv;
+			var navChildDiv;
+			
+			//현재 페이지의 메뉴에 active 적용 
+			if(data.mnPrntMap){
+				navPrntDiv = $("#nav"+data.mnPrntMap.mnPrntNo).parents("div.collapse"); 
+				navChildDiv = $("#nav"+data.mnPrntMap.mnPrntNo).children("div.collapse");
+				
+				if(navPrntDiv.length>0){
+					navPrntDiv.addClass("in");
+					navPrntDiv.prev("a").removeClass("collapsed").addClass("collapse active");
+					$("#nav"+data.mnPrntMap.mnPrntNo).children("a").removeClass("collapsed").addClass("collapse active");
+				}//if
+					
+				navChildDiv.addClass("in");	
+				navChildDiv.prev("a").removeClass("collapsed").addClass("collapse active");
+				$("a[href='"+pageUrl+"']").removeClass("collapsed").addClass("collapse active");
+			}
+
 		});//paging.ajaxSubmit
+		
+		//로그아웃처리
+		$("#logoutBtn").on("click",function(){
+			location.href="logout";
+		});//onclick
+		
 	})();//commonMenu

@@ -39,16 +39,12 @@
                     if($("#tree #"+mnPrntNo).find("ul").length==0){
                         $("#tree #"+mnPrntNo).append("<ul></ul>");
                     }//if
+
+                    var lastLiMnIdx =  ""+$("#tree #"+mnPrntNo).find("ul:eq(0)>li:last").attr("name");
                     
                     //li append
-                    
-                    //index 적용 if else
-                    if($("#tree #"+mnPrntNo).find("ul:eq(0)>li").length>mnIdx){
-                    	$("#tree #"+mnPrntNo).find("ul:eq(0)>li:eq("+mnIdx+")").before("<li id='"+dataThis.mnNo+"'><span>"+dataThis.mnName+"</span></li>");
-                    }else{
-                    	$("#tree #"+mnPrntNo).find("ul:eq(0)").append("<li id='"+dataThis.mnNo+"'><span>"+dataThis.mnName+"</span></li>");
-                    }//if else
-                    
+                    $("#tree #"+mnPrntNo).find("ul:eq(0)").append("<li id='"+dataThis.mnNo+"' name='mnIdx"+mnIdx+"'><span>"+dataThis.mnName+"</span></li>");
+                 
                 });//data each
 
                 var tree = $(this);

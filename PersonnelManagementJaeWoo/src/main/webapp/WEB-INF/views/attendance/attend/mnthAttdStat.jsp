@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,13 +8,21 @@
 <title>월 근태 현황</title>
 <script>
 
-$(function () {
-	$('#workingYearMonth').datetimepicker({ //근무년월 달력
-		viewMode: 'month',
-		format: 'YYYY-MM'
+	/* 근무년월 달력 함수 */
+	$(function () {
+		$('#workingYearMonth').datetimepicker({ //근무년월 달력
+			viewMode: 'days',
+			format: 'YYYY-MM'
+		});
+		$('#attdStatId').val(moment().format('YYYY-MM'));
 	});
-});
 
+	/* 사원번호 선택 Modal 함수 */
+	function empModal(url, formId){
+		
+	}
+	
+	
 
 
 </script>
@@ -27,34 +36,40 @@ $(function () {
 					<div class="panel-body">
 						<form class="form-inline" name="">	
 							<table class="table table-bordered">
-							<tr align="center">
-								<td>근무년월</td>
-								<td>
-									<!-- 달력 : 근무년월 -->										
-									<div class="input-group date" id="workingYearMonth">
-										<input type="text" class="form-control" id="workingYearMonth"/>
+								<tr align="center">
+									<td>근무년월</td>
+									<td align="left">
+										<!-- 달력 : 근무년월 -->										
+										<div class="input-group date" id="workingYearMonth">
+											<input type="text" class="form-control" id="attdStatId" name=""/>
+												<span class="input-group-addon">
+													<span class="fa fa-calendar" />
+												</span>
+										</div>
+									</td>
+									<td>부서</td>  
+									<td align="center">
+										<select>
+										<option value="">전체</option>
+										<option value="">인크레파스</option>
+										<option value="">인사부</option>
+										<option value="">영업부</option>
+										<option value="">성실부</option>
+										</select>
+									</td>
+									<td>사원번호</td>
+									<td align="left">
+										<!-- 사원번호 입력 -->
+										<div class="input-group">
+											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번입력  / 검색버튼">
 											<span class="input-group-addon">
-												<span class="fa fa-calendar" />
+												<span class="glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#empModal" onClick="empModal"></span> <!-- 검색 아이콘 -->
 											</span>
-									</div>
-								</td>
-								<td>부서</td>  
-								<td align="center">
-									<select>
-									<option value="">전체</option>
-									<option value="">인크레파스</option>
-									<option value="">인사부</option>
-									<option value="">영업부</option>
-									<option value="">성실부</option>
-									</select>
-								</td>
-								<td>사원번호</td>
-								<td>
-									<input type="text" class="form-control" id="">
-									<span class="fa fa-search"></span> <span class="cssclass"></span>
-									<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="search" value="검색">
-								</td>
-							</tr>
+										</div>
+										<!-- 검색버튼 -->
+										<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="search" value="검색">
+									</td>
+								</tr>
 							</table>
 						</form>
 					</div>
@@ -154,6 +169,35 @@ $(function () {
 			</div>
 		</div>
 	</div>
+
+	<!-- 사원번호 선택 Modal View -->
+	<div id="empModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button><!-- 닫기버튼 -->
+					<div class="modal-title" align="center"><h2> 사원 정보 조회 </h2></div>
+					<div class="modal-body">
+				<!-- <div class="search_wrap" style="padding: 0px 10px 20px 15px; "> -->
+					<form class="form-inline" id="empFrm">
+						검색어 &nbsp;
+						<input type="text" class="form-control" name="keyword"> &nbsp;&nbsp;&nbsp;
+							<input type="checkbox" id="retrChk">
+							퇴직자포함
+						<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="attendance" value="검색" onClick="empModal">
+						
+						
+						
+						
+					</form>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
 </body>
 </html>
 

@@ -61,6 +61,31 @@ public class VacationController {
 		return map;
 	}
 	
+	/* 휴가일수설정 자동 계산 */
+	@RequestMapping(value="/vacationCountAutoCalculation.ajax")
+	public @ResponseBody HashMap<String, Object> vacationCountAutoCalculation(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("휴가일수설정 자동계산 파라미터: " + map);
+		
+		List<HashMap<String,Object>> list = vacationService.vacationCountAutoCalculation(map);
+		
+
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("vacationCountAutoCalculation", list);
+			
+			if(!(map.get("vacationCountAutoCalculation").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
 	/* 휴가일수설정 -사원등록 */
 	@RequestMapping(value="/vacationCountEmpSignUp")
 	public String vacationCountEmployeeSignUp() {
@@ -134,7 +159,6 @@ public class VacationController {
 		
 		logger.info("vacationRequest CONTROLL>>>" + map);
 		
-		
 		int list = vacationService.vacationRequest(map);
 			if(list == 0) {
 				map.put("success", "N");
@@ -169,10 +193,6 @@ public class VacationController {
 		}//if	
 		return map;
 	}
-	
-	
-	
-	
 	
 	
 	/* 휴가 조회하기 - 직원 */
@@ -218,22 +238,62 @@ public class VacationController {
 	@RequestMapping(value="/vacationListAdmin.ajax")
 	public @ResponseBody HashMap<String,Object> vacationListAdmin(
 			@RequestParam HashMap<String,Object> map){
-		
 		logger.info("휴가조회관리자 Controller 진입 매개변수>>>>" + map);
 		
-		List<HashMap<String,Object>> list = vacationService.vacationListAdmin(map);
+		List<HashMap<String,Object>> retType = vacationService.retTypeList(map);
+		List<HashMap<String,Object>> deptList = vacationService.deptNameList(map);
+		List<HashMap<String,Object>> rankList = vacationService.rankNameList(map);
+		List<HashMap<String,Object>> empList = vacationService.vacationListAdmin(map);
 		
-		if(list == null) {
+		if(deptList == null || rankList == null || empList == null) {
 			map.put("success", "N");
 		} else {
-			map.put("vacationListAdmin", list);
+			map.put("retTypeList", retType);
+			map.put("deptNameList", deptList);
+			map.put("rankNameList", rankList);
+			map.put("vacationList", empList);
+
+			if(!(map.get("retTypeList").toString()).equals("[]") &&
+		 	 !(map.get("deptNameList").toString()).equals("[]") &&
+			 !(map.get("rankNameList").toString()).equals("[]")) {
+				map.put("success", "Y");
+			} else {
+				map.put("success", "N");
+			}//if	
 		}
 		return map;
 		
 	}
 	
-	
-	
+	/* 휴가조회 관리자 : 사원 휴가 현황 정보 모달창 */
+	@RequestMapping(value="empVacationList.ajax")
+	public @ResponseBody HashMap<String,Object> empVacationList(
+			@RequestParam HashMap<String,Object> map){
+		logger.info("휴가조회관리자 모달 controller;;;;;" + map);
+		
+		List<HashMap<String,Object>> empInfo = vacationService.empInfo(map);
+		List<HashMap<String,Object>> empVacList = vacationService.empVacList(map);
+		List<HashMap<String,Object>> empVacNum = vacationService.empVacNum(map);
+		
+		if(empInfo == null || empVacList == null || empVacNum == null) {
+			map.put("success","N");
+		} else {
+			map.put("empInfo", empInfo);
+			map.put("empVacList", empVacList);
+			map.put("empVacNum", empVacNum);
+			
+			if(!(map.get("empInfo").toString()).equals("[]") &&
+		 	 !(map.get("empVacList").toString()).equals("[]") &&
+			 !(map.get("empVacNum").toString()).equals("[]")) {
+				map.put("success", "Y");
+			} else {
+				map.put("success", "N");
+			}//if	
+		}//if	
+		return map;
+	}
+
+
 	/* 휴가 조회 - 승인대기 개수 */
 	@RequestMapping(value="/vacationProgCntNum.ajax")
 	public @ResponseBody int vacationProgCntNum() {
@@ -293,7 +353,6 @@ public class VacationController {
 	}//승인완료 저장
 	
 	
-	
 	/* 휴가 월마감 */
 	@RequestMapping(value="/vacationMonthlyReport")
 	public String vacationMonthlyReport() {
@@ -301,16 +360,11 @@ public class VacationController {
 	}
 	
 	
-	
-	
-	/*	
-	@RequestMapping(value="ajaxFormSubmit.ajax")
-	public @ResponseBody HashMap<String,String> ajaxFormSubmit(
-			@RequestParam HashMap<String,String> map){
-		
-		logger.debug(map.get("vastCrtData") + map.get("vastC") + map.get("vastStartDate") + map.get("vastEndDate") + map.get("vastCont"));
-		
-		return map;
+	/* 근태마감 */
+	@RequestMapping(value="/salMonthlyReport")
+	public String salMonthlyReport() {
+		return "salMonthlyReport";
 	}
-*/	
+	
+	
 }

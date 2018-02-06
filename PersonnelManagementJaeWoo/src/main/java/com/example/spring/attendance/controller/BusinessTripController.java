@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.attendance.service.BusinessTripService;
 
@@ -21,6 +20,12 @@ public class BusinessTripController {
 	
 	@Autowired
 	private BusinessTripService businessTripService; //서비스
+	
+	//출장관리 - 출장정산
+	@RequestMapping(value = "/businessAdj")
+	public String businessAdj() {
+		return "businessAdj";
+	}
 	
 	//출장신청
 	@RequestMapping(value = "/businessRequest")
@@ -42,7 +47,12 @@ public class BusinessTripController {
 			map.put("success", "N");
 		}else {
 			map.put("empList", list);
-			map.put("success", "Y");
+			
+			if(!(map.get("empList").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}//if
 		}
 
 		return map;
@@ -66,24 +76,4 @@ public class BusinessTripController {
 		return map;
 	}
 	
-	//출장관리 - 출장정산
-	@RequestMapping(value = "/businessAdj")
-	public ModelAndView businessAdj(@RequestParam HashMap<String, Object> map){
-		System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 출장관리 - 출장정산");
-		List list = businessTripService.businessAdj(map);
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("list", list);
-		mv.setViewName("businessAdj");
-		return mv;
-	}
-	
-	//출장관리 - 검색
-	@RequestMapping(value = "/searchBusinessList")
-	@ResponseBody
-	public List searchBusinessList(@RequestParam HashMap<String, Object> map){
-		System.out.println("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 출장관리 - 검색");
-		logger.info("파라미터map: " + map);
-		List list = businessTripService.businessAdj(map);
-		return list;
-	}
 }

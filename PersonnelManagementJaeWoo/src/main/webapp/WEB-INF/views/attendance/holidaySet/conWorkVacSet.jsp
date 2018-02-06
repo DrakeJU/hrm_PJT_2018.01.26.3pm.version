@@ -8,7 +8,6 @@
 </head>
 
 <script>
-
 	/*
 		DB 연결할 
 		continous_work_year (테이블)
@@ -33,6 +32,7 @@
 							'</tr>';
 							
 		$("#tbody tr:last").after(addTrText);
+		$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
 	});
 	//표 행 삭제
 	$(document).on("click", "button[id=deleteTr]", function(){
@@ -95,7 +95,7 @@
 					);
  	 			});
  			}
-
+ 			$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
 
 			/* //테이블 정렬
 			$(function(){
@@ -168,7 +168,7 @@
 			
 		});
 		console.log("-------------"+jArray);
-		
+		window.location.reload();
 	}
 	
 </script>
@@ -221,16 +221,17 @@
 										<th >비고</th>
 									</tr>
 								</thead>
-								<tbody  id="tbody" style="display:block;height:200px;overflow:auto;">
+								<tbody  id="tbody" style="display:block;height:400px;overflow:auto;">
 									<!-- <tr id="headTr"></tr> -->
 								</tbody>
 							</table>
-							<div id="low_buttons">
-								<span class="ftr">
-								<button type="button" name="saveButton" class="btn btn-primary ftr" onClick="insertDDBB('insertForm')">저장</button>
-								<button type="button" name="refreshButton" class="btn btn-primary ftr" onClick="tbodyList()">새로고침</button>
-								</span>
-							</div>
+<!-- 							<div id="low_buttons"> -->
+<!-- 								<span class="ftr"> -->
+								<input type="button" name="saveButton" class="btn btn-primary" value="저장" style="float:right;" onClick="insertDDBB('insertForm')"/>
+<!-- 								<input type="button" name="refreshButton" class="btn btn-primary" value="새로고침" onClick="tbodyList()"/> -->
+								
+<!-- 								</span> -->
+<!-- 							</div> -->
 						</form>
 					</div>
 				</div>

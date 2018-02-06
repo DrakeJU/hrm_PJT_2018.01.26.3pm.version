@@ -176,17 +176,13 @@ function calender(){
 								<option value="empName">성명</option>
 								<option value="deptName">부서</option>
 							</select>
-							<input type="text" class="form-control" name="keyword">
-							&nbsp;&nbsp;&nbsp;
+							<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
 							<input type="button" class="btn btn-primary" id="searchBtn" style="float:right;" onclick="vacationCountEmpSignUpList()" value="검색">
 						</form>
 					</div>
 				</div>
 				
 				<div class="panel panel-headline">
-<!-- 					<div class="panel-heading"> -->
-<!-- 						<h3 class="panel-title">제목</h3> -->
-<!-- 					</div> -->
 					<div class="panel-body"> 
 						<div class="list_wrapper">
 							<form class="form-inline" id="vacCntEmpFrm">
@@ -209,20 +205,6 @@ function calender(){
 										</tr>
 									</thead>
 									<tbody id="vacCntEmpListTbody" style="display:block;height:400px;overflow:auto;">
-<!-- 										<tr> -->
-<!-- 											<td> -->
-<!-- 												<label class="fancy-checkbox-inline"> -->
-<!-- 													<input type="checkbox" name=""> -->
-<!-- 													<span></span> -->
-<!-- 												</label> -->
-<!-- 											</td> -->
-<!-- 											<td>123456</td> -->
-<!-- 											<td>개츠비</td> -->
-<!-- 											<td>개발팀</td> -->
-<!-- 											<td>팀장</td> -->
-<!-- 											<td>2007-10-15</td> -->
-<!-- 											<td><input type="text" name="" value="" class="form-control">일</td> -->
-<!-- 										</tr> -->
 									</tbody>
 								</table>
 							</form>

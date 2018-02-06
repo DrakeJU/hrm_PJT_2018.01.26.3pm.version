@@ -43,16 +43,16 @@
 								<div class="logo text-center"><img src="/spring/resources/common/img/logo-dark.png" alt="Klorofil Logo"></div>
 								<p class="lead">Login to your account</p>
 							</div>
-							<form class="form-auth-small" action="index.php">
+							<form class="form-auth-small" id="loginForm">
 								<div class="form-group">
 									<label for="signin-id" class="control-label sr-only">id</label>
-									<input type="text" class="form-control" id="signin-id" placeholder="id">
+									<input type="text" class="form-control" id="signin-id" placeholder="id" name="empId">
 								</div>
 								<div class="form-group">
 									<label for="signin-password" class="control-label sr-only">Password</label>
-									<input type="password" class="form-control" id="signin-password" placeholder="Password">
+									<input type="password" class="form-control" id="signin-password" placeholder="Password" name="empPswd">
 								</div>
-								<button type="button" class="btn btn-primary btn-lg btn-block">LOGIN</button>
+								<button type="button" id="loginBtn" class="btn btn-primary btn-lg btn-block">LOGIN</button>
 							</form>
 						</div>
 					</div>
@@ -74,5 +74,21 @@
 	<script src="/spring/resources/common/js/jquery.form.js"></script>
 	<script src="/spring/resources/common/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="/spring/resources/common/js/paging.js"></script>
+	<script>
+	
+	$(document).ready(function(){
+		$("#loginBtn").on("click",function(){
+			paging.ajaxFormSubmit("loginProcess","loginForm",function(result){
+				if(result==null){
+					alert("아이디와 비밀번호가 틀립니다. 다시 입력해주세요");
+				}else{
+					alert("로그인 되었습니다.");
+					location.href="/spring/main.do";
+				}//if eles
+			});//paging.ajaxFormSubmit
+		});//onClick	
+	});//doc
+	
+	</script>
 </body>
 </html>
