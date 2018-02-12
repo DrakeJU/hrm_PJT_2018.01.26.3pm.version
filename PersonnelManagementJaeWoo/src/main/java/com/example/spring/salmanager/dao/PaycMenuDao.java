@@ -132,7 +132,7 @@ public class PaycMenuDao {
     }
     
     
-    public List<HashMap<String, Object>> selectPayc(HashMap<String, String> map) {
+    public List<HashMap<String, Object>> selectPayc(HashMap<String, Object> map) {
     	
     	List<HashMap<String, Object>> list = this.sqlSession.selectList(nameSpaceName + "select_payc",map);
     	

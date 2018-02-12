@@ -86,6 +86,25 @@ public class VacationController {
 		return map;
 	}
 	
+	//휴가일수설정 휴가일수 저장하기
+	@RequestMapping(value = "/vacationCountUpdate.ajax")
+	public @ResponseBody HashMap<String,Object> vacationCountUpdate(
+			@RequestParam HashMap<String,Object> map) {
+
+		logger.debug("parameter >>>  " + map);
+
+		int list = vacationService.vacationCountUpdate(map);
+
+		if(list == 0) {
+			map.put("success", "N");
+		}else {
+			map.put("success", "Y");
+		}
+
+		return map;
+	}
+
+	
 	/* 휴가일수설정 -사원등록 */
 	@RequestMapping(value="/vacationCountEmpSignUp")
 	public String vacationCountEmployeeSignUp() {
@@ -318,18 +337,27 @@ public class VacationController {
 			@RequestParam HashMap<String,Object> map) {
 		logger.info("vacation 휴가 신청현황 리스 CONTROLLER 진입////");
 		
-//		HashMap<String,Object> map = new HashMap<String,Object>();3
+		List<HashMap<String,Object>> deptList = vacationService.deptNameList(map);
+        List<HashMap<String,Object>> rankList = vacationService.rankNameList(map);
+        List<HashMap<String,Object>> situList = vacationService.situationList(map);
 		List<HashMap<String,Object>> list = vacationService.vacationProgressList(map);
-		map.put("vacationProgressList", list);
-			logger.info(PRE_VIEW_PATH + map);
-			
-		if(list == null) {
-			map.put("success", "N");
+		
+		if(deptList == null || rankList == null || list == null ) {
+			map.put("success", "N");			
 		} else {
+			map.put("deptNameList", deptList);
+            map.put("rankNameList", rankList);
+            map.put("situationList", situList);
 			map.put("vacationProgressList", list);
-			map.put("success", "Y");
-		}//if
 			
+			if(!(map.get("deptNameList").toString()).equals("[]") &&
+				!(map.get("rankNameList").toString()).equals("[]") &&
+				!(map.get("situationList").toString()).equals("[]")) {
+					map.put("success", "Y");				
+			} else {
+				map.put("success", "N");	
+			}//if
+		}//if
 		return map;
 	}
 	

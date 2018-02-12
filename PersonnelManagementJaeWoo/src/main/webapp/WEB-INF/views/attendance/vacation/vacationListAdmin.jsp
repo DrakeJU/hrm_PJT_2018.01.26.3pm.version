@@ -16,9 +16,11 @@
 
 $(function(){
 	calender();		//달력함수
+	retSelect();	//재직 여부
 	deptSelect();	//부서 셀렉 
-	vacEmpList();	//사원 리스트 함수 AJAX
 	rankSelect();	//직급 셀렉
+	vacEmpList();	//사원 리스트 함수 AJAX
+	enterKey();	//검색 후 엔터키 작동
 });
 	
 
@@ -38,7 +40,7 @@ function vacEmpList(){
 		//테이블 스크롤 CSS
 		$('#vacListTable').children('thead').css('width','calc(100% - 1.1em)');
 		
-	
+		
 		//부서명 셀렉박스
 		if(rslt.deptNameList == null){
 			$('#deptNameList').append("<option value=''>"+ 없음  +"</option>");
@@ -50,7 +52,7 @@ function vacEmpList(){
 					"<option value='"+v.deptCode+"'>"+ v.deptName +"</option>"	
 				);
 			});//.each.deptName
-			$('#deptNameList').val($('#selectTestName').val()).prop("selected", true); //input hidden값 value를 선택
+			$('#deptNameList').val($('#deptHidden').val()).prop("selected", true); //input hidden값 value를 선택
 		}//if
 
 		
@@ -65,6 +67,7 @@ function vacEmpList(){
 					"<option value='"+ v.rankCode +"'>"+ v.rankName + "</option>"		
 				);
 			});//each.rankName
+			$('#rankNameList').val($('#rankHidden').val()).prop("selected", true); //input hidden값 value를 선택
 			
 		}//if
 		
@@ -83,9 +86,9 @@ function vacEmpList(){
 						"<td>"+ v.empName +"</td>"+ //사원명
 						"<td>"+ v.deptName +"</td>"+ //부서명
 						"<td value='"+v.rankCode+"'>"+ v.rankName +"</td>"+ //직급명
-						"<td>"+ v.emreVacCnt +"</td>"+ //휴가 전체 일수
+						"<td>"+ v.emreVacUd +"</td>"+ //휴가 전체 일수
 						"<td>"+ v.emrePvacUd +"</td>"+ //휴가 사용 일수
-						"<td>"+ v.remineVacCnt +"</td>"+	//휴가 잔여일수
+						"<td>"+ v.remineVacUd +"</td>"+	//휴가 잔여일수
 					"</tr>"
 				);
 			});//each list
@@ -102,18 +105,19 @@ function vacEmpList(){
 			});
 				
 		}//if-table 생성
-
+		
+		
 		//테이블 마우스오버시 (행을 지날 때), 색 바뀜
 // 		$(document).ready(function(){
-			$('table tbody tr').mouseover(function(){ 
-				$(this).css("backgroundColor","#f2f2f2"); 
-				$(this).click(function(){
-					$(this).css("backgroundColor","#88C9DF");
-				});
-			}); 
-			$('table tr').mouseout(function(){ 
-				$(this).css("backgroundColor","#fff"); 
+		$('table tbody tr').mouseover(function(){ 
+			$(this).css("backgroundColor","#f2f2f2"); 
+			$(this).click(function(){
+				$(this).css("backgroundColor","#88C9DF").selected();
 			});
+		}); 
+		$('table tr').mouseout(function(){ 
+			$(this).css("backgroundColor","#fff"); 
+		});
 	});//paging		
 };	// vacationAdemin List : END
 	
@@ -122,12 +126,36 @@ function searchClick(){
 	vacEmpList();
 };
 
+/* 검색어 입력 후 엔터키 작동 */
+ 
+function enterKey(){
+ 
+$("#keyword").keydown(function(f){
+
+	if(f.keyCode == 13){	//javaScript에서는 13이 enter키를 의미함
+		searchClick();
+		return false;
+	}
+});
+}
+
+
+
+/* 재직 셀렉 */
+function retSelect(){
+	$('#retTypeList').change(function(){
+		$('#retHidden').val($(this).children("option:selected").select().val());
+// 		$(this).children("option:selected").text();
+		vacEmpList();
+	});
+	
+}
+
 /* 부서명 셀렉 */
 function deptSelect(){
 	$("#deptNameList").change(function(){
-		
 		//input hidden의 vlaue로 선택한 option을 입력
-		$('#selectTestName').val($(this).children("option:selected").select().val()); 
+		$('#deptHidden').val($(this).children("option:selected").select().val()); 
 		vacEmpList(); //ajax 실행
 	});
 }
@@ -135,22 +163,10 @@ function deptSelect(){
 /* 직급명 셀렉 */
 function rankSelect(){
 	$('#rankNameList').change(function(){
-		$(this).children("option:selected").text();	
-		console.log("dddddddddddddddddddddd"+$(this).children("option:selected").text());
-		vacEmpList();
+// 		$(this).children("option:selected").text();
+		$('#rankHidden').val($(this).children("option:selected").select().val());
+		vacEmpList();	//ajax 실행
 	});
-}
-
-
-	
-	
-	
-
-/* 검색어 입력 후 엔터키 작동 - 아직 안됨 */
-function press(f){
-	if(f.keyCode == 13){	//javaScript에서는 13이 enter키를 의미함
-		vacListAdminFrm.submit();
-	}
 }
 
 
@@ -183,6 +199,7 @@ $(function() {
 
 
 
+/*************************************************************************************************************/
 
 /*모달 리스트 START */
 $(function(){
@@ -211,12 +228,12 @@ function empVacationList(empEmno){
 		$('#empVacListTable').children('thead').css('width','calc(100% - 1.1em)');
 		$('#empVacListTbody').empty();	//이전 리스트 삭제
 		//리스트가 없을 경우
-		if(rslt == null || rslt.success == "N"){
-			$('#empVacListTbody').append(
-				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"		
-			);
-		//리스트가 있을 경우	
-		} else if(rslt.success == "Y"){
+// 		if(rslt == null || rslt.success == "N"){
+// 			$('#empVacListTbody').append(
+// 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"		
+// 			);
+// 		//리스트가 있을 경우	
+// 		} else if(rslt.success == "Y"){
 			//상단 사원 정보
 			$.each(rslt.empInfo, function(k, v){
 				//$('#empEmno').text($("input[type=hidden][name=empEmno]").val()); //히든:사원번호
@@ -244,13 +261,13 @@ function empVacationList(empEmno){
 				$('#empVacListTbody').append(
 					"<th colspan='2' class='text-center' id='vacationNumTh'>" + '합계' + "</th>" +
 					"<th colspan='5'>" +
-						"·총 휴가일수:" +"&nbsp;"+ v.emreVacCnt +"&nbsp;&nbsp;" +	//휴가 전체 일수
+						"·총 휴가일수:" +"&nbsp;"+ v.emreVacUd +"&nbsp;&nbsp;" +	//휴가 전체 일수
 						"·사용일수:" +"&nbsp;"+ v.emrePvacUd +"&nbsp;&nbsp;" +	//사용 일수
-						"·잔여일수:" +"&nbsp;"+ v.remineVacCnt +"&nbsp;&nbsp;" +	//잔여 일수
+						"·잔여일수:" +"&nbsp;"+ v.remineVacUd +"&nbsp;&nbsp;" +	//잔여 일수
 					"</th>"	
 				);//append th
 			});	//each.empVacNum
-		}
+// 		}//if
 	});//paging
 	
 	
@@ -267,10 +284,6 @@ function empVacationList(empEmno){
 			<div class="container-fluid">
 			<h3 class="page-title">휴가조회(관리자)</h3>
 				<div class="panel panel-headline">
-<!-- 					<div class="panel-heading"> -->
-<!-- 						<h3 class="panel-title">휴가항목 선택</h3> -->
-<!-- 							<p class="subtitle">설명이 필요할 경우 추가 예정</p> -->
-<!-- 					</div> -->
 					<div class="panel-body">
 						<form class="form-inline" id="vacListAdminFrm" name="vacListAdminFrm">							
 							기준년도
@@ -281,24 +294,24 @@ function empVacationList(empEmno){
 									<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 								</span>
 							</div> &nbsp;&nbsp;&nbsp;
-<!-- 							<select class="form-control" name="searchOption" id="searchOption"> -->
-<!-- 								<option value="empEmno">사번</option> -->
-<!-- 								<option value="empName">이름</option> -->
-<!-- 							</select> -->
-							<input type="text" class="form-control" name="keyword" placeholder="검색어 입력"> 
+							<input type="text" class="form-control" name="keyword" id="keyword" placeholder="검색어 입력"> 
 							<input type="button" class="btn btn-primary" name="search" value="검색" onclick="searchClick()">
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 							<!-- 정렬 조건 -->
 							<select name="retTypeList" id="retTypeList" value="" class="form-control"><!-- 퇴직 여부 -->
-								<option value="Y">재직</option>
-								<option value="N">퇴직</option>
+								<option value="N">재직</option>
+								<option value="Y">퇴직</option>
 							</select> 
 							<select name="deptNameList" id="deptNameList" value="부서별" class="form-control"><!-- 부서 -->
 							</select> 
-							<input type="hidden" id="selectTestName">
 							<select name="rankNameList" id="rankNameList" value="직급별" class="form-control"><!-- 직급 -->
 							</select>
+							<!-- 새로고침 -->
+							<input type="button" class="btn btn-primary" name="reStart" value="전체보기" onclick="window.location.reload()">
+							<input type="hidden" id="retHidden"><!-- 네임으로 하면 파라미터 값이 넘어감 -->
+							<input type="hidden" id="deptHidden">
+							<input type="hidden" id="rankHidden">
 							<button class="btn btn-danger" type="button" name="prog"
 								style="float: right;" onclick="vacationProgressList()">
 								휴가신청현황 <span class="badge" id="countNum"></span>
@@ -358,13 +371,6 @@ function empVacationList(empEmno){
 												</thead>
 												<tbody id="empVacListTbody">
 													<tr>
-<!-- 														<td>1</td> -->
-<!-- 														<td>2017-01-02</td> -->
-<!-- 														<td>연차</td> -->
-<!-- 														<td>2017-01-02~2017-01-04</td> -->
-<!-- 														<td>3.0</td> -->
-<!-- 														<td></td> -->
-<!-- 													</tr> -->
 													</tr>
 
 												</tbody>

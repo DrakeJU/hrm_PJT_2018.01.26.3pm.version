@@ -3,17 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!-- <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
-<script src="resources/common/js/jquery-3.2.1.js"></script>
-<script src="http://malsup.github.com/jquery.form.js"></script>
-<script src="resources/common/js/paging.js"></script> -->
 
 <head>
 <script>
@@ -21,13 +10,12 @@
 	var checklength = ${count};
 	
 	var checkcount = 0;
-
-	/* ${aList.get(0).scomHhCst } 야간근무수당
+	/*  ${aList.get(0).scomHhCst } 야간근무수당
 	${aList.get(0).scomNhCst }	주간근무수당
 	${aList.get(0).scomElhCst } 식대
 	${aList.get(0).sempCmc }	차량유지비
-	${aList.get(0).scomLhCst } 지각시간당비용 */
-	$(document).ready(function() {
+	${aList.get(0).scomLhCst } 지각시간당비용 
+	  $(document).ready(function() {
 		//최상단 체크박스 클릭
 		$("#checkall").click(function() {
 			//클릭되었으면
@@ -38,22 +26,22 @@
 					if ($("#chk" + i).prop("checked") == false) {
 						
 						$("#chk" + i).prop("checked",true);
-						$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-						
-						$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="5" onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');		
+						$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
 						$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 						
 						
-					 	$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
-						$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 						$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 						$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 						$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					 	
+						$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+						$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 						$("td[name=slctext"+ i+ "]").append('<input type="checkbox" name=slciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 						
 						//$("input[type=text]").css("width","70px");
@@ -86,18 +74,81 @@
 
 			}
 		});
-	});
+	}); */
+	
+	function allcheck(){
+		
+		if ($("#checkall").prop("checked") ==false) {//input태그의 name이 chk인 태그들을 찾아서 checked옵션을 true로 정의
+			$("#checkall").prop("checked",true)
+			$("[id ^= checkPoint]").addClass('success');
+			for (var i = 0; i < checklength; i++) {
+				
+				if ($("#chk" + i).prop("checked") == false) {
+					
+					$("#chk" + i).prop("checked",true);
+					$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');		
+					$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
+					
+					
+					$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+				 	
+					/* $("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					$("td[name=slctext"+ i+ "]").append('<input type="checkbox" name=slciCk'+ i+ ' onchange="checkChange(this,'+i+')">'); */
+					
+					//$("input[type=text]").css("width","70px");
+					//$("input[name=sali"+i+"]").css("width","100px");
+					///$("input[name=sbci"+ i+ "]").css("width","100px");
+				}
+			}
+
+		}else{
+			$("#checkall").prop("checked",false)
+			$("input[type=checkbox]").prop("checked", false);
+			$("[id ^=checkPoint]").removeClass('success');
+			for (var i = 0; i < checklength; i++){
+				$("input[name=sali"+ i + "]").remove();
+				$("input[name=sbci"+ i + "]").remove();
+				$("input[name=sbciCk"+ i + "]").remove();
+				$("input[name=snci"+ i + "]").remove();
+				$("input[name=snciCk"+ i + "]").remove();
+				$("input[name=tami"+ i + "]").remove();
+				$("input[name=tamiCk"+ i + "]").remove();
+				$("input[name=fdei"+ i + "]").remove();
+				$("input[name=fdeiCk"+ i + "]").remove();
+				$("input[name=cmci"+ i + "]").remove();
+				$("input[name=cmciCk"+ i + "]").remove();
+				$("input[name=slci"+ i + "]").remove();
+				$("input[name=slciCk"+ i + "]").remove();
+				$("input[name=code"+ i + "]").remove();
+				
+				
+			}
+
+		}
+	}
 	function check(i) {
 
-		if ($("#chk" + i).prop("checked") == true) {
+		if ($("#chk" + i).prop("checked") == false) {
+			
+			$("#chk" + i).prop("checked",true)
+			$("[id=checkPoint"+i+"]").addClass('success');
 			//alert(list);
-			$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden"  size="10" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="0" style="visibility:hidden" size="10" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden"  size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
 			$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 			
 		
@@ -107,14 +158,17 @@
 			
 		
 			
-		 	$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
-			$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 			$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 			$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 			$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
-			$("td[name=slctext"+ i+ "]").append('<input type="checkbox" name=slciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+			
+			/* $("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+		 	$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+			$("td[name=slctext"+ i+ "]").append('<input type="checkbox" name=slciCk'+ i+ ' onchange="checkChange(this,'+i+')">'); */
 			
 		} else {
+			$("[id=chk"+i+"]").prop("checked",false);
+			$("[id=checkPoint"+i+"]").removeClass('success');
 			/* $('[name=sbci'+i+']').val("0");
  			$('[name=snci'+i+']').val("0");
 		 	//$('[name=cmci'+i+']').val("0");
@@ -167,7 +221,7 @@
 	}
 	
 	/// td 더블클릭시 체크 인풋 박스 추가삭제
-	function checkboxChange( obj ){
+/* 	function checkboxChange( obj ){
 		//alert( obj.id );
 		var inputName = obj.id.replace("text","i");
 		var iptNameLen = inputName.length;
@@ -186,10 +240,10 @@
 			$('[name="'+inputName+'"]').css('visibility','visible');
 			$('[name="'+inputName3+'"]').prop("checked",true);
 		}
-	}
+	} */
 	
 	// mouse over
-	function tdMouseOver( obj ){
+/* 	function tdMouseOver( obj ){
 		var tdName = obj.id;
 		$('[name="'+tdName+'"]').mouseover( $('[name="'+tdName+'"]').css('background-color','yellow') );
 	}
@@ -197,7 +251,7 @@
 	function tdMouseOut( obj ){
 		var tdName = obj.id;
 		$('[name="'+tdName+'"]').mouseout( $('[name="'+tdName+'"]').css('background-color','white') );
-	}
+	} */
 	
 	// 숫자만 입력, 콤마찍기, 첫자리 숫자 0 입력 안되게
 	//콤마찍기
@@ -291,6 +345,7 @@
 			frm.submit(); */ 
 		 
 	}
+		
 	
 	
  		
@@ -311,35 +366,43 @@
 				<div class="panel">
 					<div class="panel-heading">
 
-						<form id="frm" name="f1" method="get">
+						<form id="frm" name="f1" method="POST">
 							<div class="panel-body">
 								<table class="table table-bordered" table-hover">
-									<thead>
-										<th class="text-center"><input type="checkbox" id="checkall" /></th>
+									<tr onclick="allcheck()">
+										<th class="text-center" onclick="allcheck()"><input type="checkbox" id="checkall" /></th>
 										<th>사번</th>
 										<th>사원이름</th>
 										<th>급여</th>
 										<th>주간근무수당</th>
 										<th>야간근무수당</th>
+										<th>연장근무수당</th>
+										<th>지각</th>
+										<th>휴가</th>
 										<th>교통비</th>
 										<th>식대</th>
 										<th>차량유지비</th>
-										<th>지각</th>
+										<th>상여금</th>
+										<th>출장비</th>
 
-									</thead>
+									</tr>
 									<c:forEach var="tb" items="${list}" varStatus="status">
 
-										<tr>
-											<td width="5" align="center"><input type="checkbox" id="chk${status.index}" onclick="check('${status.index}')"></td>
-											<td width="50" name="empcode${status.index}" id="${tb.EMP_EMNO}">${tb.EMP_EMNO}</td>
-											<td width="100" >${tb.EMP_NAME}</td>
-											<td width="100" id="saltext${status.index}" name="saltext${status.index}"  align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
-											<td width="100" id="sbctext${status.index}" name="sbctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
-											<td width="100" id="snctext${status.index}" name="snctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
-											<td width="100" id="tamtext${status.index}" name="tamtext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
-											<td width="100" id="fdetext${status.index}" name="fdetext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
-											<td width="100" id="cmctext${status.index}" name="cmctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
-											<td width="100" id="slctext${status.index}" name="slctext${status.index}" align="center" ondblclick="checkboxChange(this)" onmouseover="tdMouseOver(this)" onmouseout="tdMouseOut(this)"></td>
+										<tr id="checkPoint${status.index}">
+											<td width="5" align="center" onclick="check(${status.index})"><input type="checkbox" id="chk${status.index}" onclick="check('${status.index}')"></td>
+											<td width="50" name="empcode${status.index}" id="${tb.EMP_EMNO}" onclick="check(${status.index})">${tb.EMP_EMNO}</td>
+											<td width="100" onclick="check(${status.index})">${tb.EMP_NAME}</td>
+											<td width="100" id="saltext${status.index}" name="saltext${status.index}"  align="center" ondblclick="checkboxChange(this)" ></td>
+											<td width="100" id="sbctext${status.index}" name="sbctext${status.index}" align="center" ondblclick="checkboxChange(this)"></td>
+											<td width="100" id="snctext${status.index}" name="snctext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
+											<td width="100"></td>
+											<td width="100" id="slctext${status.index}" name="slctext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
+											<td width="100"></td>
+											<td width="100" id="tamtext${status.index}" name="tamtext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
+											<td width="100" id="fdetext${status.index}" name="fdetext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
+											<td width="100" id="cmctext${status.index}" name="cmctext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
+											<td width="100"></td>
+											<td width="100"></td>
 										</tr>
 									</c:forEach>
 									

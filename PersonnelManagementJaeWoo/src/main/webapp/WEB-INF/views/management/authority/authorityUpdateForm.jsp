@@ -7,7 +7,7 @@
 </div>
 <!-- 메뉴 권한 상세  업데이트 폼 시작 -->
 <div class="panel-body"> 
-	<form id="insertForm" method="post">
+	<form id="updateForm" method="post">
 		<input type="hidden" name="mnNo" value="${menuData.mnNo}"/>
 		<input type="hidden" name="empEmno" value="${empEmno}"/>
 		<table class="table table-bordered" style="width:100%;">
@@ -47,7 +47,7 @@
 				<tr>
 					<th class="text-center">적용 시작일</th>	
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker strt" id="atrAplyStrt">
 							<input type="text" class="form-control" name="atrAplyStrt" value="${authoData.atrAplyStrt}">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -55,9 +55,10 @@
 						</div>
 					</td>
 				</tr>
+				<tr>
 					<th class="text-center">적용 종료일</th>	
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker fini" id="atrAplyFini">
 							<input type="text" class="form-control" name="atrAplyFini" value="${authoData.atrAplyFini}">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -68,7 +69,7 @@
 				<tr>	
 					<th class="text-center">수정가능 시작일</th>
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker strt" id="atrUpdtStr">
 							<input type="text" class="form-control" name="atrUpdtStrt" value="${authoData.atrUpdtStrt}">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -79,7 +80,7 @@
 				<tr>
 					<th class="text-center">수정가능 종료일</th>	
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker fini" id="atrUpdtFini">
 							<input type="text" class="form-control"  name="atrUpdtFini" value="${authoData.atrUpdtFini}">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->

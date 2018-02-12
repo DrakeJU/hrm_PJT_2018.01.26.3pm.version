@@ -55,7 +55,7 @@
 						</span>
 					</td>
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker strt">
 							<input type="text" class="form-control" name="atrAplyStrt">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -63,7 +63,7 @@
 						</div>
 					</td>
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker fini">
 							<input type="text" class="form-control" name="atrAplyFini">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -71,7 +71,7 @@
 						</div>
 					</td>
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker strt">
 							<input type="text" class="form-control" name="atrUpdtStrt">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -79,7 +79,7 @@
 						</div>
 					</td>
 					<td>
-						<div class="input-group date datepicker">
+						<div class="input-group date datepicker fini">
 							<input type="text" class="form-control"  name="atrUpdtFini">
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->

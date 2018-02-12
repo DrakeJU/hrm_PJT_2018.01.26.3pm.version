@@ -44,6 +44,16 @@ public class VacationService {
 		return list;
 	}
 	
+	//휴가일수설정  휴가일수 저장하기
+	public int vacationCountUpdate(HashMap<String,Object> map) {
+		
+		int list = vacationDao.vacationCountUpdate(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
 	/* 휴가일수설정 - 사원등록 필요 개수 */
 	public int vacationCountEmpSignUpCntNum() {
 		
@@ -151,6 +161,12 @@ public class VacationService {
 			logger.info("vacationProg 휴가승인대기 개수 service >>>> " + countNum);
 		
 		return countNum;
+	}
+	
+	/* 휴가 신청현황 - 승인대기 셀렉박스 */
+	public List<HashMap<String,Object>> situationList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.situationList(map);
+		return list;
 	}
 	
 	/* 휴가 신청현황 리스트 */

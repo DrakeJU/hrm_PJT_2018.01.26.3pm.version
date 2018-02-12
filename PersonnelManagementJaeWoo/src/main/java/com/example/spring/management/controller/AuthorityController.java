@@ -103,9 +103,9 @@ public class AuthorityController {
 	}//authorityInsert
 	
 	//메뉴 권한 업데이트
-	@RequestMapping(value="authorityUpdate.do")
+	@RequestMapping(value="authorityUpdate.exc")
 	public @ResponseBody int authorityUpdate(@RequestParam HashMap<String,Object> map) {
-	 
+		System.out.println("----------------------드루와");
 		int result = (int)authorityService.authorityUpdate(map);
 		return result;
 	}//authorityUpdat 

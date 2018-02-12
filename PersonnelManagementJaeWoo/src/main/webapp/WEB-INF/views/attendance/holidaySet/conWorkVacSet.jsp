@@ -179,22 +179,7 @@
 		<!-- MAIN CONTENT -->
 		<div class="main-content">
 			<div class="container-fluid">
-				<h3 class="page-title">휴가항목설정</h3>
-				<!-- OVERVIEW -->
-
-				<div class="panel panel-headline">
-					<div class="panel-body">
-						<form class="form-inline" name="searchForm">
-							<strong class="pdu_8 ftl">사업장</strong> <select
-								name="attendanceDivision" class="w_120 mgl_8 mgu_8">
-								<option value="vacation">인크레더블</option>
-							</select> <span class="ftr">
-								<button type="button" class="btn btn-primary" onClick="">검색</button>
-							</span>
-						</form>
-					</div>
-				</div>
-
+				<h3 class="page-title"><b>휴가항목설정</b></h3>
 				<!-- TABLE STRIPED -->
 				<div class="panel panel-headline">
 					<div class="boxArea text-center">

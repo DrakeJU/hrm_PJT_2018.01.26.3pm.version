@@ -7,6 +7,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-	main 페이지입니다.
+	  <!-- MAIN -->
+        <div class="main">
+            <!-- MAIN CONTENT -->
+            <div class="main-content">
+                <div class="container-fluid">
+                	<h3 class="page-title">인사관리시스템</h3>
+                </div>
+            </div>
+        </div>        
 </body>
 </html>

@@ -193,7 +193,7 @@
 						
 						</div>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body" style="max-height:500px; overflow-y:auto">
 						<div class="row">
 							<div class="col-md-12" style="padding-top:20px;">
 								<table class="table table-hover" style="padding-left:30px;">
@@ -301,6 +301,5 @@
 				</div>
 			</div>
 		</div>
-
 </body>
 </html>

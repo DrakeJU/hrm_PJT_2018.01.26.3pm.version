@@ -381,6 +381,7 @@
 											"<button type='button' name='infoDeleteBtn' class='btn btn-default' onClick='commInfoDeleteFunc($(this))'>삭제</button></td>" + 
 										"</td>" + 
 									"</tr>"
+									
 								);
 							
 						});//each
@@ -492,14 +493,21 @@
 			
 			
 /* ==================================== 페이징 ============================================ */
-
-	
  
+ 
+ 	pagingList();
+
+	function pagingList(obj){
+		
+		if(obj==undefined){	//선택한 페이지 값이 안들어왔을 때
+			obj = 1;
+		}//if
+				
 		var url = "/spring/commonPaging.do";
 		
 		var commonSelect = $("#searchPanel select > option:selected").val();	//검색조건
 		var commonSearch = $("#searchPanel input[name='commonSearch']").val();	//검색내용
-		var data = {"commonSelect":commonSelect,"commonSearch":commonSearch};
+		var data = {"commonSelect":commonSelect,"commonSearch":commonSearch,"selectPageNum":obj};
 		
 		paging.ajaxSubmit(url,data,function(result){
 			
@@ -514,23 +522,33 @@
 			pagingFunc(data);	//페이징 ajax함수 호출
 			
 		});
-		 
-		function pagingFunc(data){	//페이징 ajax함수
-			
-			var data = {"totalNoticeNum":data.allPostNum,
-						"choicePage":data.selectPageNum,
-						"viewNoticeMaxNum":data.postNum,
-						"viewPageMaxNum":data.PageNum};
-			
-			$("#commList nav[name='pagingNav']").pagingNav(data,function(target){
-				
-				location.href = "/spring/commonList.do?selectPageNum="+target.attr("name");
-				
-			});
-			
-		}//paging
+		 	
+	}//pagingList
+	
+	function pagingFunc(data){	//페이징 ajax함수
 		
+		var data = {"totalNoticeNum":data.allPostNum,
+					"choicePage":data.selectPageNum,
+					"viewNoticeMaxNum":data.postNum,
+					"viewPageMaxNum":data.PageNum};
+		
+		$("#commList nav[name='pagingNav']").pagingNav(data,function(target){
 			
+			var commonSelect = $("#searchPanel").find("select[name='commonSelect'] option:selected").val();//검색조건
+			var commonSearch = $("#searchPanel").find("input[name='commonSearch']").val();	//검색내용
+			
+			var url = "/spring/commonSearchList.do";
+			var data = {"commonSelect":commonSelect,"commonSearch":commonSearch,"selectPageNum":target.attr("name")};
+			
+			commSearchListAjaxSubmit(url,data);
+			pagingList(target.attr("name"));
+			
+		});
+		
+	}//paging
+
+	
+		
 	</script>
 		
 </head>

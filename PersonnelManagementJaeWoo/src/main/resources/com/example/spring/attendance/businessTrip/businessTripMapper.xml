@@ -79,4 +79,31 @@
 	)
 	</insert>
 	
+	<!-- 출장정산 -->
+	<select id="businessAdj" parameterType="Hashmap" resultType="Hashmap">
+		SELECT
+			EMP_EMNO 			empEmno 	#사원번호
+			,(SELECT	EMP_NAME empName FROM EMPLOYEE WHERE EMPLOYEE.EMP_EMNO = BT_STM.EMP_EMNO) empName 	#사원이름
+			,BTST_SERIAL_NUMBER bsNumber	#출장일련번호
+			,ATRF_SERIAL_NUMBER asNumber	#영수증파일일련번호
+			,BTST_CRT_DATE 		bcDate		#신청일
+			,BTST_BT_START_DATE bbsDate		#출장시작일자
+			,BTST_BT_END_DATE 	bbeDate		#출장종료일자
+			,BTST_BT_AREA 		bbArea		#출장지역
+			,BTST_BT_P 			bbP			#출장목적(장소)
+			,BTST_BT_PF 		bbPf		#출장비예상
+			,BTST_BT_FEE 		bbFee		#출장비실제사용금액
+			,BTST_CONT 			bCont		#신청내용
+			,BTST_DEL_YN 		bdYn		#삭제여부
+		FROM BT_STM
+		<if test="empEmno !=null and empEmno !='' ">
+			WHERE EMP_EMNO = #{empEmno} 
+		</if>
+		<if test="btstBtStartDate !=null and btstBtStartDate !='' ">
+			AND (SELECT REPLACE(BTST_CRT_DATE,'-','')) BETWEEN (SELECT REPLACE(#{btstBtStartDate},'-','')) AND (SELECT REPLACE(#{btstBtEndDate},'-',''))
+		</if>
+	</select>
+	
+	
+	
 </mapper>

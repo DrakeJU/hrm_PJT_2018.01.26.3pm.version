@@ -16,7 +16,7 @@
 			 					"<td name='empEmno'>"+rslt[index].empEmno+"</td>" +		//사원번호
 			 					"<td name='empName'>"+rslt[index].empName+"</td>" +		//성명
 			 					"<td name='commName'>"+rslt[index].commName+"</td>" +	//증명서종류
-			 					"<td name='crtfUse'>"+rslt[index].crtfUse+"</td>" +		//용도
+			 					//"<td name='crtfUse'>"+rslt[index].crtfUse+"</td>" +		//용도
 			 					"<td name='crtfDate'>"+rslt[index].crtfDate+"</td>" +	//신청일
 			 			  "</tr>");
 		 });
@@ -47,7 +47,6 @@
 	 					"<td name='empEmno'>"+rslt[index].empEmno+"</td>" +		//사원번호
 	 					"<td name='empName'>"+rslt[index].empName+"</td>" +		//성명
 	 					"<td name='commName'>"+rslt[index].commName+"</td>" +	//증명서종류
-	 					"<td name='crtfUse'>"+rslt[index].crtfUse+"</td>" +		//용도
 	 					"<td name='crtfDate'>"+rslt[index].crtfDate+"</td>" +	//신청일
 	 			  "</tr>");
 			});
@@ -83,62 +82,5 @@
 			 $("#viewModal #viewForm input[name='rankName']").val(rslt.rankName); //직위/직급명
 		});
 	}
-	
-	//증명서신청 
-	var insertData = function(){
-		
-		//신청시 오늘날짜 세팅
-		var d = new Date();
-		var year = d.getFullYear();
-		var month = d.getMonth()+1;
-		var day = d.getDate();
-		
-		//월, 일이 1자리수이면 0을붙인다
-		if(("" + month).length == 1) {month = "0" + month;} 
-		if(("" + day).length   == 1) {day = "0" + day;}
-
-		$("[name='application']").val(year+'-'+month+'-'+day);
-		
-		//신청시 사원정보 가져오기
-		var obj = {};
-		obj.emno = emno;
-		
-		paging.ajaxSubmit("empInfo.do",obj,function(rslt){
-			 $("#insertModal #insertForm input[name='empEmno']").val(rslt.empEmno);
-			 $("#insertModal #insertForm input[name='deptName']").val(rslt.deptName);
-			 $("#insertModal #insertForm input[name='empName']").val(rslt.empName);
-			 $("#insertModal #insertForm input[name='rankName']").val(rslt.rankName);
-		});
-		
-		//신청버튼클릭시
-		$("#insertBtn").click(function(){
-			$("#insertForm [name='crtfCode']").val(crtfCode);
-			
-			var formId = $("#insertForm").attr("id");
-			
-			var url = "/spring/certificateInsert.do"; 
-			
-			if($("#insertForm select[name='select']").val() == "증명서종류"){ //증명서 선택 안했을시
-				alert("증명서를 선택하십시오");
-				return false;
-			}else {	//증명서 선택했을시
-				if(confirm("저장하시겠습니까?") == true){
-					paging.ajaxFormSubmit(url,formId, function(result){
-						console.log("result : " + result);
-						if(result > 0){
-							alert("저장되었습니다");
-							location.href="/spring/certificateIssue.do";
-						}else{
-							alert("저장실패. 다시 입력해주세요");
-						}
-					});
-				}else{
-					return false;
-				}
-			}
-		});
-		
-	}
-	
 	
 </script>

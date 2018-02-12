@@ -128,7 +128,7 @@
 	</insert>
 	<update id="authorityUpdate" parameterType="HashMap">
 		UPDATE authority
-			SET autho_attr= authoAttr, /*권한속성*/
+			SET ATR_ATTR = #{atrAttr}, /*권한속성*/
 			ATR_APLYSTRT = #{atrAplyStrt}, /*권한시작날짜*/
 			ATR_APLYFINI = #{atrAplyFini}, /*권한종료날짜*/
 			ATR_UPDTSTRT = #{atrUpdtStrt}, /*데이터접근시작날짜*/

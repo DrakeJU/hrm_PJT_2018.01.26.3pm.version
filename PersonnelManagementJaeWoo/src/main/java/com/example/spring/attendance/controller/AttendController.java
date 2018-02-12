@@ -1,6 +1,6 @@
 package com.example.spring.attendance.controller;
 
-import java.util.HashMap; 
+import java.util.HashMap;  
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,78 +27,78 @@ public class AttendController {
 	 * 메뉴명 : [출결관리] - [일일근태등록]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.02.02
+	 * @Date   : 2018.02.06
 	 ***************************************************************************************/
 	
 	//출결관리 - 일일근태등록
-	@RequestMapping(value = "/dailAttdReg")
-	public String dailAttdReg(
-			@RequestParam HashMap<String, String> params, Model model) throws Exception{
+		@RequestMapping(value = "/dailAttdReg")
+		public String dailAttdReg(
+				@RequestParam HashMap<String, String> params, Model model) throws Exception{
 
-		return "dailAttdReg";
-	}
+			return "dailAttdReg";
+		}
 	
 	//출결관리 - 일일근태등록
 	//출근버튼====================================================================
-	@RequestMapping(value = "/insertDailAttReg")
-	public ModelAndView insertDailAttReg(
-			@RequestParam HashMap<String, String> params) throws Exception{
-	
-		// 1) 촐근값입력
-		attendService.insertDailAttReg(params);
+		@RequestMapping(value = "/insertDailAttReg")
+		public ModelAndView insertDailAttReg(
+				@RequestParam HashMap<String, String> params) throws Exception{
 		
-		// 2) 출근입력값 출력 조회 
-		ModelAndView mv = new ModelAndView();
-		
-		List<HashMap<String, Object>> resultList = attendService.selectInDailAttReg(params); 
-		
-		mv.addObject("resultList", resultList);
-		mv.setViewName("dailAttdReg");
-		/*	
-		//결과값에 대한 ajax alert 띄울시에 사용 
-		if(resultList == null) {
-			mv.addObject("success", "N");
-		} else {
+			// 1) 촐근값입력
+			attendService.insertDailAttReg(params);
+			
+			// 2) 출근입력값 출력 조회 
+			ModelAndView mv = new ModelAndView();
+			
+			List<HashMap<String, Object>> resultList = attendService.selectInDailAttReg(params); 
+			
 			mv.addObject("resultList", resultList);
-			mv.addObject("success", "Y");
-		}
-		*/
-		return mv;
-	}//insert/select
+			mv.setViewName("dailAttdReg");
+			/*	
+			//결과값에 대한 ajax alert 띄울시에 사용 
+			if(resultList == null) {
+				mv.addObject("success", "N");
+			} else {
+				mv.addObject("resultList", resultList);
+				mv.addObject("success", "Y");
+			}
+			*/
+			return mv;
+		}//insert/select
 	
 	
 	//퇴근버튼====================================================================
-	@RequestMapping(value = "/updateDailAttReg")
-	public ModelAndView updateDailAttReg(
-			@RequestParam HashMap<String, String> params)throws Exception{
-		
-		// 1) 퇴근값입력 update
-		attendService.updateDailAttReg(params);
-		
-		
-		// 2) 퇴근입력값 출력 조회 
-		ModelAndView mv = new ModelAndView();
-		
-		mv.addObject("resultList", attendService.selectInDailAttReg(params));
-		mv.setViewName("dailAttdReg");
-		return mv;
-	}//update
+		@RequestMapping(value = "/updateDailAttReg")
+		public ModelAndView updateDailAttReg(
+				@RequestParam HashMap<String, String> params)throws Exception{
+			
+			// 1) 퇴근값입력 update
+			attendService.updateDailAttReg(params);
+			
+			
+			// 2) 퇴근입력값 출력 조회 
+			ModelAndView mv = new ModelAndView();
+			
+			mv.addObject("resultList", attendService.selectInDailAttReg(params));
+			mv.setViewName("dailAttdReg");
+			return mv;
+		}//update
 	
 	
 	//검색버튼====================================================================
-	@RequestMapping(value="/readDailAttdReg")
-	public ModelAndView readDailAttdReg(
-			@RequestParam HashMap<String, String> params)throws Exception {
-		
-		
-		logger.debug("attendedDate :" + params.get("attendedDate"));
-		logger.debug("empEmno : " + params.get("empEmno"));
-		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("resultList", attendService.selectInDailAttReg(params));
-		mv.setViewName("dailAttdReg");
-		return mv;
-	}
+		@RequestMapping(value="/readDailAttdReg")
+		public ModelAndView readDailAttdReg(
+				@RequestParam HashMap<String, String> params)throws Exception {
+			
+			
+			logger.debug("attendedDate :" + params.get("attendedDate"));
+			logger.debug("empEmno : " + params.get("empEmno"));
+			
+			ModelAndView mv = new ModelAndView();
+			mv.addObject("resultList", attendService.selectInDailAttReg(params));
+			mv.setViewName("dailAttdReg");
+			return mv;
+		}
 	
 	/*
 	//ajax 방식 사용

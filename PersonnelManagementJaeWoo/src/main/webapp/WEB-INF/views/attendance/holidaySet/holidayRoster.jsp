@@ -201,11 +201,12 @@
 		var eventsArray = new Array();
 		
 		paging.ajaxSubmit("/spring/holidayRosterEventsList.ajax", "", function(result){
+			console.log("hhh");
 			for(var i = 0 ; i < result.length ; i++){
 				eventsObj.start = result[i].start;
 				eventsObj.end = result[i].end;
 				eventsObj.text = result[i].text;
-				eventsObj.id = DayPilot.guid();
+				eventsObj.id = result[i].id;
 				eventsObj.resource = result[i].resource;
 				eventsArray.push(eventsObj);
 				eventsObj = {};
@@ -266,14 +267,6 @@
 		paging.ajaxSubmit("/spring/holidayRosterDBInsert.ajax",dataObj,function(result){
 			console.log(result);
 		});
-    }
-    
-    function loadRosterBtn(){
-    	option2.startDate = "2018-01-05";
-   		
-    	location.reload();
-    	
-    	console.log("새로고침 : " + JSON.stringify(option2.startDate));
     }
     
 </script>

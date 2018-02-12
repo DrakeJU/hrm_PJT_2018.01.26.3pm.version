@@ -18,6 +18,14 @@ public class CertificateController {
 	@Autowired
 	private CertificateService certificateService;
 	
+	//증명서신청
+	@RequestMapping(value="certificateRequest.do")
+	public String certificateRequest() {
+		
+		return "certificateRequest";
+		
+	}//certificateRequest
+	
 	//증명서발급메인화면 
 	@RequestMapping(value="certificateIssue.do")
 	public String certificateIssue() {
@@ -70,5 +78,6 @@ public class CertificateController {
 		
 		return result;
 	}
+	
 	
 }

@@ -67,7 +67,7 @@ public class CommonCodeDao {
 		
 		return result;
 		
-	}//commonDelete
+	}//commonDelete-
 	
 	
 	//하위 공통코드 등록

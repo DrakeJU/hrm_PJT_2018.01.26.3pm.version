@@ -45,7 +45,7 @@
 	 				$('#empEmno').text($("input[type=hidden][name=empEmno]").val());
 	 				$('#empName').text(v.empName);
 	 				$('#baseDate').text(v.baseDate);
-	 				$('#emreVacCnt').text(v.emreVacCnt);
+	 				$('#emreVacUd').text(v.emreVacUd);
 	 				$('#emrePvacUd').text(v.emrePvacUd);
 	 				$('#remndrDate').text(v.remndrDate);
 	 			});
@@ -57,8 +57,7 @@
 		 					"<td>"+ i +"</td>"+ //번호
 		 					"<td>"+ v.vastCrtDate +"</td>"+ //신청일
 		 					"<td>"+ v.vastType +"</td>"+ //휴가항목
-		 					"<td>"+ v.vastStartDate +"</td>"+ //시작일
-		 					"<td>"+ v.vastEndDate +"</td>"+ //종료일
+		 					"<td>"+ v.vastTerm +"</td>"+ //휴가기간
 		 					"<td>"+ v.vastVacUd +"</td>"+ //일수
 		 					"<td>"+ v.vastProgressSituation +"</td>"+ //결재상황
 		 					"<td>"+ v.vastCont +"</td>"+ //휴가사유
@@ -112,7 +111,7 @@
 							</tr>
 							<tr>
 								<th>전체일수</th>
-								<td id="emreVacCnt"></td>
+								<td id="emreVacUd"></td>
 								<th>사용일수</th>
 								<td id="emrePvacUd"></td>
 								<th>잔여일수</th>
@@ -136,8 +135,7 @@
 										<th>번호</th>
 										<th>신청일</th>
 										<th>휴가항목</th>
-										<th>시작일</th>
-										<th>종료일</th>
+										<th>휴가기간</th>
 										<th>일수</th>
 										<th>전자결재상태</th>
 										<th>휴가사유</th>
@@ -148,8 +146,7 @@
 <!-- 										<td>3</td> -->
 <!-- 										<td>2018.01.15</td> -->
 <!-- 										<td>휴가</td> -->
-<!-- 										<td>2018.01.18</td> -->
-<!-- 										<td>2018.01.19</td> -->
+<!-- 										<td>2018.01.18~2018.01.20</td> -->
 <!-- 										<td>2</td> -->
 <!-- 										<td>승인대기</td> -->
 <!-- 										<td>개인사유</td> -->

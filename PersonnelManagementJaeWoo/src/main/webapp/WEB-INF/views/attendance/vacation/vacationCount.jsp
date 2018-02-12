@@ -12,7 +12,7 @@
 </style>
 <script type="text/javascript">
 
-var url = "vacationCountEmpList.ajax";
+var url = "vacationCountEmpList.ajax"
 var formId = "vacCntSelectFrm"; //초기, 검색할 때 id를 기본값으로 세팅
 
 //document.ready
@@ -20,6 +20,11 @@ $(function(){
 	calender(); //년도달력
 	vacCntEmpSignUpCntNum(); //사원등록 개수
 	vacCntEmpList(); //사원정보 리스트 ajax
+	
+	$(document).on("click", "#empIncoDate", function(){ //휴가일수 텍스트박스 클릭하면 체크박스 자동 checked
+		$(this).closest('tr').find("input[type=checkbox]").prop("checked",true);
+	});
+	
 }); 
 
 //검색을 눌렀을 때
@@ -27,76 +32,106 @@ function vacCntEmpListSearch(){
 	vacCntEmpList();
 }
 
+//검색결과 없을 시, 조건 초기화
+function searchReset(){
+	window.location.reload();
+}
+
 //휴가일수 자동계산을 눌렀을때
 function vacCntCalculation(){
-// 	url = "";
-// 	formId = "vacCntEmpFrm";
-// 	vacCntEmpList(); //사원정보 리스트 ajax
-	var empIncoDate = new Date('');
 	
-	var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
+	if($('input:checkbox:checked').length == 0){ //선택된 체크박스가 없을 경우 alert창 띄움
 	
-	$("input[type=checkbox][id=emnoChk]").each(function(){
-		if($(this).prop('checked')){
-
-			var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
-			var chkTdText = chkTr.children().eq(2).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
-
-			if(empEmnoResult == null){
-				empEmnoResult = chkTdText;
-			}else{
-				empEmnoResult = empEmnoResult + "/" + chkTdText; //사원번호를 구분자와 함께 저장
-			}
-		}
-	});
+		alert('선택된 체크박스가 없습니다.');
 	
-	$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
-	console.log($('#empEmnoResult').val());
-	
-	paging.ajaxFormSubmit("vacationCountAutoCalculation.ajax", "vacCntEmpFrm", function(rslt){
-		console.log("결과데이터:"+JSON.stringify(rslt));
+	}else{
+		var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
 		
-// 		if(rslt == null){
-// 			console.log('');
-// 		}else{
-// 			alert("저장이 완료되었습니다.");
-// 			window.location.reload();
-// 		}
-	});
+		$("input[type=checkbox][id=emnoChk]").each(function(){
+			if($(this).prop('checked')){
+	
+				var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
+				var chkTdText = chkTr.children().eq(2).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
+	
+				if(empEmnoResult == null){
+					empEmnoResult = chkTdText;
+				}else{
+					empEmnoResult = empEmnoResult + "/" + chkTdText; //사원번호를 구분자와 함께 저장
+				}
+			}
+		});
+	
+		$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
+		console.log($('#empEmnoResult').val());
+		
+		paging.ajaxFormSubmit("vacationCountAutoCalculation.ajax", "vacCntEmpFrm", function(rslt){
+			console.log("결과데이터:"+JSON.stringify(rslt));
+			
+			if(rslt == null || rslt.success == "N"){
+				console.log('에러');
+			}else if(rslt.success == "Y"){
+	 			$.each(rslt.vacationCountAutoCalculation, function(k, v) {
+	 				$("input[type=checkbox][id=emnoChk]").each(function(){
+	 					if($(this).prop('checked')){
+	 						var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
+	 						var chkTdText = chkTr.children().eq(2).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
+	 						if(chkTdText == v.empEmno){
+	 							$(this).closest('tr').find("input").val(v.vacCnt);
+	 						}
+	 					}
+	 				});
+	 			});
+			}
+		});
+	}
 }
 
 //저장을 눌렀을 때
 function vacCntSave(){
-
-	var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
 	
-	$("input[type=checkbox][id=emnoChk]").each(function(){
-		if($(this).prop('checked')){
-
-			var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
-			var chkTdText = chkTr.children().eq(1).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
+	if($('input:checkbox:checked').length == 0){ //선택된 체크박스가 없을 경우 alert창 띄움
 		
-			if(empEmnoResult == null){
-				empEmnoResult = chkTdText;
-			}else{
-				empEmnoResult = empEmnoResult + "/" + chkTdText; //사원번호를 구분자와 함께 저장
+		alert('선택된 체크박스가 없습니다.');
+	
+	}else{
+
+		var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
+		
+		$("input[type=checkbox][id=emnoChk]").each(function(){
+			if($(this).prop('checked')){
+	
+				var chkTr = $(this).closest('tr'); //체크한 체크박스와 가장 가까운 tr
+				var chkEmpEmnoText = chkTr.children().eq(2).text(); //체크한 체크박스의 2번째 td의 내용(사원번호)
+				var chkVacCntText = chkTr.find("input[type=text]").val(); //휴가일수 내용
+				
+// 				console.log(chkVacCntText);
+				
+				if(chkVacCntText == ''){
+					chkVacCntText = "0"; //휴가일수 입력한 값이 없으면 0으로 넣게
+				}
+				
+				if(empEmnoResult == null){
+					empEmnoResult = chkEmpEmnoText + "^" + chkVacCntText;
+				}else{
+					empEmnoResult = empEmnoResult + "/" + chkEmpEmnoText + "^" + chkVacCntText; //사원번호,휴가일수를 구분자와 함께 저장
+				}
 			}
-		}
-	});
-	$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
-// 	console.log($('#empEmnoResult').val());
-	
-	paging.ajaxFormSubmit("vacCntEmpSignUpInsert.ajax", "vacCntEmpFrm", function(rslt){
-		console.log("ajaxFormSubmit -> callback");
-		console.log("결과데이터:"+JSON.stringify(rslt));
+		});
+		$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
+		console.log($('#empEmnoResult').val());
 		
-		if(rslt == null){
-			alert("저장에 실패하였습니다. 다시 시도해주세요.")
-		}else{
-			alert("저장이 완료되었습니다.");
-			window.location.reload();
-		}
-	});
+		paging.ajaxFormSubmit("vacationCountUpdate.ajax", "vacCntEmpFrm", function(rslt){
+			console.log("ajaxFormSubmit -> callback");
+			console.log("결과데이터:"+JSON.stringify(rslt));
+			
+			if(rslt == null){
+				alert("저장에 실패하였습니다. 다시 시도해주세요.")
+			}else{
+				alert("저장이 완료되었습니다.");
+				window.location.reload();
+			}
+		});
+	}
 }
 
 //퇴직자 포함 체크여부
@@ -120,7 +155,7 @@ function vacCntEmpList(){
 
 		if(rslt == null || rslt.success == "N"){
 			$('#vacCntEmpListTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
- 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+ 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.<br><br><br><br><button type='button' class='btn btn-info' id='searchresetBtn' onclick='searchReset()''>조건초기화</button></div>"
  			);
 		}else if(rslt.success == "Y"){
  			$.each(rslt.vacationCountEmpList, function(k, v) {
@@ -232,7 +267,7 @@ function vacCntEmpSignUpCntNum(){
 								<option value="empName">성명</option>
 								<option value="deptName">부서</option>
 							</select>
-							<input type="text" class="form-control" name="">
+							<input type="text" class="form-control" name="keyword">
 							&nbsp;&nbsp;&nbsp;
 							<label class="fancy-checkbox-inline">
 								<input type="checkbox" id="retrChk">
@@ -272,7 +307,7 @@ function vacCntEmpSignUpCntNum(){
 											<th style='width:12%;'>부서</th>
 											<th style='width:12%;'>직위</th>
 											<th style='width:12%;'>입사일</th>
-											<th>휴가일수</th>
+											<th onclick="" class="sorter-false">휴가일수&nbsp;<i class="fa fa-info-circle"></i></th>
 										</tr>
 									</thead>
 									<tbody id="vacCntEmpListTbody" style="display:block;height:400px;overflow:auto;">

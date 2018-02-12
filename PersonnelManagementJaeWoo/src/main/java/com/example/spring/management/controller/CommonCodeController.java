@@ -54,14 +54,14 @@ public class CommonCodeController {
 		if (selectPageNum == null || selectPageNum == "") {
 			selectPageNum = "1";
 		}//if
-		
+		logger.debug("##########################################selectPageNum: " + selectPageNum);
 		String commonSelect = request.getParameter("commonSelect");
 		String commonSearch = request.getParameter("commonSearch");
-		
+
 		paramMap.put("selectPageNum", selectPageNum);
 		paramMap.put("commonSelect",commonSelect);
 		paramMap.put("commonSearch",commonSearch);
-
+		
 		List<HashMap<String, Object>> list = commonCodeService.commonList(paramMap);
 		
 		ModelAndView mv = new ModelAndView();
@@ -155,7 +155,7 @@ public class CommonCodeController {
 	public @ResponseBody List<HashMap<String, Object>> commonInfoList(@RequestParam(value="commPrntCode") String commPrntCode) {
 
 		List<HashMap<String, Object>> list = commonCodeService.commonInfoList(commPrntCode);
-
+		
 		return list;
 
 	}// commonInfoList
@@ -171,7 +171,7 @@ public class CommonCodeController {
 		if (selectPageNum == null || selectPageNum == "") {
 			selectPageNum = "1";
 		}//if
-		
+		logger.debug("paramMap.get('selectPageNum') = " + paramMap.get("selectPageNum"));
 		HashMap<String,Integer> map = commonCodeService.paging(paramMap);
 
 		map.put("selectPageNum", Integer.parseInt(selectPageNum));

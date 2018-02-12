@@ -58,6 +58,7 @@ public class CommonController {
 			session.setAttribute("userId", userMap.get("empId"));
 			session.setAttribute("adminYn", userMap.get("empAdminYn"));
 			session.setAttribute("userAuthList",commonService.authorityProcess(userMap));
+			
 		}//if 정상적인 로그인 인 경우 
 		
 		return userMap;

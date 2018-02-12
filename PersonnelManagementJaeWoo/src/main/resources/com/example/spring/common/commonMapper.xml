@@ -11,13 +11,15 @@
 		FROM MENU
 		WHERE MN_DEL_YN='N' /*메뉴삭제여부*/
 		AND MN_USE_YN='Y' /*메뉴사용여부*/
+		ORDER BY MN_PRNT_NO ASC, MN_IDX ASC	
 	</select>
 	<select id="selectMenu" parameterType="HashMap" resultType="HashMap">
 		SELECT
 			MN_NO mnNo,
 			MN_PRNT_NO mnPrntNo
 		FROM MENU
-		WHERE MN_URL = #{mnUrl}	
+		WHERE MN_URL = #{mnUrl}
+		AND MN_DEL_YN='N'	
 	</select>
 	<select id="loginProcess" parameterType="HashMap" resultType="HashMap">
 		select 
@@ -32,12 +34,12 @@
 		select
 			mn_url mnUrl,
 			atr_attr atrAttr,
-			atr_aplystrt atrAplystrt,
-			atr_aplyfini atrAplyfini,
-			atr_updtstrt atrUpdtstrt,
+			atr_aplystrt atrAplyStrt,
+			atr_aplyfini atrAplyFini,
+			atr_updtstrt atrUpdtStrt,
 			atr_updtfini atrUpdtFini
 		from authority left join menu
 		on authority.MN_NO = menu.MN_NO
-		where emp_emno =  #{emp_emno}	
+		where emp_emno =  #{empEmno}	
 	</select>
 </mapper>

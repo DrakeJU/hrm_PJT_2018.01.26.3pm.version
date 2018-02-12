@@ -42,12 +42,13 @@
 	</select>
 	
 	<select id="holidayRosterEventsList" resultType="HashMap">
-		SELECT DISTINCT start, end, text, resource FROM workroster
+		SELECT start, end, text, resource, id FROM workroster
 	</select>
 	
 	<insert id = "holidayRosterDBInsert" parameterType="eventsData" >
-		INSERT INTO WORKROSTER(START, END, ID, RESOURCE, TEXT)
-		VALUES(#{start}, #{end}, #{id}, #{resource}, #{text})
+		INSERT INTO WORKROSTER(ID, START, END, RESOURCE, TEXT)
+		VALUES(#{id}, #{start}, #{end}, #{resource}, #{text})
+		ON DUPLICATE KEY UPDATE START = #{start}, END = #{end}, RESOURCE = #{resource}, TEXT = #{text}
 	</insert>
 	
 	<!-- 연차에 따른 휴가일수 리스트 불러오기 -->

@@ -81,8 +81,7 @@
 			,DATE_FORMAT(DEPN_END_DATE,"%Y-%m-%dT%H:%i:%s") AS end		/*종료날짜*/
 			,'20' as id													/*가상컬럼*/
 		FROM DEPARTMENT_PLAN
-		WHERE EMP_EMNO = #{emno} 
-			  AND DEPT_CODE = #{deptCode}
+		WHERE DEPT_CODE = #{deptCode}
 			  AND DEPN_DEL_YN = 'N'
 	</select>
 	
@@ -120,8 +119,7 @@
 			,DEPN_UPDT_DATE AS depnUpdtDate     								/*수정날짜*/
 			,DEPN_DEL_YN AS depnDelYn 											/*삭제여부*/
 		FROM DEPARTMENT_PLAN
-		WHERE EMP_EMNO = #{emno}
-			AND DEPN_STRT_DATE = #{start}
+		WHERE DEPN_STRT_DATE = #{start}
 			AND DEPN_END_DATE = #{end}
 	</select>
 	

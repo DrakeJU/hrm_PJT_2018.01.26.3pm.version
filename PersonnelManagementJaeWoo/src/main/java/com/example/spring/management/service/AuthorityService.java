@@ -70,12 +70,22 @@ public class AuthorityService {
 	//메뉴 권한 등록
 	public int authorityInsert(HashMap<String,Object> map) {
 		
+		map.put("atrAplyStrt",((String)map.get("atrAplyStrt")).replaceAll("-","")+"000000");
+		map.put("atrAplyFini",((String)map.get("atrAplyFini")).replaceAll("-","")+"000000");
+		map.put("atrUpdtStrt",((String)map.get("atrUpdtStrt")).replaceAll("-","")+"000000");
+		map.put("atrUpdtFini",((String)map.get("atrUpdtFini")).replaceAll("-","")+"000000");
+		
 		int result = authorityDao.authorityInsert(map);
 		return result;
 	}//authorityInsert
 	
 	//메뉴 권한 업데이트
 	public int authorityUpdate(HashMap<String,Object> map) {
+		
+		map.put("atrAplyStrt",((String)map.get("atrAplyStrt")).replaceAll("-","")+"000000");
+		map.put("atrAplyFini",((String)map.get("atrAplyFini")).replaceAll("-","")+"000000");
+		map.put("atrUpdtStrt",((String)map.get("atrUpdtStrt")).replaceAll("-","")+"000000");
+		map.put("atrUpdtFini",((String)map.get("atrUpdtFini")).replaceAll("-","")+"000000");
 		
 		int result = authorityDao.authorityUpdate(map);
 		return result;

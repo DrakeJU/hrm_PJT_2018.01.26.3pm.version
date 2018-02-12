@@ -190,15 +190,15 @@
 			success : function(data) {
 				console.log("결과데이터 : "+JSON.stringify(data));
 				selectrcount = data.list.length;
+				
 				for(var i=0; i<data.list.length; i++) {
 					
-			
 					 $("[id=select_list]").append("<tr><td id=sempname"+i+">"+ data.list[i].EMP_NAME +"</td>"
-					 								  +"<td id=ssal"+i+">"+ data.list[i].SCAL_SAL +"</td>"
-					 								  +"<td id=sfdex"+i+">"+ data.list[i].SCAL_FDEX +"</td>"
+					 								  +"<td class=align-right id=ssal"+i+">"+ data.list[i].SCAL_SAL +"</td>"
+					 								  +"<td class=align-right id=sfdex"+i+">"+ data.list[i].SCAL_FDEX +"</td>"
 					 								  +"<td>"+data.list[i].SCAL_CMC+"</td>"
 					 								  +"<td></td>"
-					 								  +"<td>"+data.list[i].SCAL_NW_CST+"</td>"
+					 								  +"<td class=align-right>"+data.list[i].SCAL_NW_CST+"</td>"
 					 								  +"<td>"+data.list[i].SCAL_ITAX+"</td>"
 					 								  +"<td>"+data.list[i].SCAL_LTAX+"</td>"
 					 								  +"<td>"+ data.list[i].SCAL_NPEN +"</td>"

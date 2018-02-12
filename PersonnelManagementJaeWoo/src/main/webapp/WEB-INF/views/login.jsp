@@ -76,18 +76,32 @@
 	<script src="/spring/resources/common/js/paging.js"></script>
 	<script>
 	
-	$(document).ready(function(){
-		$("#loginBtn").on("click",function(){
-			paging.ajaxFormSubmit("loginProcess","loginForm",function(result){
-				if(result==null){
-					alert("아이디와 비밀번호가 틀립니다. 다시 입력해주세요");
-				}else{
-					alert("로그인 되었습니다.");
-					location.href="/spring/main.do";
-				}//if eles
-			});//paging.ajaxFormSubmit
+	$(document).ready(function(e){
+		
+		$("#loginBtn").on("click",function(){//login 버튼 클릭했을 때
+			loginAjax();
 		});//onClick	
+	 
+		$("#loginForm input").on("keydown", function(e){//keydown 중 Enter를 눌렀을 때
+			if(e.keyCode == 13){
+				loginAjax();
+			}//if
+		});
+	
 	});//doc
+	 
+	function loginAjax(){
+		
+		paging.ajaxFormSubmit("loginProcess","loginForm",function(result){
+			if(result==null){
+				alert("아이디와 비밀번호가 틀립니다. 다시 입력해주세요");
+			}else{
+				alert("로그인 되었습니다.");
+				location.href="/spring/main.do";
+			}//if eles
+		});//paging.ajaxFormSubmit
+		
+	}//loginAjax
 	
 	</script>
 </body>

@@ -25,6 +25,30 @@
 	
 	<context:component-scan base-package="com.example.spring" />
 	
+	<!-- 인터셉터 객체 생성 -->
+	<interceptors>
+		<interceptor>			
+			<mapping path="/**"/>			
+			<exclude-mapping path="/login.do"/>
+			<exclude-mapping path="/loginProcess"/>
+			<exclude-mapping path="/resources/**"/>
+			<exclude-mapping path="/logout" />
+			<beans:bean class="com.example.spring.common.interceptor.AuthenticationInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/**"/>
+			<exclude-mapping path="/login.do"/>
+			<exclude-mapping path="/loginProcess"/>
+			<exclude-mapping path="/logout" />
+			<exclude-mapping path="/resources/**"/>
+			<exclude-mapping path="/navList.ajax"/>
+			<exclude-mapping path="/common/**"/>
+			<exclude-mapping path="/**.exc"/>
+			<exclude-mapping path="/main.do"/>
+			<beans:bean class="com.example.spring.common.interceptor.AuthorityInterceptor"/>
+		</interceptor>
+	</interceptors>	
+	
 	<beans:bean id="tilesViewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
   		<beans:property name="order" value="1" />
 	</beans:bean>

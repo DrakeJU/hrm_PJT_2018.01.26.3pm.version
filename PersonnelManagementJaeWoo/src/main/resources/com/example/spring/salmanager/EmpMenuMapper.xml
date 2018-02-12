@@ -99,9 +99,9 @@
 			SET SEMP_SAL = replace(#{sal},",",""),
 				SEMP_BW_CST = replace(#{sbc},",",""),
 				SEMP_NW_CST= replace(#{snc},",",""), 
-				SEMP_TAMT= replace(#{tami},",",""), 
-				SEMP_FDEX= replace(#{fdei},",",""), 
-				SEMP_CMC= replace(#{cmci},",",""),
+				SEMP_TAMT= replace(#{tam},",",""), 
+				SEMP_FDEX= replace(#{fde},",",""), 
+				SEMP_CMC= replace(#{cmc},",",""),
 				SEMP_L_CST= replace(#{slc},",","")
 				
 		WHERE EMP_EMNO =  #{code}

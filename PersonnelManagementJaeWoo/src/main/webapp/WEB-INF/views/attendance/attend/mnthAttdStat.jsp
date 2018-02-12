@@ -18,9 +18,26 @@
 	});
 
 	/* 사원번호 선택 Modal 함수 */
-	function empModal(url, formId){
+	function empModal(url, formId){//모달창을 띄워 사원 list 띄우기
+		$('#empModalTbody').empty();//입력되있던 리스트데이터 삭제
 		
-	}
+		paging.ajaxFormSubmit(url, formid, function(rslt){
+			console.log("결과데이터 " + JSON.stringify(rslt));
+		
+			//$('#empModalTable').children('thead').css('width','calc(100% - 1em)'); //테이블 스크롤 css
+			
+			if(rslt == null){
+				$('#empModalTbody').append(
+				"조회할 데이터가 없습니다."
+				
+				);
+			}else if(){
+				$
+			}
+			
+			
+		})//paging.ajax
+	}//function empModal
 	
 	
 
@@ -177,27 +194,42 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button><!-- 닫기버튼 -->
 					<div class="modal-title" align="center"><h2> 사원 정보 조회 </h2></div>
-					<div class="modal-body">
-				<!-- <div class="search_wrap" style="padding: 0px 10px 20px 15px; "> -->
-					<form class="form-inline" id="empFrm">
-						검색어 &nbsp;
-						<input type="text" class="form-control" name="keyword"> &nbsp;&nbsp;&nbsp;
-							<input type="checkbox" id="retrChk">
-							퇴직자포함
-						<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="attendance" value="검색" onClick="empModal">
-						
-						
-						
-						
-					</form>
-				</div>
+						<div class="modal-body">
+					<!-- <div class="search_wrap" style="padding: 0px 10px 20px 15px; "> -->
+							<form class="form-inline" id="empFrm">
+								검색어 &nbsp;
+								<input type="text" class="form-control" name="keyword"> &nbsp;&nbsp;&nbsp;
+									<input type="checkbox" id="retrChk">
+									퇴직자포함
+								<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="attendance" value="검색" onClick="empModal">
+							</form>
+						<div class="">
+							<table border="1" class="table tablesorter table-bordered" id="">
+								<thead>
+									<tr align="center">
+										<th></th>
+										<th>사원번호</th>
+										<th>이름</th>
+										<th>부서</th>
+										<th>직급</th>
+									</tr>
+								</thead>
+								<tbody id="empModalTbody" style="display:block;height:200px; overflow:auto;"><!-- overflow:auto 스크롤 사용시 필요-->
+								
+								
+								
+								
+								
+								
+								</tbody>
+							</table>
+						</div>	
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	
-	
+	<p>
 </body>
 </html>
 

@@ -6,9 +6,11 @@
 		
 		var pageHref = $(location).attr('href'); //현재 페이지 주소값 저장
 		var pageUrl = pageHref.substring(pageHref.lastIndexOf("/")+1); // 설정된 url 값 저장 
+		var obj = {};
+		obj.mnUrl = pageUrl;
 		
 		//menu list data ajax로 불러오기
-		paging.ajaxSubmit("/spring/navList.ajax",{"mnUrl":pageUrl},function(data){
+		paging.ajaxSubmit("/spring/navList.ajax",obj,function(data){
 			
 			var mnPrntNo //부모코드 저장 변수
 	    	var mnIdx //menu index 저장 변수 
@@ -40,13 +42,8 @@
             		 		$("#sidebar-nav #nav"+mnPrntNo).append("<div id='"+thisId.substring(1)+"' class='collapse'><ul class='nav'></ul></div>");
             	 		}//if
                  	}//if
-                 
-                 	//index 적용 if else
-                 	if($("#sidebar-nav #nav"+mnPrntNo).find("ul:eq(0)>li").length>mnIdx){
-                 		$("#sidebar-nav #nav"+mnPrntNo).find("ul:eq(0)>li:eq("+mnIdx+")").before("<li id='nav"+dataThis.mnNo+"'><a href='"+dataThis.mnUrl+"'><span>"+dataThis.mnName+"</span></a></li>");
-                	}else{
-                 		$("#sidebar-nav #nav"+mnPrntNo).find("ul:eq(0)").append("<li id='nav"+dataThis.mnNo+"'><a href='"+dataThis.mnUrl+"'><span>"+dataThis.mnName+"</span></a></li>");
-                 	}//if else
+
+                 	$("#sidebar-nav #nav"+mnPrntNo).find("ul:eq(0)").append("<li id='nav"+dataThis.mnNo+"'><a href='"+dataThis.mnUrl+"'><span>"+dataThis.mnName+"</span></a></li>");
                  	
             	}//if else            
 			});//each

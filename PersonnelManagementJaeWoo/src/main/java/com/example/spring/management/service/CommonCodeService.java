@@ -32,7 +32,7 @@ public class CommonCodeService {
 	}
 
 	
-	//공통코드 등록
+	//공통코드 등록-
 	public int commonInsert(HashMap<String,Object> paramMap) {
 		
 		Calendar calendar = Calendar.getInstance();

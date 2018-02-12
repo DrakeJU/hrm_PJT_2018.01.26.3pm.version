@@ -80,8 +80,29 @@
 		$("div[name='detail']").html(html); //메뉴 권한 테이블 html 출력
 		
 		//datepicker 적용 
-		$(".datepicker").datetimepicker({ 
+		$(".datepicker.fini").datetimepicker({ 
+	         format : 'YYYY-MM-DD',
+	         useCurrent: false
+	    }); 
+
+		$(".datepicker.strt").datetimepicker({ 
 	         format : 'YYYY-MM-DD'
+	    }); 
+
+		$("#atrAplyStrt").on("dp.change", function (e) {
+	        $('#atrAplyFini').data("DateTimePicker").minDate(e.date);
+	    });
+		
+	    $("#atrAplyFini").on("dp.change", function (e) {
+	        $("#atrAplyStrt").data("DateTimePicker").maxDate(e.date);
+	    });
+	    
+	    $("#atrUpdtStrt").on("dp.change", function (e) {
+	        $('#atrUpdtFini').data("DateTimePicker").minDate(e.date);
+	    });
+		
+	    $("#atrUpdtFini").on("dp.change", function (e) {
+	        $("#atrUpdtStrt").data("DateTimePicker").maxDate(e.date);
 	    });
 		
 		//등록 버튼 이벤트 등록
@@ -96,7 +117,7 @@
 		
 		//취소버튼 이벤트 등록
 		$("[name='authoEsc']").on("click",function(){
-			locathion.href="authorityMain.do";
+			location.href="authorityMain.do";
 		});
 		 
 	};//authoMenuTable
@@ -124,7 +145,7 @@
 
 	//메뉴권한 업데이트 
 	var authorityUpdate = function(){
-		paging.ajaxFormSubmit("authorityUpdate.do","updateForm",function(result){
+		paging.ajaxFormSubmit("authorityUpdate.exc","updateForm",function(result){
 			if(result=="1"){
 				alert("업데이트에 성공하였습니다.");
 				$("#hiddenForm").submit();

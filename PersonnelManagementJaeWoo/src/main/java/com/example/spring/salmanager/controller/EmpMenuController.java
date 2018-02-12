@@ -48,7 +48,7 @@ public class EmpMenuController {
 
 
 	// �ϱ�++++++++++++++++++++++++++++++++++++++++++++++++++++
-	@RequestMapping(value = "/new_empcode")	//emp_main -> emp_newsali(üũ�� �ű԰�� �ο��� ��Ÿ���ִ� ��)
+	@RequestMapping(value = "/new_empcode", method = RequestMethod.POST)	//emp_main -> emp_newsali(üũ�� �ű԰�� �ο��� ��Ÿ���ִ� ��)
 	public ModelAndView new_emp(@RequestParam HashMap<String, Object> params, Model model) throws Exception {
 
 		ModelAndView mv = new ModelAndView();
@@ -67,7 +67,7 @@ public class EmpMenuController {
 
 	}
 	
-	@RequestMapping(value = "/exi_empcode", method = RequestMethod.GET)//emp_main -> emp_exisali()
+	@RequestMapping(value = "/exi_empcode", method = RequestMethod.POST)//emp_main -> emp_exisali()
 	public ModelAndView exi_emp(@RequestParam HashMap<String, String> params, Model model) throws Exception {
 
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -83,7 +83,7 @@ public class EmpMenuController {
 
 	}
 	
-	@RequestMapping(value = "insert_sal_empcode",method = RequestMethod.GET)  //신규입력 post(방식)
+	@RequestMapping(value = "insert_sal_empcode",method = RequestMethod.POST)  //신규입력 post(방식)
 	public ModelAndView i_sal_emp(@RequestParam HashMap<String, String> map) {
 		ModelAndView mv = new ModelAndView();
 		
@@ -100,7 +100,7 @@ public class EmpMenuController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "update_sal_empcode",method = RequestMethod.GET)  //기존입력 post(방식)
+	@RequestMapping(value = "update_sal_empcode",method = RequestMethod.POST)  //기존입력 post(방식)
 	public ModelAndView u_sal_emp(@RequestParam HashMap<String, String> map) {
 		ModelAndView mv = new ModelAndView();
 		

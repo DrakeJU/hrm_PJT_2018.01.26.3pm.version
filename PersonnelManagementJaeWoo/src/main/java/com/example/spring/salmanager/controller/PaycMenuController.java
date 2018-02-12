@@ -1,5 +1,6 @@
 package com.example.spring.salmanager.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,9 +142,9 @@ public class PaycMenuController {
 //---------------------------------------  급여대장  조회  ----------------------------------------------
 	@ResponseBody 
 	@RequestMapping(value = "/payc_select.ajax")
-	public Map<String, Object> payc_select(
-			@RequestParam HashMap<String, String> map) {
-		Map<String, Object> m1 = new HashMap<String, Object>();
+	public HashMap<String, Object> payc_select(
+			@RequestParam HashMap<String, Object> map) {
+		HashMap<String, Object> m1 = new HashMap<String, Object>();
 		
 		System.out.println("select yymm : "+map);
 		List<HashMap<String, Object>> list = paycMenuService.selectPayc(map);
@@ -159,10 +160,9 @@ public class PaycMenuController {
 	public @ResponseBody HashMap<String, Object> payc_acal(
 			@RequestParam HashMap<String, Object> map) {
 
-		logger.info("map : " + map);
-		//HashMap<String,Object> m1 = paycMenuService.acalPayc(map);
-		//paycMenuService.acalPayc(map);
+		logger.info("paycMenuCmap : " + map);
 		
+
 		return paycMenuService.acalPayc(map);
 	}
 //-------------------------------------------------------------------------------------------------

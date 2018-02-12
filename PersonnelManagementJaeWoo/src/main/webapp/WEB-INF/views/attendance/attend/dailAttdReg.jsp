@@ -14,9 +14,6 @@
 			viewMode: 'days',
 			format: 'YYYYMMDD'
 		});
-		
-		/* 일일근태등록 페이지 클릭시 오늘날짜 보여주기 */
-		$('#attendedDateId').val(moment().format('YYYY-MM-DD'));
 	// 	$alert('#baseDay').val(moment().format('YYYY-MM-DD'));
 	});
 	
@@ -71,7 +68,7 @@
 									<td>
 										<!-- 달력 : 근무일자 -->										
 										<div class="input-group date" id="workingDate">
-											<input type="text" class="form-control" id="attendedDateId" name="attendedDate"/>
+											<input type="text" class="form-control" name="attendedDate"/>
 												<span class="input-group-addon">
 													<span class="fa fa-calendar" />
 												</span>
