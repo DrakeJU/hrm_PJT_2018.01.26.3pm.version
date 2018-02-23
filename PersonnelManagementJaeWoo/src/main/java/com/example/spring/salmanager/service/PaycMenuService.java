@@ -2,6 +2,7 @@ package com.example.spring.salmanager.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,34 +25,87 @@ public class PaycMenuService {
 
 	public List paycList(HashMap<String, String> map) {
 
-		List<Object> tempList = new ArrayList();
+		List<HashMap<String, Object>> tempList = new ArrayList();
 		// List<HashMap<String, Object>> paycList = new ArrayList<HashMap<String,
 		// Object>>();
 		List<HashMap<String, Object>> list = paycMenuDao.paycList(map);
 
-		String yymm = "";
+		String yymmi = "";
 		// String mm = "";
-		String firstyymm = "";
-		for (int i = 0; i < list.size(); i++) {
+		String yymmj = "";
+		
+		String firstyymm ="";
+		String yymm ="";
+	/*	for(int i = 0; i < list.size(); i++) {
 
-			firstyymm = list.get(0).get("SREG_YYMM").toString();
-			yymm = list.get(i).get("SREG_YYMM").toString();
-			// mm = yymm.substring(4,yymm.length());
-			// System.out.println("sregmm : "+mm);
-
+				if(tempList.size()==0) {
+					
+					firstyymm = "0";
+				}else {
+					firstyymm = tempList.get(0).get("SREG_YYMM").toString();
+				}
+				
+				yymm = list.get(i).get("SREG_YYMM").toString();
+				// mm = yymm.substring(4,yymm.length());
+				// System.out.println("sregmm : "+mm);
+	
+				tempList.add(list.get(i));
+				
+				if(Integer.parseInt(firstyymm) < Integer.parseInt(yymm)) {
+					
+					tempList.remove(i);
+					tempList.add(0, list.get(i));
+					
+				}
+			
+		}*/
+		
+		/*for(int i = 0; i < list.size(); i++) {
+			
 			tempList.add(list.get(i));
-
-			if (Integer.parseInt(firstyymm) < Integer.parseInt(yymm)) {
-
-				tempList.remove(i);
-				tempList.add(0, list.get(i));
-
+		}*/
+		System.out.println("temp : "+tempList);
+		for(int i = 0; i < list.size(); i++) {
+			
+		
+			for(int j=i+1; j<list.size(); j++) {
+				
+				yymmi = list.get(i).get("SREG_YYMM").toString();
+				yymmj = list.get(j).get("SREG_YYMM").toString();
+				
+				if(Integer.parseInt(yymmi) < Integer.parseInt(yymmj)) {
+					
+					if(Integer.parseInt(yymmi.substring(0,4)) <= Integer.parseInt(yymmj.substring(0,4))) {
+						
+						//tempList = (List<Object>) list.get(i);
+					
+						tempList.add(list.get(i));
+						list.set(i, list.get(j));
+						list.set(j, tempList.get(0));
+						
+						tempList.clear();
+					
+					}else {
+						
+						tempList.add(list.get(list.size()-1));
+						list.set(list.size()-1,list.get(j));
+						list.set(j, tempList.get(0));
+						//list.remove(j);
+						tempList.clear();
+						System.out.println("changetemp : "+list);
+						
+					}
+			
+				}
+				
+				
 			}
-
+			
+			
 		}
-		System.out.println("tempList : " + tempList);
+		
 
-		return tempList;
+		return list;
 	}
 
 	public void makePaycInsert(HashMap<String, String> map) {
@@ -167,7 +221,7 @@ public class PaycMenuService {
 
 				deduction.get(i).put("itax", "0");
 				deduction.get(i).put("ltax", "0");
-			}else if(tempsal>=3000 && tempsal<=10000){
+			}else if(tempsal>=3000 && tempsal<10000){
 				temp = tempsal % 100;
 				// System.out.println("temp : "+temp);
 
@@ -205,6 +259,31 @@ public class PaycMenuService {
 				deduction.get(i).put("itax", stritax);
 				deduction.get(i).put("ltax", strltax);
 
+			}else if(tempsal==10000) {
+				tempList.put("sal", 10000);
+				tempList.put("sal_min", 10000);
+				tempList.put("sal_max", 10000);
+				// paycMenuDao.getItax(tempList);
+
+				m1 = paycMenuDao.getItax(tempList);
+				itaxListtemp1 = (List<HashMap<String, Object>>) m1.get("itaxList");
+				tempList.clear();
+
+				tempList.put("emp_emno", deduction.get(i).get("EMP_EMNO").toString());
+				m1 = paycMenuDao.getfamilyNum(tempList);
+				itaxListtemp2 = (List<HashMap<String, Object>>) m1.get("number");
+
+				stritax = (String) itaxListtemp1.get(0).get("fm" + itaxListtemp2.get(0).get("fam_seq"));
+				itax = Integer.parseInt(stritax);
+
+				ltax = (itax / 100) * 10;
+				strltax = String.valueOf(ltax);
+
+				tempList.clear();
+
+				deduction.get(i).put("itax", stritax);
+				deduction.get(i).put("ltax", strltax);
+				
 			}else if(tempsal>10000 && tempsal<=14000) {
 				
 				tempList.put("sal", 10000);
@@ -223,8 +302,7 @@ public class PaycMenuService {
 				itax = Integer.parseInt(stritax);
 				strltax = String.valueOf(ltax);
 				
-				
-				
+
 				//remainsal = tempsal-10000;
 				remainsal = (((tempsal-10000)*0.98)*0.35)*1000;
 				//strremainsal = String.format("%.0f", remainsal);
@@ -241,7 +319,7 @@ public class PaycMenuService {
 				deduction.get(i).put("itax", String.format("%.0f", ditax));
 				//deduction.get(i).put("ltax", (Integer.parseInt(String.format("%.0f", dltax))/10)*10);
 				deduction.get(i).put("ltax", String.valueOf(((Integer.parseInt(strdltax)/10)*10)));
-			}else if(tempsal>14000 && tempsal<=45000) {
+			}else if(tempsal>14000 && tempsal<=28000) {
 				
 				tempList.put("sal", 10000);
 				tempList.put("sal_min",10000);
@@ -280,6 +358,45 @@ public class PaycMenuService {
 				deduction.get(i).put("itax", String.format("%.0f", ditax));
 				//deduction.get(i).put("ltax", (Integer.parseInt(String.format("%.0f", dltax))/10)*10);
 				deduction.get(i).put("ltax", String.valueOf(((Integer.parseInt(strdltax)/10)*10)));
+			
+			}else if(tempsal>28000 && tempsal<=45000) {
+				tempList.put("sal", 10000);
+				tempList.put("sal_min",10000);
+				tempList.put("sal_max", 10000);
+				
+				m1 = paycMenuDao.getItax(tempList);
+				itaxListtemp1 = (List<HashMap<String, Object>>) m1.get("itaxList");
+				tempList.clear();
+				
+				tempList.put("emp_emno", deduction.get(i).get("EMP_EMNO").toString());
+				m1 = paycMenuDao.getfamilyNum(tempList);
+				itaxListtemp2 = (List<HashMap<String, Object>>) m1.get("number");
+
+				stritax = (String) itaxListtemp1.get(0).get("fm" + itaxListtemp2.get(0).get("fam_seq"));
+				itax = Integer.parseInt(stritax);
+				strltax = String.valueOf(ltax);
+				
+				
+				
+				//remainsal = tempsal-10000;
+				remainsal = (((tempsal-28000)*0.98)*0.40)*1000;
+				//strremainsal = String.format("%.0f", remainsal);
+				
+				double ditax = Double.parseDouble(stritax);
+				double dltax = Double.parseDouble(strltax);
+				
+				double defaultm = 6585600;
+				
+				ditax = ditax+remainsal+defaultm;
+				dltax = (ditax / 100) * 10;
+			
+				String strdltax = String.format("%.0f", dltax);
+				
+				tempList.clear();
+				
+				deduction.get(i).put("itax", String.format("%.0f", ditax));
+				//deduction.get(i).put("ltax", (Integer.parseInt(String.format("%.0f", dltax))/10)*10);
+				deduction.get(i).put("ltax", String.valueOf(((Integer.parseInt(strdltax)/10)*10)));
 			}else { //45000천원 초과
 				tempList.put("sal", 10000);
 				tempList.put("sal_min",10000);
@@ -300,13 +417,13 @@ public class PaycMenuService {
 				
 				
 				//remainsal = tempsal-10000;
-				remainsal = (((tempsal-45000)*0.98)*0.40)*1000;
+				remainsal = (((tempsal-45000)*0.98)*0.42)*1000;
 				//strremainsal = String.format("%.0f", remainsal);
 				
 				double ditax = Double.parseDouble(stritax);
 				double dltax = Double.parseDouble(strltax);
 				
-				double defaultm = 12916400;
+				double defaultm = 13249600;
 				
 				ditax = ditax+remainsal+defaultm;
 				dltax = (ditax / 100) * 10;
@@ -349,7 +466,7 @@ public class PaycMenuService {
 				deduction.get(i).put("npen", strnpen);
 				deduction.get(i).put("hfee", strhfee);
 
-			} else {
+			}else {
 
 				strnpen = String.format("%.0f", npen);
 				strhfee = String.format("%.0f", hfee);
@@ -365,6 +482,18 @@ public class PaycMenuService {
 		// ------------------------------------ 국민연금, 건강보험
 		// --------------------------------------------------
 
+		
+		//평일연장근무수당(150%), 평일야간근무수당(200%)
+		//휴일근무수당(150%),휴일연장수당(200%),휴일야간수당(250%)
+		
+		//한달 산정근무시간  = 209시간
+		//지각
+		//휴가
+		//조퇴
+		
+		double hoursal = Integer.parseInt(strsal)/209;
+		
+		
 		// map.put("deduction", deduction);
 		// map.put("itaxList", itaxList);
 		// map.put("ltaxList", ltaxList);

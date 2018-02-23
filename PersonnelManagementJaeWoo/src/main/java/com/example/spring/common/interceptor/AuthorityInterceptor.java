@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.example.spring.management.controller.MenuTreeController;
@@ -27,39 +29,31 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
 	
 		HttpSession session = request.getSession();
 		
+		//관리자 여부 if
 		if(session.getAttribute("adminYn").equals("Y")) {
+			//관리자 계정일 경우 controller실행
 			return true;
 		}else {
+			//권한 리스트 
 			ArrayList<HashMap<String,Object>> userAuthList 
 					= (ArrayList<HashMap<String,Object>>)session.getAttribute("userAuthList");
 			
 			String mnUrl;
 			
+			//권한 리스트 순환 for
 			for(int i = 0; i<userAuthList.size(); i++) {
+				//현재 url 
 				mnUrl = "/"+(String)userAuthList.get(i).get("mnUrl");
 				
+				//권한이 있을시 controller 실행
 				if(mnUrl.equals(request.getServletPath())) {
 					
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-					
-					Date atrAplyStrt = sdf.parse((String)userAuthList.get(i).get("atrAplyStrt"));
-					Date atrAplyFini = sdf.parse((String)userAuthList.get(i).get("atrAplyFini"));
-					
-					Date today = new Date();
-
-					if(atrAplyStrt.compareTo(today)<=0 && atrAplyFini.compareTo(today)>=0) {
-						return true;
-					}//if
-					
+					return true;
+		
 				}//if
 			}//for
-			
-			response.setContentType("text/html; charset=UTF-8");
-
-		    PrintWriter out = response.getWriter();
-            out.println("<script>alert('메뉴 접근 권한이 없습니다.'); history.go(-1);</script>"); 
-            out.flush(); 
-            
+	
+            //해당 url에 권한이 없을시 종료
 			return false;
 		}//if else
 	}//preHandle

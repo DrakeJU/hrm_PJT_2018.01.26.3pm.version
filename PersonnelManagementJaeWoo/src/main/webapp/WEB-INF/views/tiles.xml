@@ -53,13 +53,14 @@
    <definition name="certificateRequest" extends="base-definition">  
        <put-attribute name="title" value="증명서신청" />
        <put-attribute name="body" value="/WEB-INF/views/personnel/certificate/certificateRequest.jsp" />
+       <put-attribute name="scripts" value="/WEB-INF/views/personnel/certificate/script/certificateRequestScript.jsp"/>
    </definition>
    
-   <!-- [인사관리]-[증명서관리]-[증명서발급] -->
+   <!-- [인사관리]-[증명서관리]-[증명서발급대장] -->
    <definition name="certificateIssue" extends="base-definition">  
-       <put-attribute name="title" value="증명서발급" />
+       <put-attribute name="title" value="증명서발급대장" />
        <put-attribute name="body" value="/WEB-INF/views/personnel/certificate/certificateIssue.jsp" />
-       <put-attribute name="scripts" value="/WEB-INF/views/personnel/certificate/script/issue.jsp"/>
+       <put-attribute name="scripts" value="/WEB-INF/views/personnel/certificate/script/certificateIssueScript.jsp"/>
    </definition>
    
    <!-- [인사관리] END -->
@@ -136,6 +137,18 @@
        <put-attribute name="body" value="/WEB-INF/views/attendance/business/businessAdj.jsp" />  
    </definition>
    
+   <!-- [근태관리]-[휴가관리](메인 대시보드) -->
+   <definition name="dashboard" extends="base-definition">  
+       <put-attribute name="title" value="Dashboard" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/vacation/dashboard.jsp" />  
+   </definition>  
+   
+   <!-- [근태관리]-[휴가관리](대시보드) -->
+<!--    <definition name="vacationDashboard" extends="base-definition">   -->
+<!--        <put-attribute name="title" value="휴가관리" /> -->
+<!--        <put-attribute name="body" value="/WEB-INF/views/attendance/vacation/vacationDashboard.jsp" />   -->
+<!--    </definition>    -->
+   
    <!-- [근태관리]-[휴가관리]-[휴가일수설정] -->
    <definition name="vacationCount" extends="base-definition">  
        <put-attribute name="title" value="휴가일수설정" />
@@ -190,10 +203,29 @@
        <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holidaySet.jsp" />  
    </definition>
    
+   <!-- [근태관리]-[근태기초정보설정/조회]-[휴가항목설정](사원) -->
+   <definition name="individualRoster" extends="base-definition">  
+       <put-attribute name="title" value="휴가항목설정" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/individualRoster.jsp" />  
+   </definition>
+   
+   <!-- [근태관리]-[근태기초정보설정/조회]-[휴가항목설정](사원) -->
+   <definition name="weekRoster" extends="base-definition">  
+       <put-attribute name="title" value="휴가항목설정" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/weekRoster.jsp" />  
+   </definition>
+   
+   
    <!-- [근태관리]-[근태기초정보설정/조회]-[근무표생성](관리자) -->
    <definition name="holidayRoster" extends="base-definition">  
        <put-attribute name="title" value="휴가항목설정" />
        <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holidayRoster.jsp" />  
+   </definition>
+   
+    <!-- [근태관리]-[근태기초정보설정/조회]-[근무표조회](관리자) -->
+   <definition name="holidayRosterCheck" extends="base-definition">  
+       <put-attribute name="title" value="휴가항목설정" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holidayRosterCheck.jsp" />  
    </definition>
    
       <!-- [근태관리]-[근태기초정보설정/조회]-[근무표생성](관리자) -->
@@ -213,8 +245,12 @@
        <put-attribute name="title" value="휴가항목설정" />
        <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/conWorkVacSet.jsp" />  
    </definition>
-   
-   
+   <!-- [근태관리]-[근태기초정보설정/조회]-[휴일설정] -->
+   <definition name="holiDyMng" extends="base-definition">  
+       <put-attribute name="title" value="휴일설정" />
+       <put-attribute name="body" value="/WEB-INF/views/attendance/holidaySet/holiDyMng.jsp" />
+       <put-attribute name="scripts" value="/WEB-INF/views/attendance/holidaySet/script/holiDyMngScript.jsp"/>
+   </definition>
    
    <!-- END [근태관리] -->
    

@@ -153,10 +153,10 @@
 				var commCodeInfo = obj.closest("tr").children("td[name='commCodeInfo']").text();//공통코드 정보
 				var commRegMn = obj.closest("tr").children("td[name='commRegMn']").text();		//공통코드 등록자
 				
-				thisForm.find("tr").find("td").children("input[name='commCode']").val(commCode);		//기존 공통코드 값을 value값으로 설정
-				thisForm.find("tr").find("td").children("input[name='commName']").val(commName);		//기존 공통코드명을 value값으로 설정
-				thisForm.find("tr").find("td").children("input[name='commCodeInfo']").val(commCodeInfo);//기존 공통코드 정보를 value값으로 설정
-				thisForm.find("tr").find("td").children("input[name='commRegMn']").val(commRegMn);		//기존 공통코드 등록자를 value값으로 설정
+				thisForm.find("tr").find("td").find("input[name='commCode']").val(commCode);		//기존 공통코드 값을 value값으로 설정
+				thisForm.find("tr").find("td").find("input[name='commName']").val(commName);		//기존 공통코드명을 value값으로 설정
+				thisForm.find("tr").find("td").find("input[name='commCodeInfo']").val(commCodeInfo);//기존 공통코드 정보를 value값으로 설정
+				thisForm.find("tr").find("td").find("input[name='commRegMn']").val(commRegMn);		//기존 공통코드 등록자를 value값으로 설정
 				
 				$("#updateModal").modal({backdrop:'static'},'show');	//수정창 동적으로 띄우기
 				

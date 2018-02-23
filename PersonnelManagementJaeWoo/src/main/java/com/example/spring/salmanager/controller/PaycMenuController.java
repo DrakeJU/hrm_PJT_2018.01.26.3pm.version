@@ -35,56 +35,19 @@ public class PaycMenuController {
 	public ModelAndView goEmpMenu(HttpServletRequest request) throws Exception {
 
 		HashMap<String, String> map = new HashMap<String, String>();
+		
 		ModelAndView mv = new ModelAndView();
-
+		
+		paycMenuService.paycList(map);
+		System.out.println("paycMenu "+paycMenuService.paycList(map));
 		mv.addObject("list", paycMenuService.paycList(map));
+		//HashMap<String, String> m1 = paycMenuService.acalPayc(map);
 		mv.setViewName("payc_main");
 
 		return mv;
 
 	}
 //--------------------------------------------------------------------------------
-	
-	/*@RequestMapping(value = "/makePayc.do", method = RequestMethod.GET)
-	public String makePayc(@RequestParam HashMap<String, Object> params, Model model) throws Exception {
-
-		
-		 * map.put("perSyy",request.getParameter("perSyy"));
-		 * map.put("perSmm",request.getParameter("perSmm"));
-		 * map.put("perSday",request.getParameter("perSday"));
-		 * 
-		 * map.put("perEyy",request.getParameter("perEyy"));
-		 * map.put("perEmm",request.getParameter("perEmm"));
-		 * map.put("perEday",request.getParameter("perEday"));
-		 
-
-		
-		 * map.put("payyy",request.getParameter("payyy"));
-		 * map.put("paymm",request.getParameter("paymm"));
-		 * map.put("paytoday",request.getParameter("paytoday"));
-		 
-
-		
-		 * map.put("pyymm",request.getParameter("pyy")+request.getParameter("pmm"));
-		 * map.put("paycname",request.getParameter("paycname"));
-		 * map.put("payday",request.getParameter("payyy")+request.getParameter("paymm")+
-		 * request.getParameter("paytoday"));
-		 * map.put("payyymm",request.getParameter("payyy")+request.getParameter("paymm")
-		 * );
-		 
-		HashMap<String, String> map = new HashMap<String, String>();
-
-		map.put("pyymm", params.get("pyy").toString() + params.get("pmm"));
-		map.put("paycname", params.get("paycname").toString());
-		map.put("payday", params.get("payyy").toString() + params.get("paymm") + params.get("paytoday"));
-		map.put("payyymm", params.get("payyy").toString() + params.get("paymm"));
-		logger.info("�� : " + map);
-
-		paycMenuService.makePaycInsert(map);
-
-		return "/SalManager/windowdefault";
-
-	}*/
 
 //--------------------------------newPayc -> makePayc 급여대장 생성폼 --------------------------------
 

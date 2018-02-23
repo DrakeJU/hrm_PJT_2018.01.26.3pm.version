@@ -16,33 +16,43 @@
 				<h3 class="page-title">증명서발급대장</h3><br>
 				<!-- OVERVIEW -->
 				<div class="row">
-					<div class="col-md-10">
+					<div class="col-md-12">
 						<div class="panel panel-headline">
 							<div class="panel-heading">
 								<form id="formId">
-								<div>
-									증명서구분
-									<select name="select" class="form-control">
-										<option value="전체">전체</option>
-										<option value="재직증명서">재직증명서</option>
-										<option value="경력증명서">경력증명서</option>
-										<option value="퇴직증명서">퇴직증명서</option>
-									</select>
+								<div class="form-group col-md-3">
+										<label for="selectBox1" class="col-form-label col-sm-4">증명서구분</label>
+										<div class="col-sm-8">
+											<select name="crtfSelect" class="form-control" id="selectBox1">
+												<option value="전체">전체</option>
+												<option value="재직증명서">재직증명서</option>
+												<option value="경력증명서">경력증명서</option>
+												<option value="퇴직증명서">퇴직증명서</option>
+											</select>
+										</div>
 								</div>
-								<div>
-									신청일자
-									<input type="text" name="startDate" class="form-control" placeholder="날짜선택">
-									~&nbsp;<input type="text" name="endDate" class="form-control" placeholder="날짜선택">
+								<div class="form-group col-md-5">
+									<label for="" class="col-form-label col-sm-3">신청일자</label>
+									<div class="col-sm-4">
+										<input type="text" name="startDate" class="form-control" placeholder="날짜선택">
+									</div>	
+										<span class="col-sm-1 text-center">~</span>
+									<div class="col-sm-4">	
+										<input type="text" name="endDate" class="form-control" placeholder="날짜선택">
+									</div>
 								</div>
-								<div>
-									결제상태
-									<select name="" class="form-control">
+								<div class="form-group col-md-3">
+									<label for="" class="col-form-label col-sm-5">결제상태</label>
+									<div class="col-sm-7">
+										<select name="progressSituation" class="form-control">
 										<option value="전체">전체</option>
 										<option value="승인대기">승인대기</option>
 										<option value="승인완료">승인완료</option>
 									</select>
+									</div>
 								</div>
 									<input type="button" value="검색" onclick="search()" class="btn btn-primary">
+									<input type="hidden" value="" name="choicePage">
 								</form>
 							</div>
 						</div>
@@ -50,15 +60,10 @@
 				</div>
 				<!-- 증명서 신청 내역 -->
 				<div class="row">
-					<div class="col-md-10">
+					<div class="col-md-12">
 						<div class="panel">
 							<div class="panel-heading">
 								<h4 class="panel-title" style="font-size:20px; padding-left:15px;">증명서 신청내역</h4>
-							</div>
-							<div class="row">
-								<div class="col-md-12 text-right" style="padding-right:60px">
-									<button type="button" class="btn btn-default" data-toggle="modal" data-target="#insertModal" onclick="insertData()">신청</button>
-								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
@@ -70,12 +75,15 @@
 													<th>사원번호</th>
 													<th>성명</th>
 													<th>증명서종류</th>
+													<th>신청일자</th>
 													<th>발행일자</th>
+													<th>결제상태</th>
 												</tr>
 											</thead>
 											<tbody id="tbodyId">
 											</tbody>
 										</table>
+										<nav name="pagingNav" aria-label="Paging navigation example" align="center"></nav>
 									</div>
 								</div>
 							</div>
@@ -99,7 +107,7 @@
 												<tr>
 													<th>증명서구분</th>
 													<td>
-														<select name="select" disabled="disabled">
+														<select name="crtfSelect" disabled="disabled">
 															<option value="증명서종류">증명서종류</option>
 															<option value="재직증명서">재직증명서</option>
 															<option value="경력증명서">경력증명서</option>
@@ -129,14 +137,22 @@
 												</tr>
 												<tr>
 													<th>신청일자</th>
-													<td><input type="text" name="application" readonly></td>
+													<td><input type="text" name="requestDate" readonly></td>
+												</tr>
+												<tr>
+													<th>발행일자</th>
+													<td><input type="text" name="issueDate" readonly></td>
+												</tr>
+												<tr>
+													<th>결제상태</th>
+													<td><input type="text" name="progressSituation" readonly></td>
 												</tr>
 											</tbody>
 										</form>
 									</table>
 										<div class="modal-footer">
-											<button type="button" id="" class="btn btn-default" data-dismiss="modal">보기</button>
-											<button type="button" id="" class="btn btn-default" data-dismiss="modal">삭제</button>
+											<button type="button" id="viewBtn" class="btn btn-default" data-dismiss="modal">보기</button>
+											<button type="button" id="deleteBtn" class="btn btn-default" data-dismiss="modal">삭제</button>
 											<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 										</div>
 									</div>

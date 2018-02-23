@@ -8,6 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>휴가조회(관리자)</title>
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/vacation.css" />
+<script src="/spring/resources/common/js/pagingNav.js"></script>
+<script src="/spring/resources/common/management/js/menuTree.js"></script>
+
 <!-- <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/theme.default.css" /> -->
 <!-- <script src="/spring/resources/common/js/jquery-latest.min.js"></script> -->
 <!-- <script src="/spring/resources/common/js/jquery.tablesorter.widgets.js"></script> -->
@@ -23,11 +26,16 @@ $(function(){
 	enterKey();	//검색 후 엔터키 작동
 });
 	
+var searchStart = function(choicePage){
+	vacEmpList(choicePage);
+	console.log("dddd");
+}
+
 
 /* 휴가 조회 리스트  ajax */
 		
-function vacEmpList(){
-
+function vacEmpList(choicePage){
+	
 	paging.ajaxFormSubmit("vacationListAdmin.ajax", "vacListAdminFrm", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:"+JSON.stringify(rslt));
@@ -93,6 +101,16 @@ function vacEmpList(){
 				);
 			});//each list
 
+			if(choicePage == undefined){
+				choicePage = 1;
+			}//선택 페이지값이 들어오지 않은 경우 if
+			
+			//페이징 생성
+			var obj = {"totalNoticeNum":rslt.totalNoticeNum, "choicePage":rslt.choicePage};
+			$(
+					
+					"nav[name='pagingNav']").pagingNav(obj,"pageClick");
+			console.log(obj);
 			
 			//테이블 내용 가운데 정렬	
 			$('#vacListTable').children().addClass('text-center');	
@@ -103,8 +121,10 @@ function vacEmpList(){
 			$(function(){
 				$('#vacListTable').tablesorter({sortList: [[0,0], [1,0]]});
 			});
+			
 				
 		}//if-table 생성
+		
 		
 		
 		//테이블 마우스오버시 (행을 지날 때), 색 바뀜
@@ -118,9 +138,10 @@ function vacEmpList(){
 		$('table tr').mouseout(function(){ 
 			$(this).css("backgroundColor","#fff"); 
 		});
-	});//paging		
-};	// vacationAdemin List : END
+	});//paging	
 	
+};	// vacationAdemin List : END
+
 /*검색 버튼 */
 function searchClick(){		
 	vacEmpList();
@@ -129,16 +150,21 @@ function searchClick(){
 /* 검색어 입력 후 엔터키 작동 */
  
 function enterKey(){
- 
-$("#keyword").keydown(function(f){
-
-	if(f.keyCode == 13){	//javaScript에서는 13이 enter키를 의미함
-		searchClick();
-		return false;
-	}
-});
+	$("#keyword").keydown(function(f){
+		if(f.keyCode == 13){	//javaScript에서는 13이 enter키를 의미함
+			searchClick();
+			return false;
+		}
+	});
 }
 
+//paging 처리 
+var pageClick = function(target){
+	console.log(target);
+	searchStart(target.attr("name"));
+	
+}//pageClick
+	
 
 
 /* 재직 셀렉 */
@@ -382,28 +408,13 @@ function empVacationList(empEmno){
 <!-- 						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
 						      </div>
 						    </div>
-						
 						  </div>
 						</div>
-								
-						<!-- paging 영역 -->
-						<div align="center">
-							<ul class="pagination">
-								<li>
-									<a title="이전페이지" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
-								</li>
-								<li class="active"><a href="#">1<span class="sr-only">(current)</span></a></li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-							  <li><a href="#">4</a></li>
-							  <li><a href="#">5</a></li>
-							  <li>
-									<a href="#" aria-label="Next">
-										<span aria-hidden="true">&raquo;</span>
-									</a>
-								</li>
-							</ul>
-						</div>
+<!-- ******************************************************************************************************************* -->								
+						<!-- 페이징 네비게이션 시작 -->
+						<nav name="pagingNav" aria-label='Page navigation example' align='center'>
+						</nav>
+						<!-- 페이징 네비게이션 끝 -->
 						<!-- END list table 영역 -->
 						    
 						<!-- 버튼영역 -->

@@ -17,31 +17,152 @@
 		$('#attdStatId').val(moment().format('YYYY-MM'));
 	});
 
-	/* 사원번호 선택 Modal 함수 */
-	function empModal(url, formId){//모달창을 띄워 사원 list 띄우기
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* 사원번호 선택  Modal 함수 ======================================*/
+	
+	//퇴직자 포함 체크여부
+	function retrCheck(){//모달창을 띄워 사원 list 띄우기
+ 		if(($('#retrChk').prop("checked")) == true ){
+ 			$('#retrDelYn').val('on');
+ 		}else{
+ 			$('#retrDelYn').val('off');
+ 		}
+ 		
+	}//function empModal	
+	
+	function empListModal(url, formId){
+		retrCheck();//퇴직자 포함 체크
 		$('#empModalTbody').empty();//입력되있던 리스트데이터 삭제
 		
-		paging.ajaxFormSubmit(url, formid, function(rslt){
+		paging.ajaxFormSubmit(url, formId, function(rslt){
 			console.log("결과데이터 " + JSON.stringify(rslt));
 		
-			//$('#empModalTable').children('thead').css('width','calc(100% - 1em)'); //테이블 스크롤 css
+			$('#empModalTable').children('thead').css('width','calc(100% - 1em)'); //테이블 스크롤 css
 			
 			if(rslt == null){
 				$('#empModalTbody').append(
 				"조회할 데이터가 없습니다."
 				
 				);
-			}else if(){
-				$
-			}
-			
-			
-		})//paging.ajax
-	}//function empModal
+			}else if(rslt.success == "Y"){
+				$.each(rslt.empList, function(k, v) {
+					$('#empModalTbody').append(
+						"<tr style='display:table;width:100%;table-layout:fixed;'>"+
+							"<td>"+
+								"<label class='fancy-checkbox-inline'>" +
+								"<input type='checkbox' name='empEmnoChk'>" +
+								"<span></span>" +
+								"</label>"+
+							"</td>"+
+							"<td>"+ v.retrDelYn +"</td>"+ //퇴직구분
+							"<td>"+ v.empEmno +"</td>"+ //사원번호
+							"<td>"+ v.empName +"</td>"+ //사원명
+							"<td>"+ v.deptName +"</td>"+ //부서명
+							"<td>"+ v.rankName +"</td>"+ //직급명
+						"</tr>"
+					);
+				});//each
+				
+				$("input[type='checkbox'][name=empEmnoChk]").click(function(){	// 체크박스 선택 1개로 제한(라디오버튼처럼)
+					if($(this).prop('checked')){ //check 이벤트가 발생했는지
+						//체크박스 전체를 checked 해제후 click한 요소만 true로 지정
+						$("input[type='checkbox'][name=empEmnoChk]").prop("checked", false);
+						$(this).prop('checked',true);
+					}
+				});
+				
+				//테이블 내용 가운데 정렬
+				$('#empModalTable tr').children().addClass('text-center');
+				
+				$(function(){ //테이블 정렬
+					$("#empModalTable").tablesorter();
+				});
+				$(function(){
+					$("#empModalTable").tablesorter({sortList: [[0,0], [1,0]]});
+				});
+				
+			};//if
+		});//paging.ajax
+	}//empListModal
+	
+	//사원번호 검색창에 자동 채우기
+	function empEmnoClick(){
+ 		var chkTr = $('input[name=empEmnoChk]:checked').closest('tr'); //체크된 체크박스와 가장 가까운 tr
+ 		var empEmnoVal = chkTr.children().eq(2).text(); //tr 하부 2번째 td의 텍스트(사번)
+ 		var empNameVal = chkTr.children().eq(3).text(); //tr 하부 3번째 td의 텍스트(이름)
+ 		var deptNameVal = chkTr.children().eq(4).text(); //tr 하부 4번째 td의 텍스트(부서)
+ 		var rankNameVal = chkTr.children().eq(5).text(); //tr 하부 5번째 td의 텍스트(직급)
+	//console.log(empEmnoVal, nameVal, departmentVal, positionVal);	
+ 		
+ 		$('#empEmno').val(empNameVal);
+ 		$('#hiddenEmpEmno').val(empEmnoVal);
+ 		$('#hiddenEmpName').val(empNameVal);
+ 		$('#hiddenDeptName').val(deptNameVal);
+ 		$('#hiddenRankName').val(rankNameVal);
+ 		$(".modal-body input[name=keyword]").val(""); //키워드 내용 지우기
+ 	}
 	
 	
+	//사원번호 검색버튼 ajax
+	function searchForm(obj){
+		
+		//modal empEmnoChk hidden값으로 근태현황 입력창 내용 입력
+		$('#empInfo tbody tr td:eq(0)').text($('#hiddenEmpEmno').val());
+		$('#empInfo tbody tr td:eq(1)').text($('#hiddenEmpName').val());
+		$('#empInfo tbody tr td:eq(2)').text($('#hiddenDeptName').val());
+		$('#empInfo tbody tr td:eq(3)').text($('#hiddenRankName').val());
+//  	console.log($('#hiddenEmpEmno').val());
+//  	console.log($('#empInfo tbody tr td:eq(0)').text());
+		
+		
+		
+		//사원번호 로 근태현황에 내용추가
+// 		var empEmno = $("#empEmno").val();
+// 		console.log("empEmno : " + empEmno);
+		
+// 		$(obj).ajaxForm({
+// 			async:true, 
+// 			cash:false, 
+// 			type:"post",
+// 			url	:'',
+// 			data : {"empEmno" : empEmno},
+// 			dataType:"JSON", 
+// 	        success : function(data) {
+// 	        	var jsonStr = JSON.stringify(data);
+// 	            var jsonObj = JSON.parse(jsonStr);
+// 	            $.each($(jsonObj), function(i , objVal){
+// 					var str ="<tr align='center' onclick=''>";
+// 					str+="<td>"+this.empEmno+"</td>";
+// 					str+="<td>"+this.empName+"</td>";
+// 					str+="<td>"+this.deptName+"</td>";
+// 					str+="<td>"+this.rankName+"</td>";
+// 					str+="</tr>";
+// 		            $("#dataTable").append(str);
+// 				});
+	            
+// 	        }, // success 
+	        
+//             error : function(xhr, status) {
+//                 alert(xhr + " : " + status);
+//             }
+// 		})
+	
 
-
+	}//searchForm
+	
+	
+	
+	
 </script>
 </head>
 <body>
@@ -51,7 +172,7 @@
 			<h3 class="page-title">월 근태 현황</h3>
 				<div class="panel">
 					<div class="panel-body">
-						<form class="form-inline" name="">	
+						<form class="form-inline" name="mAttdFrm" method="post">	
 							<table class="table table-bordered">
 								<tr align="center">
 									<td>근무년월</td>
@@ -78,13 +199,13 @@
 									<td align="left">
 										<!-- 사원번호 입력 -->
 										<div class="input-group">
-											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번입력  / 검색버튼">
+											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번입력  / 검색버튼" >
 											<span class="input-group-addon">
-												<span class="glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#empModal" onClick="empModal"></span> <!-- 검색 아이콘 -->
+												<span class="glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#empModal" onClick="empListModal('${pageContext.request.contextPath}/mAttdSelectEmpList.ajax','empFrm')"></span> <!-- 검색 아이콘 -->
 											</span>
 										</div>
 										<!-- 검색버튼 -->
-										<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="search" value="검색">
+										<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="search" value="검색" onClick="searchForm(mAttdFrm)">
 									</td>
 								</tr>
 							</table>
@@ -92,19 +213,23 @@
 					</div>
 					<div class="panel-body">
 						<h4>◈ 근태현황<h4>
-						<table border="1" class="table table-bordered">
-						<tr align="center">
-							<td>사원번호</td>
-							<td>성명</td>
-							<td>부서</td>
-							<td>직급</td>
-						</tr>
-						<tr align="center">
-							<td> 　　　　 </td>
-							<td> 　　　　 </td>
-							<td> 　　　　 </td>
-							<td> 　　　　 </td>
-						</tr>
+						<table border="1" class="table table-bordered" id="empInfo">
+							<thead>
+								<tr align="center">
+									<td>사원번호</td>
+									<td>성명</td>
+									<td>부서</td>
+									<td>직급</td>
+								</tr>
+							</thead>
+							<tbody id="dataTable">
+								<tr align="center">
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+								</tr>
+							</tbody>
 						</table>
 						<table border="1" class="table table-bordered">
 							<tr align="center">
@@ -190,46 +315,63 @@
 	<!-- 사원번호 선택 Modal View -->
 	<div id="empModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
+		
+			<!-- Modal 내용 -->
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button><!-- 닫기버튼 -->
 					<div class="modal-title" align="center"><h2> 사원 정보 조회 </h2></div>
-						<div class="modal-body">
-					<!-- <div class="search_wrap" style="padding: 0px 10px 20px 15px; "> -->
-							<form class="form-inline" id="empFrm">
-								검색어 &nbsp;
-								<input type="text" class="form-control" name="keyword"> &nbsp;&nbsp;&nbsp;
-									<input type="checkbox" id="retrChk">
-									퇴직자포함
-								<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="attendance" value="검색" onClick="empModal">
-							</form>
-						<div class="">
-							<table border="1" class="table tablesorter table-bordered" id="">
-								<thead>
-									<tr align="center">
-										<th></th>
-										<th>사원번호</th>
-										<th>이름</th>
-										<th>부서</th>
-										<th>직급</th>
-									</tr>
-								</thead>
-								<tbody id="empModalTbody" style="display:block;height:200px; overflow:auto;"><!-- overflow:auto 스크롤 사용시 필요-->
-								
-								
-								
-								
-								
-								
-								</tbody>
-							</table>
-						</div>	
-					</div>
 				</div>
+				
+				<!-- 검색 -->
+				<div class="modal-body">
+					<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
+						<form class="form-inline" id="empFrm">
+							검색어 &nbsp;
+							<input type="text" class="form-control" name="keyword"> &nbsp;&nbsp;&nbsp;
+								<input type="checkbox" id="retrChk">
+								퇴직자포함
+							<input type="hidden" name="retrDelYn" id="retrDelYn" ><!-- 퇴직자 포함 히든 -->
+							<input type="button" class="btn btn-danger btn-xs" style="float:right;" name="attendance" onClick="empListModal('${pageContext.request.contextPath}/mAttdSelectEmpList.ajax','empFrm')" value="검색">
+						</form>
+					</div>
+				 </div>
+					
+				 <div class="list_wrap">
+					<table class="table tablesorter table-bordered" id="empModalTable">
+						<thead style="display:table;width:100%;table-layout:fixed;">
+							<tr>
+								<th class="sorter-false"></th>
+								<th>구분</th>
+								<th>사원번호</th>
+								<th>이름</th>
+								<th>부서</th>
+								<th>직급</th>
+							</tr>
+							<input type="hidden" name="hiddenEmpEmno" id="hiddenEmpEmno"> <!-- 사원번호 Hidden -->
+							<input type="hidden" name="hiddenEmpName" id="hiddenEmpName"> <!-- 이름 Hidden -->
+							<input type="hidden" name="hiddenDeptName" id="hiddenDeptName"> <!-- 부서 Hidden -->
+							<input type="hidden" name="hiddenRankName" id="hiddenRankName"> <!-- 직급 Hidden -->
+						</thead>
+						<tbody id="empModalTbody" style="display:block;height:200px;overflow:auto;"><!-- overflow:auto 스크롤 사용시 필요-->
+						
+						
+						
+						
+						
+						
+						</tbody>
+					</table>
+				 <div class="modal-footer">
+				 	<button type="button" class="btn btn-danger" data-dismiss="modal" onClick="empEmnoClick()">선택</button>
+				 </div>
+				 </div>
 			</div>
 		</div>
 	</div>
 	<p>
+	
+	
 </body>
 </html>
 

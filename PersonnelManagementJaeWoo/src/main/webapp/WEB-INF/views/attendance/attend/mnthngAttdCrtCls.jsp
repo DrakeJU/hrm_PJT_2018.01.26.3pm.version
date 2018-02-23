@@ -6,6 +6,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>월간 근태 생성/마감</title>
+<script type="text/javascript">
+		//테이블 내용 가운데정렬
+		$(document).ready(function() { 
+		    $('.table tr').children().addClass('text-center');
+		    console.log('hg');
+		});
+		
+		//달력
+		$(function () {
+		    $('#monthDate').datetimepicker({
+		    	viewMode: 'months',
+		    	format: 'YYYY-MM'
+		    });
+		});
+</script>
 </head>
 <body>
 	<div class="main">
@@ -24,7 +39,8 @@
 							    </span>
 						  	</div>
 						  	<!-- 검색버튼 -->
-						  	<input type="submit" class="btn btn-primary" style="float:right; name="search" value="검색">
+						  	<input type="button" class="btn btn-primary" style="float:right; name="search" value="검색" onclick="empListPrint(1)">
+						  	<!-- <input type="submit" class="btn btn-primary" style="float:right; name="search"> -->
 						</form>
 					</div>
 				</div>
@@ -47,7 +63,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach var="item" items="${resultList}">
+								 	<c:forEach var="item" items="${resultList}">
 										<tr>
 											<td>${item.empEmno}</td>
 											<td>${item.empName}</td>
@@ -59,6 +75,7 @@
 								</tbody>
 							</table>
 							<!-- paging 영역 -->
+							<!-- 
 							<div align="center">
 								<ul class="pagination">
 									<li>
@@ -75,6 +92,10 @@
 										</a>
 									</li>
 								</ul>
+							</div>
+							 -->
+							<div align="center">
+									<nav name="pagingNav" aria-label='Page navigation example' align='center'></nav>
 							</div>
 							<!-- END list table 영역 -->
 						</div>
@@ -133,7 +154,7 @@
 								<tr>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>평일연장</td>
 									<td>
-										<input type="time" pattern="[0-9]{2}:[0-9]{2}" class="form-control" id="" placeholder="평일연장">
+										<input type="text" pattern="" class="form-control" id="" placeholder="평일연장">
 									</td>
 									<td><i class="fa fa-asterisk-red" aria-hidden="true"></i>평일야간</td>
 									<td>
@@ -182,72 +203,116 @@
 			</div>
 		</div>
 	</div>
-	
-	<script>
-		//테이블 내용 가운데정렬
-		$(document).ready(function() { 
-		    $('.table tr').children().addClass('text-center');
-		    console.log('hg');
-		});
-		
-		//달력
-		$(function () {
-		    $('#monthDate').datetimepicker({
-		    	viewMode: 'months',
-		    	format: 'YYYY-MM'
-		    });
-		});
-		
+	<script src="/spring/resources/common/js/pagingNav.js"></script>
+	<script src="/spring/resources/common/management/js/menuTree.js"></script>
+    <script>
 		// 테이블에서 선택된 행 값 얻어오기 :(이 기능은 화면 로딩 이후에 실행해야 정상동작)
-		$('#empInfoTable tr').click(function(){    
-			console.log('table row clikc 함수 진입');	
+		var detailEvent = function(){
+			$('#empInfoTable tr').click(function(){    
+				console.log('table row clikc 함수 진입');	
+				
+					var tr = $(this);
+					var td = tr.children();
+					
+					var empEmno = td.eq(0).text();
+					var workYyMm = $('#modeApplicationDate').val();
 			
-				var tr = $(this);
-				var td = tr.children();
-				
-				var empEmno = td.eq(0).text();
-				var workYyMm = $('#modeApplicationDate').val();
-		
-				$.ajax({
-					  type : "POST"
-					, url : "/spring/readMnthngAttdCrtClsStts"
-					, data : {"empEmno":empEmno, "workYyMm":workYyMm}
-					, dataType : "json"
-					, success : function(data){
-						console.log("성공");
-						var resultSttsMap = data.resultSttsMap;
-						
-						$(resultSttsMap).each(function(index, element){
-							console.log(element.wkWorkdayCnt);
-							console.log(element.vacUsedayCnt);
-							console.log(element.etcUsedayCnt);
-							console.log(element.totWorkdayCnt);
-							console.log(element.hoilWorkdayCnt);
+					$.ajax({
+						  type : "POST"
+						, url : "/spring/readMnthngAttdCrtClsStts"
+						, data : {"empEmno":empEmno, "workYyMm":workYyMm}
+						, dataType : "json"
+						, success : function(data){
+							console.log("성공");
+							var resultSttsMap = data.resultSttsMap;
 							
-							$("#totWorkdayCnt").val(element.totWorkdayCnt);
-							$("#wkWorkdayCnt").val(element.wkWorkdayCnt);
-							$("#hoilWorkdayCnt").val(element.hoilWorkdayCnt);
-							$("#vacUsedayCnt").val(element.vacUsedayCnt);
-							$("#etcUsedayCnt").val(element.etcUsedayCnt);
-						});
-						
-					}
-					, error : function (xhr, status, error){
-						console.log("에러발생 ");
-						console.log("xhr : " + JSON.stringify(xhr));
-						console.log("status : " + status);
-						console.log("error : " + error);
-					}
-					, complete : function (event, request, settings){
-						console.log("완료");
-						console.log("event : " + JSON.stringify(event));
-						console.log("request : " + request);
-						console.log("settings : " + settings);
-					}
-				});		
+							$(resultSttsMap).each(function(index, element){
+								console.log(element.wkWorkdayCnt);
+								console.log(element.vacUsedayCnt);
+								console.log(element.etcUsedayCnt);
+								console.log(element.totWorkdayCnt);
+								console.log(element.hoilWorkdayCnt);
+								
+								$("#totWorkdayCnt").val(element.totWorkdayCnt);
+								$("#wkWorkdayCnt").val(element.wkWorkdayCnt);
+								$("#hoilWorkdayCnt").val(element.hoilWorkdayCnt);
+								$("#vacUsedayCnt").val(element.vacUsedayCnt);
+								$("#etcUsedayCnt").val(element.etcUsedayCnt);
+							});
+							
+						}
+						, error : function (xhr, status, error){
+							console.log("에러발생 ");
+							console.log("xhr : " + JSON.stringify(xhr));
+							console.log("status : " + status);
+							console.log("error : " + error);
+						}
+						, complete : function (event, request, settings){
+							console.log("완료");
+							console.log("event : " + JSON.stringify(event));
+							console.log("request : " + request);
+							console.log("settings : " + settings);
+						}
+					});		
+					
+				}		
+			);
+		};
+			
+			
+		
+		// 페이징처리
+		var pageClick = function(target){
+			searchStart(target.attr("name"));
+		}
+		
+		// 리스트 전처리 후 출력 함수 호출
+		var searchStart = function(choicePage){
+			empListPrint(choicePage);
+		}
+		
+		// 리스트 줄력함수
+		var empListPrint = function(choicePage){
+			
+			if(choicePage == undefined){
+				choicePage = 1;
+			}
+			
+			var workYyMm = $('#modeApplicationDate').val();
+			
+			var url = "/spring/readMnthngAttdCrtCls";
+			var data = {"workYyMm":workYyMm, "choicePage":choicePage};
+			var str = "";
+			var thisList;
+			
+			paging.ajaxSubmit(url, data, function(result) {
 				
-			}		
-		);
+				thisList = result.resultList;
+				
+				if(thisList != null){
+					$.each(thisList, function(index){
+						
+						str += "<tr class='text-center'>";
+						str += "	<td>" + thisList[index].empEmno + "</td>";
+						str += "	<td>" + thisList[index].empName + "</td>";
+						str += "	<td>" + thisList[index].rankCode + "</td>";
+						str += "	<td>" + thisList[index].depCode + "</td>";
+						str += "	<td>" + thisList[index].empAnl + "</td>";
+						str += "</tr>";
+					});
+					
+					$("#empInfoTable tbody").children().remove();
+					$("#empInfoTable tbody").append(str);
+					
+					detailEvent();
+					
+					var obj = {"totalNoticeNum":thisList.length, "choicePage":choicePage, "viewNoticeMaxNum":"2"};
+					$("nav[name='pagingNav']").pagingNav(obj, "pageClick");
+		
+				}
+			});
+		}
+		
 	</script>
 	
 </body>

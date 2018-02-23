@@ -77,8 +77,8 @@ public class EmpMenuController {
 		
 		mv.addObject("list",empMenuService.exi_checkbox_Choice(params));
 		mv.addObject("count",empMenuService.exi_checkbox_Choice(params).size());
-		
 		mv.setViewName("emp_exisali");
+		
 		return mv;
 
 	}

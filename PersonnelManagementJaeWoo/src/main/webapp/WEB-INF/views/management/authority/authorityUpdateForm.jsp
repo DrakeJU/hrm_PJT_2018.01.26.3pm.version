@@ -40,6 +40,11 @@
 							<span>
 								삭제
 							</c:when>
+							<c:otherwise>
+          					<input type="checkbox" name="atrAttr" value="all" />
+							<span>
+								all
+       						</c:otherwise>
 						</c:choose>
 						</span>
 					</td>

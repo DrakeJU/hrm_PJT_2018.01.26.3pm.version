@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.example.spring.attendance.dao.AttendDao;
@@ -69,15 +70,33 @@ public class AttendService {
 		// TODO Auto-generated method stub
 		return attendDao.readMnthngAttdCrtClsStts(paramMap);
 	}
-	
+
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [월근태현황]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.02.08
 	 ***************************************************************************************/
 
-	// 코드 영역
+	public List<HashMap<String, Object>> mAttdSelectEmpList(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		return attendDao.mAttdSelectEmpList(map);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]
@@ -91,4 +110,11 @@ public class AttendService {
 		return attendDao.readHdayExtnNightWorkInqr(paramMap);
 	}
 	
+	
+	public HashMap employee_extended_work_deadline(HashMap<String, Object> map) {
+		
+		attendDao.employee_extended_work_deadline(map);
+		return map;
+	}
+
 }

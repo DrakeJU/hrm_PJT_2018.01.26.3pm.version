@@ -15,18 +15,32 @@
 </head>
 
 <script type="text/javascript">
-	$(function () {
-		//$('#btstBtStartDate').val(moment().format('YYYY-MM-DD')); //출장신청일
-		$('#rosterStartDate').val(moment().format('YYYY-MM-DD')); //출장종료일
-		$('#rosterYearMonthStart').datetimepicker({ //신청년월 시작 달력
-			viewMode: 'days',
-			format: 'YYYY-MM-DD'
-		});
+// 	$(function () {
+// 		//$('#btstBtStartDate').val(moment().format('YYYY-MM-DD')); //출장신청일
+// 		$('#rosterStartDate').val(moment().format('YYYY-MM-DD')); //출장종료일
+// 		$('#rosterYearMonthStart').datetimepicker({ //신청년월 시작 달력
+// 			viewMode: 'days',
+// 			format: 'YYYY-MM-DD'
+// 		});
 		
-	});//function
+// 	});//function
 
 	function submitButton(){
-		$("input[name='yearMonth']").val($('#rosterStartDate').val());
+		var year = $("select[name=rosterYear]").val();
+		var month = $("select[name=rosterMonth]").val();
+		var day = "1";
+		
+		var rosterDate = new Date(year, (month -1), "1");
+		
+		console.log("rosterDate : " + rosterDate);
+		
+		var yearMonth = rosterDate.getFullYear() + '-' + ((rosterDate.getMonth()+1)<10 ? '0' + (rosterDate.getMonth()+1) : (rosterDate.getMonth()+1)) + '-' +
+        (rosterDate.getDate()<10 ? '0'+rosterDate.getDate() : rosterDate.getDate());
+		
+		$("input[name='yearMonth']").val(yearMonth);
+		
+		console.log("yearMonth : " + $("input[name='yearMonth']").val());
+		$("form[name='rosterSetting']").submit();
 		$("form[name='hiddenForm']").submit();
 	}
 	
@@ -116,7 +130,6 @@
 						
 // 						console.log($(this));
 						if(empEmno == workerCode[i]){
-							console.log("zzzzzzzzzzzzz--------------------------");
 							$(this).prop("checked", true);
 						}
 					}
@@ -185,18 +198,401 @@
 			
 			<div class="panel panel-headline">
 				<div class="panel-heading">
-					<h4 class="panel-title" style="font-size:20px; padding-left:15px;">근무 년월일</h4>
+					<h4 class="panel-title" style="font-size:20px; padding-left:15px;">근무표 생성 연도와 달을 선택하세요.</h4>
 				</div>
 			
 				<div class="panel-body">
-					<div class="input-group date" id="rosterYearMonthStart">
-					<input type="text" class="form-control" id="rosterStartDate" name="rosterStartDate"/>
-					<span class="input-group-addon">
-						<span class="fa fa-calendar" >
-						</span>
-					</span>
-					</div>
+<!-- 					<div class="input-group date" id="rosterYearMonthStart"> -->
+<!-- 					<input type="text" class="form-control" id="rosterStartDate" name="rosterStartDate"/> -->
+<!-- 					<span class="input-group-addon"> -->
+<!-- 						<span class="fa fa-calendar" > -->
+<!-- 						</span> -->
+<!-- 					</span> -->
+<!-- 					</div> -->
+						<select id="rosterYear" name="rosterYear">
+							<option value="2016">2016</option>
+							<option value="2017">2017</option>
+							<option value="2018">2018</option>
+							<option value="2019">2019</option>
+						</select>년
+						
+						<select id="rosterMonth" name="rosterMonth" class="w_40 mgb_5">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+						</select>월
 				</div>
+				
+				<div class="panel-heading">
+					<h4 class="panel-title" style="font-size:20px; padding-left:15px;">근무자 수</h4>
+					각 요일별 근무자 수 배정 기준을 입력합니다.	<br>
+					D : Day E : Evening N : Night
+				</div>
+				
+				<form action="holidayRosterWorkerNumberDBInsert" method="post" name="rosterSetting">			
+				<div class="panel-body">
+					휴　일 - D : 
+					<select name="holidayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="holidayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N : 
+					<select name="holidayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					월요일 - D : 
+					<select name="MondayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="MondayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="MondayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					화요일 - D : 
+					<select name="TuesdayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="TuesdayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="TuesdayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					수요일 - D : 
+					<select name="WednesdayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="WednesdayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="WednesdayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					목요일 - D : 
+					<select name="ThursdayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="ThursdayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="ThursdayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					금요일 - D : 
+					<select name="FridayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="FridayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="FridayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					토요일 - D : 
+					<select name="SaturdayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="SaturdayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="SaturdayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+					
+					일요일 - D : 
+					<select name="SundayD" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					E : 
+					<select name="SundayE" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					N :
+					<select name="SundayN" class="w_40 mgb_5">
+						<option value="zero">0</option>
+						<option value="one">1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+						<option value="six">6</option>
+						<option value="seven">7</option>
+						<option value="eight">8</option>
+						<option value="nine">9</option>
+						<option value="ten">10</option>
+					</select>
+					<br>
+				</div>
+				</form>	
 				
 				<div class="panel-heading">
 					<h4 class="panel-title" style="font-size:20px; padding-left:15px;">근무 투입 인원 검색</h4>
@@ -215,6 +611,7 @@
 						</span>
 					</div>
 				</div>
+				
 			</div>
 			
 			<div class="panel">

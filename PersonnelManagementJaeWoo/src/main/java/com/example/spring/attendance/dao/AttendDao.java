@@ -84,10 +84,30 @@ public class AttendDao {
 	 * 메뉴명 : [출결관리] - [월근태현황]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.02.08
 	 ***************************************************************************************/
 
-	// 코드 영역
+	public List<HashMap<String, Object>> mAttdSelectEmpList(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<HashMap<String, Object>> resultList 
+		= this.sqlSession.selectList(nameSpaceName + "mAttdSelectEmpList", map);
+		
+		return resultList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]
@@ -103,4 +123,11 @@ public class AttendDao {
 		
 		return resultList;
 	}
+
+	public HashMap employee_extended_work_deadline(HashMap<String, Object> map) {
+		
+		this.sqlSession.update(nameSpaceName+"acalUpdate", map);
+		return map;
+	}
+
 }

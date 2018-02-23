@@ -310,7 +310,7 @@
 										</tr>	
 									</c:forEach>
 								</table>
-								<input type="button" class="btn btn-info" value="수정" onclick="update_sal_emp();">
+								<input type="button" class="btn btn-info" value="저장" onclick="update_sal_emp();">
 							</div>
 						</form>
 					</div>

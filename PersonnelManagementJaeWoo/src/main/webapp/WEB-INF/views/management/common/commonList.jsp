@@ -89,8 +89,7 @@
 													</c:forEach>
 												</tbody>
 											</table>
-											<nav name="pagingNav" aria-label="Paging navigation example" align="center">
-											</nav>
+											<nav name="pagingNav" aria-label="Paging navigation example" align="center"></nav>
 										</div>
 									</div>
 								</div>
@@ -116,18 +115,30 @@
 						<div class="row">
 							<div class="col-md-11" style="padding-top:20px;">
 								<form action="/spring/commonInsert.do" id="insertForm">
-									<table class="table table-hover" align="center">
+									<table class="table" align="center">
 										<tr>
-											<td> &nbsp;그룹코드명</td>
-											<td><input type="text" name="commName"></td>
+											<td style="width:120px"> &nbsp;그룹코드명</td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commName" class="form-control">
+												</div>
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;코드정보</td>
-											<td><input type="text" name="commCodeInfo"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commCodeInfo" class="form-control">
+												</div>
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;등록자</td>
-											<td><input type="text" name="commRegMn" value="manager"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commRegMn" class="form-control" value="manager">
+												</div>
+											</td>
 										</tr>
 									</table>
 								</form>
@@ -153,22 +164,38 @@
 						<div class="row">
 							<div class="col-md-11" style="padding-top:20px;">
 								<form action="/spring/commonUpdate.do" id="updateForm">
-									<table class="table table-hover" align="center">
+									<table class="table" align="center">
 										<tr>
-											<td> &nbsp;그룹코드</td>
-											<td><input type="text" name="commCode" readOnly></td>
+											<td style="width:120px"> &nbsp;그룹코드</td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commCode" class="form-control" readOnly>
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;그룹코드명</td>
-											<td><input type="text" name="commName"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commName" class="form-control">
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;코드정보</td>
-											<td><input type="text" name="commCodeInfo"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commCodeInfo" class="form-control">
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;등록자</td>
-											<td><input type="text" name="commRegMn"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commRegMn" class="form-control">
+												</div>		
+											</td>
 										</tr>
 									</table>
 								</form>
@@ -235,18 +262,30 @@
 						<div class="row">
 							<div class="col-md-11" style="padding-top:20px">
 								<form action="/spring/commonInfoInsert.do" id="infoInsertForm">
-									<table class="table table-hover" align="center">
+									<table class="table" align="center">
 										<tr>
-											<td> &nbsp;코드명</td>
-											<td><input type="text" name="commName"></td>
+											<td style="width:120px"> &nbsp;코드명</td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commName" class="form-control">
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;코드정보</td>
-											<td><input type="text" name="commCodeInfo"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commCodeInfo" class="form-control">
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;등록자</td>
-											<td><input type="text" name="commRegMn" value="manager"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commRegMn" class="form-control" value="manager">
+												</div>		
+											</td>
 										</tr>
 									</table>
 								</form>
@@ -272,22 +311,38 @@
 						<div class="row">
 							<div class="col-md-11" style="padding-top:20px;">
 								<form action="/spring/commonUpdate.do" id="infoUpdateForm">
-									<table class="table table-hover" align="center">
+									<table class="table" align="center">
 										<tr>
-											<td> &nbsp;코드</td>
-											<td><input type="text" name="commCode" readOnly></td>
+											<td style="width:120px"> &nbsp;코드</td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commCode" class="form-control" readOnly>
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;코드명</td>
-											<td><input type="text" name="commName"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commName" class="form-control">
+												</div>		
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;코드정보</td>
-											<td><input type="text" name="commCodeInfo"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commCodeInfo" class="form-control">
+												</div>	
+											</td>
 										</tr>
 										<tr>
 											<td> &nbsp;등록자</td>
-											<td><input type="text" name="commRegMn"></td>
+											<td>
+												<div class="col-md-5">
+													<input type="text" name="commRegMn" class="form-control">
+												</div>		
+											</td>
 										</tr>
 									</table>
 								</form>

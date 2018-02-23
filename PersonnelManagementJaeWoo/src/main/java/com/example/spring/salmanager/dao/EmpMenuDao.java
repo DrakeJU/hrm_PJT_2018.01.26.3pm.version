@@ -80,6 +80,14 @@ public class EmpMenuDao {
 		 * cmci 차량유지비
 		 * slci 지각
 		 * */
+		
+		map.put("SEMP_BW_CST", "0");
+		map.put("SEMP_NW_CST", "0");
+		map.put("SEMP_TAMT", "0");
+		map.put("SEMP_FDEX", "0");
+		map.put("SEMP_CMC", "0");
+		map.put("SEMP_L_CST", "0");
+		
 		System.out.println("checklist : "+map);
 		for (String mapkey : map.keySet()) {
 			System.out.println("key : " + mapkey + ",value : " + map.get(mapkey));

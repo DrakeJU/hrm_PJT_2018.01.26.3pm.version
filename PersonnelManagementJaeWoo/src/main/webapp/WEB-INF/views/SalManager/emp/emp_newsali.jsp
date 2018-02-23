@@ -114,6 +114,7 @@
 			$("#checkall").prop("checked",false)
 			$("input[type=checkbox]").prop("checked", false);
 			$("[id ^=checkPoint]").removeClass('success');
+			
 			for (var i = 0; i < checklength; i++){
 				$("input[name=sali"+ i + "]").remove();
 				$("input[name=sbci"+ i + "]").remove();
@@ -374,7 +375,7 @@
 										<th>사번</th>
 										<th>사원이름</th>
 										<th>급여</th>
-										<th>주간근무수당</th>
+									<!-- 	<th>주간근무수당</th>
 										<th>야간근무수당</th>
 										<th>연장근무수당</th>
 										<th>지각</th>
@@ -383,7 +384,7 @@
 										<th>식대</th>
 										<th>차량유지비</th>
 										<th>상여금</th>
-										<th>출장비</th>
+										<th>출장비</th> -->
 
 									</tr>
 									<c:forEach var="tb" items="${list}" varStatus="status">
@@ -393,7 +394,7 @@
 											<td width="50" name="empcode${status.index}" id="${tb.EMP_EMNO}" onclick="check(${status.index})">${tb.EMP_EMNO}</td>
 											<td width="100" onclick="check(${status.index})">${tb.EMP_NAME}</td>
 											<td width="100" id="saltext${status.index}" name="saltext${status.index}"  align="center" ondblclick="checkboxChange(this)" ></td>
-											<td width="100" id="sbctext${status.index}" name="sbctext${status.index}" align="center" ondblclick="checkboxChange(this)"></td>
+								<%-- 			<td width="100" id="sbctext${status.index}" name="sbctext${status.index}" align="center" ondblclick="checkboxChange(this)"></td>
 											<td width="100" id="snctext${status.index}" name="snctext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
 											<td width="100"></td>
 											<td width="100" id="slctext${status.index}" name="slctext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
@@ -402,7 +403,7 @@
 											<td width="100" id="fdetext${status.index}" name="fdetext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
 											<td width="100" id="cmctext${status.index}" name="cmctext${status.index}" align="center" ondblclick="checkboxChange(this)" ></td>
 											<td width="100"></td>
-											<td width="100"></td>
+											<td width="100"></td> --%>
 										</tr>
 									</c:forEach>
 									

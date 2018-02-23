@@ -1,5 +1,7 @@
 package com.example.spring.personnel.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,22 +17,33 @@ public class CertificateService {
 	@Resource(name="certificateDao")
 	private CertificateDao certificateDao;
 	
-	//증명서 전체 정보가져오기
-	public List<String> certificateWhole(){
+	//증명서 maxNum
+	public int certificateMaxNum(HashMap<String, Object> map) {
 		
-		List<String> list = certificateDao.certificateWhole();
-		
-		return list;
-	}
-	
-	//검색된 증명서 정보 가져오기
-	public List<String> certificateSearch(HashMap<String, Object> map){
-		
-		if(!map.get("select").equals("전체")) {
+		if(!map.get("crtfSelect").equals("전체")) {
 			map.put("commCode",certificateDao.certificateCommCode(map)); //증명서코드
 		}
 		
-		List<String> list = certificateDao.certificateSearch(map);
+		return certificateDao.certificateMaxNum(map);
+	}
+	
+	//증명서 정보 가져오기
+	public List<String> certificateList(HashMap<String, Object> map){
+		
+		if(!map.get("crtfSelect").equals("전체")) {
+			map.put("commCode",certificateDao.certificateCommCode(map)); //증명서코드
+		}
+		
+		int choicePage = Integer.parseInt((String)map.get("choicePage"));
+		int viewNoticeMaxNum = 10;
+		int noticeCount= 0; //게시물 시작 순번
+		
+		noticeCount = (choicePage-1)*viewNoticeMaxNum;
+		
+		map.put("noticeCount", noticeCount);
+		map.put("viewNoticeMaxNum", viewNoticeMaxNum);
+		
+		List<String> list = certificateDao.certificateList(map);
 		
 		return list;
 	}
@@ -43,16 +56,50 @@ public class CertificateService {
 		return map;
 	}
 	
+	//증명서 상세보기
+	public HashMap<String, Object> certificateSearchInfo(int crtfSeq){
+		
+		HashMap<String, Object> map = certificateDao.certificateSearchInfo(crtfSeq);
+		
+		return map;
+	}
+	
 	//증명서 신청
 	public int certificateInsert(HashMap<String, Object> map) {
 		
 		map.put("commCode",certificateDao.certificateCommCode(map)); //증명서코드
-		map.put("delYn", "N"); //삭제유무
+		map.put("crtfProgressSituation", "승인대기");	//전자결제상태
+		map.put("crtfIssueDate", "");	//발행일
+		map.put("crtfDelYn", "N"); //삭제유무
 		
 		int result = certificateDao.certificateInsert(map);
 		
 		return result;
 	}
+	
+	//증명서신청 시 사원정보
+	public HashMap<String,String> certificateRequestEmpInfo(String empEmno){
+		
+		HashMap<String,String> map = certificateDao.certificateRequestEmpInfo(empEmno);
+		
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String crtfRequestDate = sdf.format(calendar.getTime());
+		
+		map.put("crtfRequestDate",crtfRequestDate);
+		
+		return map;
+		
+	}//certificateRequestInfo
+	
+	//증명서 신청내역 목록
+	public List<HashMap<String,Object>> certificateRequestList(String empEmno){
+		
+		List<HashMap<String,Object>> list = certificateDao.certificateRequestList(empEmno);
+		
+		return list;
+		
+	}//certificateRequestList
 	
 	//증명서 삭제
 	public int certificateDelete(HashMap<String, Object> map) {
@@ -60,6 +107,14 @@ public class CertificateService {
 		int result = certificateDao.certificateDelete(map);
 		
 		return result;
+	}
+	
+	//재직증명서
+	public HashMap<String, Object> workCertificate(HashMap<String, Object> map){
+		
+		HashMap<String, Object> workMap = certificateDao.workCertificate(map);
+		
+		return workMap;
 	}
 	
 }

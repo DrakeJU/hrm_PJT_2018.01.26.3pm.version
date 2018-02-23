@@ -23,6 +23,45 @@ public class VacationService {
 	private VacationDao vacationDao;
 	private String PRE_VIEW_PATH = "/vacation/";
 	
+	/* 대시보드 - 사원정보 */
+	public List<HashMap<String,Object>> empVacInfo(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = vacationDao.empVacInfo(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
+	/* 대시보드 - 월별 휴가사용개수 그래프 */
+	public List<HashMap<String,Object>> monthlyVacChart(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = vacationDao.monthlyVacChart(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+
+	/* 오늘의 휴가자 */
+	public List<HashMap<String,Object>> vacTodayEmpList() {
+		
+		List<HashMap<String,Object>> list = vacationDao.vacTodayEmpList();
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
+	/* 대시보드- 내가 이번달에 사용한 항목별 휴가*/
+	public List<HashMap<String,Object>> thisMonthVacChart(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = vacationDao.thisMonthVacChart(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
 	
 	/* 휴가일수설정  사원 리스트 출력 */
 	public List<HashMap<String,Object>> vacationCountEmpList(HashMap<String,Object> map) {
@@ -84,6 +123,13 @@ public class VacationService {
 		return list;
 	}
 	
+	
+	/* 휴가 신청하기 - 휴가명 셀렉 */
+	public List<HashMap<String,Object>> vacationTypeList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.vacationTypeList(map);
+		return list;
+	}
+	
 	/* 휴가 신청하기 */
 	public int vacationRequest(HashMap<String,String> map) {
 		
@@ -105,6 +151,26 @@ public class VacationService {
 		return list;
 	}
 		
+	/* 휴가조회(사원)-휴가내역 상세보기 모달 */
+	public List<HashMap<String,Object>> empVacListDetail(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = vacationDao.empVacListDetail(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
+	/* 휴가조회(사원)-휴가내역 삭제 */
+	public int vacationListDelete(HashMap<String,Object> map) {
+		
+		int list = vacationDao.vacationListDelete(map);
+		
+		logger.debug("service>>> " + list);
+		
+		return list;
+	}
+	
 	
 	/* 휴가 조회하기 - 관리자 */
 	public List<HashMap<String,Object>> vacationListAdmin(HashMap<String,Object> map) {
@@ -188,7 +254,13 @@ public class VacationService {
 		return list;
 	}
 	
-	
+	/* 휴가 승인대기 삭제 */
+	public int vacationDelete(HashMap<String,Object> map) {
+		
+		int list = vacationDao.vacationDelete(map);
+			logger.info("승인대기 삭제 SERVICE 맵:::"+map);
+		return list;
+	}
 	
 	/* 휴가 개수 계산하기 */
 	public String vacationCount() {

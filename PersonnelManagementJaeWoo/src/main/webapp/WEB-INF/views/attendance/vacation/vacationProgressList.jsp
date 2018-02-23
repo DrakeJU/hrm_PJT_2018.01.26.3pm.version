@@ -14,8 +14,29 @@
 	vertical-align: middle;
 }
 </style>
-<script src="/spring/resources/common/js/bootstrap2-toggle.min.js"></script>
 <script type="text/javascript">
+
+
+/*
+ * 
+ 
+ *****
+ 
+ 
+ 수정 중
+ 
+ 
+ *****
+ 
+ */
+
+
+
+
+
+
+
+
 
 /* 실행함수 모음 */
 $(function(){
@@ -82,7 +103,7 @@ function progList() {
 			}else{
 				$.each(rslt.vacationProgressList, function(index, s){
 					$("#progressTbody").append(
-						"<tr>" +
+						"<tr val='"+s.vastSerialNumber+"'>" +
 							"<td>" +
 								"<label class='fancy-checkbox-inline'>" +
 									"<input type='checkbox' name='chk' id='chk'>" +
@@ -99,19 +120,11 @@ function progList() {
 							"<td>" + s.vastTerm + "</td>" +
 							"<td>" + s.vastVacUd + "</td>" +
 							"<td>" + s.vastCont + "</td>" +
-							"<td><input type='checkbox' data-toggle='toggle' name='progToggle' id='progToggle' data-on='완료' data-off='대기' data-onstyle='primary' data-width='75' data-height='30'>"+
+// 							"<td><input type='checkbox' data-toggle='toggle' name='progToggle' id='progToggle' data-on='완료' data-off='대기' data-onstyle='primary' data-width='75' data-height='30'>"+"</td>"+
+							"<td val='"+s.vastProgressSituation+"'>" + s.vastProgressSituation + "</td>"+
+							"<input type=hidden id='vastDelYn' name='vastDelYn' val='"+ s.vastDelYn +"'>"+
 						"</tr>"
-					);//append		
-				
-					/* DB에 저장되어있는 '승인완료'를 토글로 나타내기 */
-					$("input[type='checkbox'][name=progToggle]").bootstrapToggle();
-						var progTr = s.vastProgressSituation;
-						if(progTr == "승인완료"){
-							var progTd = $("#progressTbody tr:last").children().eq(10);							
-							progTd.children().children("#progToggle").prop('checked', true).change();
-// 							console.log(progTr);
-						} else {
-						}//if
+					);//append
 				});	//each.List
 				
 				//table 가운데 정렬
@@ -125,8 +138,24 @@ function progList() {
 				});
 	
 			}//if-table 생성
-			
-		});//paging
+				
+			//마우스오버
+			$('#progressTbody tr').hover(function(){
+			//	$(this).css("backgroundColor","#f2f2f2");
+				//console.log($(this).children().eq(10).text())				
+				//승인기면 x 아이콘 생성하고
+				if($(this).children().eq(10).text() == "승인대기"){
+					$(this).append("<span class='fa fa-close right-icon' name='delBtn' onclick='vacDel(this)'></span>");
+					
+				}//if
+			},	
+			function(){
+		//		$(this).css("backgroundColor","#fff");
+				if($(this).children().eq(10).text() == "승인대기"){
+					$(this).find("span:last").remove();					
+				}//if
+			});
+	});//paging
 }	//ajax로 리스트 불러오기
 
 /*검색 버튼 */
@@ -164,6 +193,7 @@ function rankSelect(){
 
 /* 승인현황 셀렉 */
 function situationSelect(){
+	$('#situationList').select().val('승인대기');
 	$('#situationList').change(function(){
 		$('#situationHidden').val($(this).children('option:selected').select().val());
 		progList();	//ajax 실행
@@ -172,14 +202,23 @@ function situationSelect(){
 
 /* month 달력 */
 function calender(){
-	$('#baseMonth').val(moment().format('YYYY-MM'));	//현재 월로 보여줌
-	$('#monthDateTimePicker').datetimepicker({
-		viewMode: 'months',
-		format: 'YYYY-MM'
+// 	$('#baseMonth').val(moment().format('YYYY-MM'));	//현재 월로 보여줌
+// 	$('#monthDateTimePicker').datetimepicker({
+// 		viewMode: 'months',
+// 		format: 'YYYY-MM'
+// 	});
+// 	//month의 최대값을 현재 월로 제한
+// 	$('#monthDateTimePicker').data("DateTimePicker").maxDate(moment());
+	$('#baseYear').val(moment().format('YYYY'));	//올해 년도 보여줌
+	$('#yearDateTimePicker').datetimepicker({
+		viewMode: 'years',
+		format: 'YYYY'
 	});
 	
-	//month의 최대값을 현재 월로 제한
-	$('#monthDateTimePicker').data("DateTimePicker").maxDate(moment());
+	//년도의 최대값을 올해로 제한
+	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment());
+
+
 };	
 	
 
@@ -190,49 +229,65 @@ function checkAllFunc(obj){ //최상단 체크박스를 click하면
 	})
 } 
 
+/* 승인취소 버튼 */
+function toggleOff(){
+	var chk = $("[name=chk]").length; //체크박스 갯수
+	
+	$('[name=chk]').each(function(){
+		var progTr = $(this).closest('tr'); //체크박스와 가까운 위치의 tr
+		var progTd = progTr.children().eq(10); //tr 자식인 10번째 인덱스의 td(승인현황 있는 위치의 td)
+		console.log("TD10번째"+progTd);
+		if($(this).prop('checked')){
+			progTd.html('승인취소');
+		}
+	});
+	
+}//toggleOff
 
-/* 체크박스 승인완료 버튼 */
+/* 승인완료 버튼 */
 function toggleOn(){
 	var chk = $("[name=chk]").length; //체크박스 갯수
-
+	
 	$("[name=chk]").each(function() {
 		console.log(chk);
 		var progTr = $(this).closest('tr'); //체크박스와 가까운 위치의 tr
-		var progTd = progTr.children().eq(10); //tr 자식인 7번째 인덱스의 td(토글키 있는 위치의 td)
-
-// 		if(progTd.children().children("#progToggle").is(':checked') == true){
-// 			console.log('1');
-// 		}
-		if($(this).prop('checked')){
-			progTd.children().children("#progToggle").prop('checked', true).change();
-		}else{
-			
+		var progTd = progTr.children().eq(10); //tr 자식인 10번째 인덱스의 td(승인현황 있는 위치의 td)
+		
+		if($(this).prop('checked')){			
+			progTd.html('승인완료');
+			console.log(progTd+"ssasss");
 		}//if
+
 	});	//name-each
 	
 }//toggleOn
 
 
-
-
-/* 승인완료 후 저장하기  */
+/* 승인완료&취소 후 저장하기  */
 function vacProgSave(){
+	var chk = $("[name=chk]").length; //체크박스 갯수
+	var progToggleResult;	//체크된 것 저장할 결재상황
 	
-	var progToggleResult;	//체크된 것 저장할 변수
-	$("input[type=checkbox][id=progToggle]").each(function(){
+	//$("input[type=hidden][id=vastSerialNumber]").each(function(){
+		
+	$("[name=chk]").each(function(){	
 		if($(this).prop('checked')){
-			
 			var chkTr = $(this).closest('tr');	//체크한 것과 가장 가까운 tr
 			var chkHi = chkTr.children().children("input[type=hidden][id=vastSerialNumber]").val();//체크한 것의 히든 value 값
+			var chkSi = chkTr.children().eq(10).text();	//결재상황 
 			
+			console.log("xxxxxx"+chkHi+"xxxx"+chkSi);
+	
 			if(progToggleResult == null){
-				progToggleResult = chkHi;
+				progToggleResult = chkHi + "^" + chkSi;
 			} else{
-				progToggleResult = progToggleResult +"/"+chkHi;	//히든 value 값을 구분자와 저장
+				//시리얼넘버 + 결재상황 을 구분자와 함께 저장			
+				progToggleResult = progToggleResult +"/"+ chkHi + "^" + chkSi;
 				console.log("저장::"+progToggleResult);
-			}
-		}//if
-	});//input.each
+			}//if	
+		}//if.prop
+	});//input.each		
+	//input Hidden에 value로 저장
 	$('#progToggleResult').val(progToggleResult);
 		console.log("저장후::"+$('#progToggleResult').val());
 	
@@ -243,12 +298,56 @@ function vacProgSave(){
 		if(rslt == null){
 			alert("저장에 실패하였습니다. 다시 시도해주세요.")
 		} else{
+// 			$('#progToggleResult').val(progToggleResult);
 			alert("저장되었습니다.")
 			window.location.reload();	//새로고침
 		}
 	});	//paging.ajax
 	
 }//vacProgSave
+
+
+/* 휴가 삭제 */
+function vacDel(){
+	var vacationDel;	//삭제되는 데이터 저장 변수
+
+	//마우스오버된 해당 행
+	var delTr = $(this).parent();
+	delTr.remove();
+	alert("삭제하시겠습니까?");
+
+	$('[name=delBtn]').each(function(){
+		if($('[name=delBtn]').prop('click')){
+			var chkTr = $(this).closest('tr');	//클릭한 것과 가장 가까운 tr
+			var chkHi = chkTr.children().children("input[type=hidden][id=vastSerialNumber]").val();//체크한 것의 히든 value 값
+			console.log("////"+chkHi+"//");
+			
+			if(vacationDel == null){
+				vacationDel = chkHi;
+			} else{
+				vacationDel = vacationDel +"/"+chkHi;
+				console.log("삭제삭제::"+vacationDel);
+			}
+		}//if
+	//input Hidden에 value로 저장
+	$('#progToggleResult').val(vacationDel);
+		console.log("삭제 후::::"+$('#progToggleResult').val());
+		
+		$('#vastSerialNumber').val($('#progToggleResult').val());
+	paging.ajaxFormSubmit("vacationDel.ajax","f2", function(rslt){
+		console.log("ajaxFormSubmit -> callback");
+		console.log("결과데이터" + JSON.stringify(rslt));
+		
+		if(rslt == null){
+			alert("삭제에 실패하였습니다. 다시 시도해주세요.")
+		} else{
+			alert("삭제되었습니다.")
+			window.location.reload();	//새로고침
+		}
+	});//paging.ajax
+	});
+	
+}//vacDel
 
 
 </script>
@@ -264,8 +363,10 @@ function vacProgSave(){
 <!-- 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i>							 -->
 							신청월
 							<!-- 달력 -->
-							<div class="input-group date" id="monthDateTimePicker">
-								<input type="text" class="form-control" id="baseMonth" name="baseMonth"/>
+<!-- 							<div class="input-group date" id="monthDateTimePicker">
+									<input type="text" class="form-control" id="baseMonth" name="baseMonth"/> -->
+							<div class="input-group date" id="yearDateTimePicker">
+								<input type="text" class="form-control" id="baseYear" name="baseYear"/>
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 								</span>
@@ -279,9 +380,10 @@ function vacProgSave(){
 							<select name="rankNameList" id="rankNameList" value="직급별" class="form-control"><!-- 직급 -->
 							</select>
 							<select name="situationList" id="situationList" class="form-control">
-								<option value="">결재상태</option>
+								<option value="">전체보기</option>
 								<option value="승인대기">승인대기</option>
 								<option value="승인완료">승인완료</option>
+								<option value="승인취소">승인취소</option>
 <!-- 								<option value="cat">반려</option> -->
 							</select>
 							<input type="hidden" id="deptHidden"><!-- 네임으로 하면 파라미터 값이 넘어감 -->
@@ -296,7 +398,7 @@ function vacProgSave(){
 					<div class="panel-body"> 
 						<div class="list_wrap">
 							<form class="form-inline" name="f2" id="f2">
-								<table class="table tablesorter table-bordered" id="progressTable" name="progressTable">
+								<table class="table tablesorter table-hover" id="progressTable" name="progressTable">
 									<thead>
 										<tr>
 											<th class="sorter-false" style="width:6%;">
@@ -305,6 +407,7 @@ function vacProgSave(){
 													<span></span>
 												</label>
 												<input type="hidden" name="progToggleResult" id="progToggleResult" value="">
+<!-- 												<input type="hidden" name="vacationDel" id="vacationDel" value=""> -->
 											</th>
 											<th>사원번호</th>
 											<th>이름</th>
@@ -327,7 +430,8 @@ function vacProgSave(){
 						    
 						<!-- 버튼영역 -->
 						<div class="text-center"> 
-							<button type="button" class="btn btn-info" onclick="toggleOn()">승인완료</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" id="butOff" class="btn btn-info" onclick="toggleOff()">승인취소</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" id="butCom" class="btn btn-info" onclick="toggleOn()">승인완료</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<button type="button" class="btn btn-danger" onclick="vacProgSave()">저장하기</button>
 						</div>
 						<!-- END 버튼영역 -->
@@ -336,88 +440,6 @@ function vacProgSave(){
 			</div>
 			
 
-			<!-- 사원번호 Modal -->
-			<div id="empEmnoModal" class="modal fade" role="dialog">
-			  <div class="modal-dialog">
-			  
-			  <!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<p class="modal-title">사번 정보 조회</p>
-					</div>
-					<div class="modal-body">
-						<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
-							<form class="form-inline">
-								검색어&nbsp;<input type="text" class="form-control">&nbsp;&nbsp;&nbsp;
-								<label class="fancy-checkbox-inline">
-									<input type="checkbox" name="">
-									<span>퇴직자 포함</span>
-								</label>
-								<input type="button" class="btn btn-primary" style="float:right;" name="search" onclick="empEmnoSearch()" value="검색">
-							</form>
-						</div>
-
-						<div class="list_wrap">
-							<table class="table tablesorter table-bordered">
-								<tbody>
-									<thead>
-										<tr>
-											<th></th>
-											<th>사원번호</th>
-											<th>성명</th>
-											<th>부서</th>
-											<th>직급</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<label class="fancy-checkbox-inline">
-													<input type="checkbox" name="empEmnoChk">
-													<span></span>
-												</label>
-											</td>
-											<td>12345</td>
-											<td>유성실</td>
-											<td>개발팀</td>
-											<td>사원</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="fancy-checkbox-inline">
-													<input type="checkbox" name="empEmnoChk">
-													<span></span>
-												</label>
-											</td>
-											<td>2345</td>
-											<td>유성실</td>
-											<td>개발팀</td>
-											<td>사원</td>
-										</tr>
-										<tr>
-											<td>
-												<label class="fancy-checkbox-inline">
-													<input type="checkbox" name="empEmnoChk">
-													<span></span>
-												</label>
-											</td>
-											<td>17895</td>
-											<td>유성실</td>
-											<td>개발팀</td>
-											<td>사원</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="empEmnoClick()">선택</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- END MODAL -->
 		</div>
 		<!-- END MAIN CONTENT -->
 	</div>

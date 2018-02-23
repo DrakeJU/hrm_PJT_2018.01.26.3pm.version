@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.DeleteEventsData;
 import com.example.spring.attendance.entity.EventsData;
 import com.example.spring.attendance.service.HolidaySetService;
 import com.google.gson.Gson;
@@ -72,6 +73,7 @@ public class HolidaySetController {
 
 		return map;
 	}
+	
 	//관리자 - 근속연수에 따른 휴가설정
 	@RequestMapping(value = "/conWorkVacSet")
 	public String vatacionListAdminPage3() {
@@ -96,7 +98,7 @@ public class HolidaySetController {
 	public ModelAndView holidayRosterSettingDBInsert(@RequestParam HashMap<String,Object> infoMap) {
 		//HashMap<String, String> empNameMap = new HashMap<String, String>();
 			
-		System.out.println("---------------------" + infoMap);
+		System.out.println("---------------------infoMap2" + infoMap);
 			
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("holidayRoster");
@@ -107,14 +109,39 @@ public class HolidaySetController {
 		return mv;
 	}
 	
+	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
+	@RequestMapping(value = "/holidayRosterWorkerNumberDBInsert")
+	public ModelAndView holidayRosterWorkerNumberDBInsert(@RequestParam HashMap<String,Object> infoMap) {
+		//HashMap<String, String> empNameMap = new HashMap<String, String>();
+				
+		System.out.println("---------------------infoMap" + infoMap);
+				
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("holidayRoster");
+		mv.addObject("infoMap", infoMap);
+				
+		holidaySetService.holidayRoster(infoMap);
+		
+		return mv;
+	}
+	
+	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
+	@RequestMapping(value = "/individualRoster")
+	public String individualRoster() {
+		return "individualRoster";
+	}
+	
 	//관리자 - 근무표 근무 인원 db에서 불러오는 컨트롤러.
 	@RequestMapping(value = "/holidayRosterEventsList.ajax")
-	public @ResponseBody List<HashMap<String, String>> holidayRosterEventsList() {
+	public @ResponseBody List<HashMap<String, String>> holidayRosterEventsList(@RequestParam HashMap<String,String> eventsList) {
+		System.out.println("eventsList : " + eventsList);
+		
 		List<HashMap<String, String>> map = new ArrayList<HashMap<String, String>>();
+		
 		map = holidaySetService.holidayRosterEventsList();
 		
 		System.out.println("------------- holidayRosterEventsList : "+map);
-
+		
 		return map;
 	}
 	
@@ -136,10 +163,60 @@ public class HolidaySetController {
 		return map;
 	}
 	
+	//관리자 - 근무표 근무 인원 db에서 제거하는 함수.
+	@RequestMapping(value = "/holidayRosterDelete.ajax")
+	public @ResponseBody HashMap<String, String> holidayRosterDelete(@RequestParam HashMap<String, String> deleteMap) {
+		HashMap<String, String> map = new HashMap<String, String>();
+			
+		System.out.println("------------- deleteMap : "+deleteMap);
+		
+		Gson gson = new Gson();
+		//List<DeleteEventsData>로 타입을 만들어주겠다 선언.
+		Type type = new TypeToken<List<DeleteEventsData>>() {}.getType();
+
+		String result = (String) deleteMap.get("holidayRosterDelete");
+
+		//gson.fromJson : Json 형식으로된 String을 ArrayList로 바꿔주는 역할을 함.
+		//지금 result에는 json형식으로 되어있음.
+		ArrayList<DeleteEventsData> list = gson.fromJson(result, type);
+		
+		holidaySetService.holidayRosterDelete(list);
+		
+		map.put("success", "true");
+			
+		return map;
+	}
+	
 	//관리자 - 근무표생성설정
 	@RequestMapping(value = "/holidayRosterSetting")
 	public String holidayRosterSetting() {
 		return "holidayRosterSetting";
+	}
+	
+	//관리자 - 근무표조회
+	@RequestMapping(value = "/holidayRosterCheck")
+	public String holidayRosterCheck() {
+		return "holidayRosterCheck";
+	}
+	
+	//관리자 - 근무표생성설정
+	@RequestMapping(value = "/weekRoster")
+	public ModelAndView weekRoster(@RequestParam("formYearMonth") String yearMonth) {
+		System.out.println("weekRoster : " + yearMonth);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("weekRoster");
+		mv.addObject("formYearMonth", yearMonth);
+		
+		return mv;
+	}
+	
+	//관리자 - 근무표생성설정
+	@RequestMapping(value = "/yearMonthDeliver")
+	public @ResponseBody HashMap<String, String> yearMonthDeliver(@RequestParam HashMap<String, String> yearMonth) {
+		System.out.println("yearMonth : " + yearMonth);
+			
+		return yearMonth;
 	}
 
 	//관리자 - 근무표 db 입력
@@ -214,7 +291,6 @@ public class HolidaySetController {
 		
 		List<HashMap<String,Object>> list = holidaySetService.conWorkVacSetupList(map);
 		
-
 		if(list == null ) {
 			map.put("success", "N");
 		}else {
@@ -239,4 +315,31 @@ public class HolidaySetController {
 			return string;     
 		} 
 	} 
+	//일정등록
+	@RequestMapping(value="calendarInsert.do")
+	public @ResponseBody int scheduleInsert(@RequestParam HashMap<String, String> map) {
+		System.out.println("+++++++++++++++++++ 등록 컨트롤러 map : " + map);
+		int result = holidaySetService.calendarInsert(map);
+		
+		return result;
+	}
+	//일정상세보기
+	@RequestMapping(value="calendarList.exc")
+	public @ResponseBody List<String> calendarList(){
+		System.out.println("일정상세보기(controller)");
+		
+		List<String> list = holidaySetService.calendarList();
+		
+		return list;
+	}
+	//휴일 일정 db 가저오기
+	@RequestMapping(value="calendarListDB")
+	public @ResponseBody HashMap<String, String> calendarListDB(String start){
+		System.out.println("휴일 일정 DB 가져오기 성공 (controller)");
+		
+		HashMap<String, String> map = holidaySetService.calendarListDB(start);
+		
+		return map;
+	}
+	
 }

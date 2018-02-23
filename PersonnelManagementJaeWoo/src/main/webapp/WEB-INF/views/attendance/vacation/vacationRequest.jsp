@@ -10,96 +10,142 @@
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/vacation.css" />
 <script>
 
-	$(function(){
-		calender(); //달력
-	});
+$(function(){
+	vacTypeList();//휴가 셀렉박스 ajax
+	calender(); //달력
+	vacSelect();	//휴가 셀렉박스 
+	//check_onclick();	//휴가 신청하기
+});
 
-	/* ajax-INSERT */
-	function check_onclick(url, formId){
-		paging.ajaxFormSubmit(url, formId, function(rslt){
-			console.log("ajaxFormSubmit -> callback");
-			console.log("결과데이타" + JSON.stringify(rslt));
+
+/* ajax - 휴가타입 셀렉박스 */
+function vacTypeList(){
+	paging.ajaxFormSubmit("vacTypeList.ajax", "vacReqFrm", function(rslt){
+		console.log("ajaxFormSubmit -> callback");
+		console.log("결과데이타" + JSON.stringify(rslt));
+		
+		//이전 리스트 삭제
+		$('#vacationTypeList').empty();	//휴가타입 셀렉트
+		//휴가 셀렉박스
+		if(rslt.vacationTypeList != null){
+			$('#vacationTypeList').append(
+				"<option value=''>"+ '선택' +"</option>");
+			$.each(rslt.vacationTypeList, function(k,v){
+				$('#vacationTypeList').append(
+					"'<option value='"+ v.vastC +"'>"+ v.vastType +"</option>"
+				);//append	
+			});	//each.vacationTypeList
+			$('#vacationTypeList').val($('#vacationTypeHidden').val()).prop("selected", true);//hidden 값 value를 선택하고 유지	
+		} else{
+			$('#vacationTypeList').append('<option>'+ '선택' +'</option>');
+		}//if
+	});//paging	
+}//vacationTypeList AJAX
+
+
+/* ajax-INSERT */
+function check_onclick(url, formId){
+	paging.ajaxFormSubmit(url, formId, function(rslt){
+		console.log("ajaxFormSubmit -> callback");
+		console.log("결과데이타" + JSON.stringify(rslt));
 			
-// 			insert 성공여부에 따른 alert창 띄우기
+//		insert 성공여부에 따른 alert창 띄우기
 			if(rslt.success == "Y"){
-				alert("휴가가 신청되었습니다.");
+				
+				if(rslt.empEmno == null || rslt.empName == null || rslt.deptName == null || rslt.rankName == null){
+					alert("빈 칸을 채워주세요.");
+					return false;				
+				} else {
+					alert("휴가가 신청되었습니다.");					
+				}
+								
 			}else{
 				alert("휴가 신청실패");
 			}
-		});
-	}
+		
+	});//paging
+}//check_onclick
 	
 
 	
-	/* 달력  */
-	function calender() {
+/* 달력  */
+function calender() {
+	
+	//오늘 날짜로 보여주기
+	$('#vastCrtDate').val(moment().format('YYYY-MM-DD'));	//휴가 신청일
+	$('#vastStartDate').val(moment().format('YYYY-MM-DD'));		//휴가 시작일
+	$('#vastEndDate').val(moment().format('YYYY-MM-DD'));		//휴가 종료일
+	$('#vastVacUd').val(moment().format('1'));
+	
+	$('#crtDate').datetimepicker({ //휴가신청일 달력
+		viewMode : 'days',
+		format : 'YYYY-MM-DD'
+	});
+	
+	$('#startDate').datetimepicker({ //휴가시작일 달력
+		viewMode : 'days',
+		format : 'YYYY-MM-DD'
+	});
+
+	$('#endDate').datetimepicker({ //휴가종료일 달력
+		viewMode : 'days',
+		format : 'YYYY-MM-DD'
+	});
+
+	//휴가종료날짜가 시작날짜 이전인 날짜는 선택 불가능하도록 제한
+	$('#startDate').on("dp.change", function(e) {
+		$('#endDate').data("DateTimePicker").minDate(e.date);
+	});
+
+	//일수 자동 계산 - startDate 변경시
+	$('#startDate').on("dp.change", function() { //시작날짜를 변경할 때마다
+		var startDate = moment($('#vastStartDate').val(), "YYYYMMDD");
+		var endDate = moment($('#vastEndDate').val(), "YYYYMMDD");
+
+		$('#vastVacUd').val(endDate.diff(startDate, "days")+1 //endDate-startDate를 일수로 출력
+		);
+	});
+	
+	//일수 자동 계산 - endDate 변경시
+	$('#endDate').on("dp.change", function() {
+		var startDate = moment($('#vastStartDate').val(), "YYYYMMDD");
+		var endDate = moment($('#vastEndDate').val(), "YYYYMMDD");
+
+		$('#vastVacUd').val(endDate.diff(startDate, "days")+1 //endDate-startDate를 일수로 출력
+		);
+	});
+};//달력
+
+
+	
+function vacSelect(){
+ 	$("#vacationTypeList").click(function(){
+	
+ 		var startDate = moment($('#vastStartDate').val(), "YYYYMMDD");
+		var endDate = moment($('#vastEndDate').val(), "YYYYMMDD");
+		console.log(endDate-startDate);
 		
-		//오늘 날짜로 보여주기
-		$('#vastCrtDate').val(moment().format('YYYY-MM-DD'));	//휴가 신청일
-		$('#vastStartDate').val(moment().format('YYYY-MM-DD'));		//휴가 시작일
-		$('#vastEndDate').val(moment().format('YYYY-MM-DD'));		//휴가 종료일
-		$('#vastVacUd').val(moment().format('1'));
-		
-		
-		$('#crtDate').datetimepicker({ //휴가신청일 달력
-			viewMode : 'days',
-			format : 'YYYY-MM-DD'
-		});
-		
-		$('#startDate').datetimepicker({ //휴가시작일 달력
-			viewMode : 'days',
-			format : 'YYYY-MM-DD'
-		});
-
-		$('#endDate').datetimepicker({ //휴가종료일 달력
-			viewMode : 'days',
-			format : 'YYYY-MM-DD'
-		});
-
-		//휴가종료날짜가 시작날짜 이전인 날짜는 선택 불가능하도록 제한
-		$('#startDate').on("dp.change", function(e) {
-			$('#endDate').data("DateTimePicker").minDate(e.date);
-		});
-
-		//일수 자동 계산 - startDate 변경시
-		$('#startDate').on("dp.change", function() { //시작날짜를 변경할 때마다
-			var startDate = moment($('#vastStartDate').val(), "YYYYMMDD");
-			var endDate = moment($('#vastEndDate').val(), "YYYYMMDD");
-
-			$('#vastVacUd').val(endDate.diff(startDate, "days")+1 //endDate-startDate를 일수로 출력
-			);
-		});
-		
-		
-		//일수 자동 계산 - endDate 변경시
-		$('#endDate').on("dp.change", function() {
-			var startDate = moment($('#vastStartDate').val(), "YYYYMMDD");
-			var endDate = moment($('#vastEndDate').val(), "YYYYMMDD");
-
-			$('#vastVacUd').val(endDate.diff(startDate, "days")+1 //endDate-startDate를 일수로 출력
-			);
-		});
-	};//달력
-
-
-	/* 휴가 중 반차 선택시 일수가 0.5로 변경 */
-	function halfSelect(){
-		if($("#vastC option:selected").text() == "반차"){
-			console.log("0.5");	
+		//반차 선택했을 때, 일수가 0.5로 변경
+		if($("#vacationTypeList option:selected").text() == "반차"){
+// 			console.log("0.5");	
 			$('#vastVacUd').val('0.5');//일수 입력창이 0.5로 바뀜
-// 			$('#vastVacUd').attr("disabled",true);
+			$('#vastEndDate').val($('#vastStartDate').val());
+			if(endDate-startDate != 0){
+				submitGo();
+				alert("반차는 시작날짜와 끝날짜가 같아야 합니다.");
+				$('#vastVacUd').val('0.5'); //input hidden값 value를 선택
+			}
 		} else{
-			$('#vastVacUd').val(moment().format('1'));
+
 		}
-	}//halfSelect
+ 	});	
+}//vacSelect
+	
 	
 	
 	
 /* ****************************사원 선택 모달창************************** */
- 	
-
-
-	
+ 
 	
 	//퇴직자 포함 체크 여부
 	function retrCheck(){
@@ -111,7 +157,6 @@
 	}
 		
 	//모달창 : 사원 리스트 ajax(사원 휴가일수 리스트 참조)
-	
 
 	function vacationReqEmpList(){
 		retrCheck();	//퇴직자 포함 체크 여부
@@ -217,16 +262,10 @@
 									</td>
 									<td>휴가구분</td>
 									<td>
-										<select name="vastC" class="form-control" name="vastC" id="vastC" value="vastC" onchange="halfSelect(this.vacReqFrm)">
-											<option value="yearlyVac" selected="selected">선택</option>			
-											<option id="V1" value="V1">연차</option>										
-											<option id="V2" value="V2">반차</option>
-											<option id="V3" value="V3">생리휴가</option>
-											<option id="V4" value="V4">경조휴가</option>
-											<option id="V5" value="V5">출산휴가</option>
-											<option id="V6" value="V6">병가</option>
-<!-- 											<option value="rewardVac">포상휴가</option> -->
+<!-- 										<select class="form-control" name="vacationTypeList" id="vacationTypeList" onchange="vacSelect(this.vacReqFrm)"> -->
+										<select class="form-control" name="vacationTypeList" id="vacationTypeList">
 										</select>
+										<input type="hidden" id="vacationTypeHidden"><!-- 휴가타입 히든 -->
 									</td>
 									<td>전자결재상태</td>
 									<td><input type="text" class="form-control" name="vastProgressSituation" id="vastProgressSituation" value="승인대기" readonly></td>
@@ -287,7 +326,8 @@
 								</tr>
 							</table>
 							<div class="text-right">
-								<button type="button" class="btn btn-primary" onclick="check_onclick('${pageContext.request.contextPath}/vacationRequest.ajax', 'vacReqFrm')">신청하기</button>
+								<button type="button" class="btn btn-primary" id="submitGo" onclick="check_onclick('${pageContext.request.contextPath}/vacationRequest.ajax', 'vacReqFrm')">신청하기</button>
+<!-- 									<button type="button" class="btn btn-primary" onclick="check_onclick()">신청하기</button> -->
 							</div>
 						</form>
 					</div>
@@ -295,9 +335,11 @@
 				
 				<div class="panel">
 					<div class="panel-body">
-						※ 경조사 발생 시 관련 증빙 제출(사망진단서, 청첩장, 출생증명서)
+						<p> ※ 경조사 발생 시 관련 증빙 제출(사망진단서, 청첩장, 출생증명서) </p>
+						<p> ※ 반차일 경우 휴가 시작날짜와 종료날짜가 같아야 합니다. </p>
 					</div>
 				</div>
+				
 				
 				<!--*********** 사원번호 Modal***************** -->
 				<div id="empEmnoModal" class="modal fade" role="dialog">
@@ -320,7 +362,7 @@
 											<option value="deptName">부서</option>
 										</select>
 										<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
-										<label class="fancy-checkbox-inline">
+										<label class="fancy-checkbox-in	line">
 											<input type="checkbox" id="retrChk">
 											<span>퇴직자 포함</span>
 										</label>
@@ -343,20 +385,6 @@
 												</tr>
 											</thead>
 											<tbody id="vacCntEmpListTbody" style="display:block;height:200px;overflow:auto;">
-												<!-- 
-												<tr>
-													<td>
-														<label class="fancy-checkbox-inline">
-															<input type="checkbox" name="empEmnoChk">
-															<span></span>
-														</label>
-													</td>
-													<td>0905000211</td>
-													<td>강병욱</td>
-													<td>개발팀</td>
-													<td>사원</td>
-												</tr>
-												 -->
 											</tbody>
 										</table><!-- vacEmpList END -->
 								</div>

@@ -1,6 +1,8 @@
 package com.example.spring.attendance.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.spring.attendance.dao.HolidaySetDao;
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.DeleteEventsData;
 import com.example.spring.attendance.entity.EventsData;
 
 
@@ -30,6 +33,12 @@ public class HolidaySetService {
 		return result;
 	}
 
+	public int holidayRosterDelete(ArrayList<DeleteEventsData> deleteEventData) {
+		int result = holidaySetDao.holidayRosterDelete(deleteEventData);
+		
+		return result;
+	}
+	
 	public int holidayRoster(HashMap<String,Object> infoMap) {
 		int result = holidaySetDao.holidayRoster(infoMap);
 		
@@ -70,5 +79,37 @@ public class HolidaySetService {
 		logger.debug("service>>> " + list);
 
 		return list;
+	}
+	//calendar 일정등록 service
+	public int calendarInsert(HashMap<String, String> map) {
+		
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdfToday = new SimpleDateFormat("yyyyMMddHHmmss");
+		
+		String today = sdfToday.format(cal.getTime());
+		String startDate = map.get("startDate").replaceAll("-", ""); //2018-01-24 -> 20180124
+		
+		map.put("id", startDate );
+		map.put("createDate", today);
+		map.put("updateDate", "");
+		map.put("delYN", "N");
+		
+		int result = holidaySetDao.calendarInsert(map);
+		
+		return result;
+	}
+	//개인일정상세보기
+	public List<String> calendarList(){
+		
+		List<String> list = holidaySetDao.calendarList();
+		
+		return list;
+	}
+	//휴일 일정 db 가저오기
+	public HashMap<String, String> calendarListDB(String start){
+		start = start.replaceAll("\"", "");
+		HashMap<String, String> map = holidaySetDao.calendarListDB(start);
+		
+		return map;
 	}
 }

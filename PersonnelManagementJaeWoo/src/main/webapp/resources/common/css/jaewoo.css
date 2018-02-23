@@ -8,6 +8,10 @@
 .ftl {float:left;}
 .ftr {float:right;}
 
+.w_40{width:40px !important;}
+
+.w_70{width:70px !important;}
+
 .w_80{width:80px !important;}
 
 .w_120 {width:120px !important;}
@@ -19,6 +23,8 @@
 .mgu_15 {margin-top:15px;}
 
 .mgu_8 {margin-top:8px;}
+
+.mgb_5 {margin-bottom:5px;}
 
 .pdu_8 {padding-top:8px;}
 

@@ -17,7 +17,7 @@ var formId = "vacCntSelectFrm"; //초기, 검색할 때 id를 기본값으로 �
 
 //document.ready
 $(function(){
-	calender(); //년도달력
+	calendar(); //년도달력
 	vacCntEmpSignUpCntNum(); //사원등록 개수
 	vacCntEmpList(); //사원정보 리스트 ajax
 	
@@ -62,10 +62,10 @@ function vacCntCalculation(){
 		});
 	
 		$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
-		console.log($('#empEmnoResult').val());
+// 		console.log($('#empEmnoResult').val());
 		
 		paging.ajaxFormSubmit("vacationCountAutoCalculation.ajax", "vacCntEmpFrm", function(rslt){
-			console.log("결과데이터:"+JSON.stringify(rslt));
+// 			console.log("결과데이터:"+JSON.stringify(rslt));
 			
 			if(rslt == null || rslt.success == "N"){
 				console.log('에러');
@@ -95,6 +95,7 @@ function vacCntSave(){
 	
 	}else{
 
+		$('#baseYear2').val($('#baseYear').val()); //baseYear 컨트롤러로 넘기기
 		var empEmnoResult; //체크된 사원번호를 저장할 변수(ex. 사원번호/사원번호/사원번호)
 		
 		$("input[type=checkbox][id=emnoChk]").each(function(){
@@ -148,7 +149,7 @@ function vacCntEmpList(){
 	retrCheck(); //퇴직자 포함 체크여부
 
 	paging.ajaxFormSubmit(url, formId, function(rslt){
-		console.log("결과데이터:"+JSON.stringify(rslt));
+// 		console.log("결과데이터:"+JSON.stringify(rslt));
 
  		$('#vacCntEmpListTbody').empty(); //이전 리스트 삭제
 		$('#vacCntEmpListTable').children('thead').css('width','calc(100% - 1.1em)'); //테이블 스크롤 css
@@ -173,7 +174,7 @@ function vacCntEmpList(){
 						"<td style='width:12%;'>"+ v.deptName +"</td>"+ //부서명
 						"<td style='width:12%;'>"+ v.rankName +"</td>"+ //직급명
 						"<td style='width:12%;'>"+ v.retrIncoDate +"</td>"+ //입사일자
-						"<td><input type='text' class='form-control' id='empIncoDate'>일</td>"+
+						"<td><input type='text' class='form-control' id='empIncoDate' value='"+v.emreVacUd+"'>일</td>"+
 					"</tr>"
 				);
  			});
@@ -214,7 +215,7 @@ function checkAllFunc(){ //최상단 체크박스를 click하면
 }
 
 //년도 달력
-function calender(){
+function calendar(){
 	$('#baseYear').val(moment().format('YYYY'));
   $('#yearDateTimePicker').datetimepicker({
 		viewMode: 'years', //올해 년도 보여줌
@@ -300,6 +301,7 @@ function vacCntEmpSignUpCntNum(){
 												</label>
 												<input type="hidden" name="retrDelYn" id="retrDelYn">
 												<input type="hidden" name="empEmnoResult" id="empEmnoResult">
+												<input type="hidden" name="baseYear2" id="baseYear2">
 											</th>
 											<th style='width:12%;'>구분</th>
 											<th style='width:12%;'>사원번호</th>

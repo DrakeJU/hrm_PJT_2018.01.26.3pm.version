@@ -23,7 +23,7 @@
 			$.each(data.navList,function(index,dataThis){
 				mnPrntNo = dataThis.mnPrntNo; //부모코드 저장 변수
             	mnIdx = dataThis.mnIdx; //menu index 저장 변수 
-            	
+          
             	//최상위 메뉴 일때 
             	if(mnPrntNo==0){
 					//index 적용 if else
@@ -36,18 +36,17 @@
             	}else{
             		//ul 추가 if
             	 	if($("#sidebar-nav #nav"+mnPrntNo).find("ul").length==0){
-           
             			thisId = $("#sidebar-nav #nav"+mnPrntNo).children("a").attr("href"); //부모의 href 저장변수
             			if(thisId!=undefined){
             		 		$("#sidebar-nav #nav"+mnPrntNo).append("<div id='"+thisId.substring(1)+"' class='collapse'><ul class='nav'></ul></div>");
             	 		}//if
                  	}//if
-
+         
                  	$("#sidebar-nav #nav"+mnPrntNo).find("ul:eq(0)").append("<li id='nav"+dataThis.mnNo+"'><a href='"+dataThis.mnUrl+"'><span>"+dataThis.mnName+"</span></a></li>");
                  	
             	}//if else            
 			});//each
-			
+
 			//drop menu 적용을 위한 속성 지정
 			$("#sidebar-nav a[href^='#']").attr({'data-toggle':'collapse'}).addClass("collapsed").append("<i class='icon-submenu lnr lnr-chevron-left'></i>");
 
@@ -72,7 +71,7 @@
 				navChildDiv.addClass("in");	
 				navChildDiv.prev("a").removeClass("collapsed").addClass("collapse active");
 				$("a[href='"+pageUrl+"']").removeClass("collapsed").addClass("collapse active");
-			}
+			}//if
 
 		});//paging.ajaxSubmit
 		

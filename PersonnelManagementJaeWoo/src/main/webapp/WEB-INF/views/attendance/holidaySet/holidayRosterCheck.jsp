@@ -30,7 +30,7 @@
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/themes/scheduler_green.css?v=3110" />    
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/themes/scheduler_blue.css?v=3110" />    
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/themes/scheduler_traditional.css?v=3110" />
-<link type="text/css" rel="stylesheet" href="/spring/resources/common/themes/scheduler_transparent.css?v=3110" />    
+<link type="text/css" rel="stylesheet" href="/spring/resources/common/themes/scheduler_transparent.css?v=3110" />   
 
 <script src="/spring/resources/common/js/daypilot-all.min.js?v=3110" type="text/javascript"></script>
 <script src="/spring/resources/common/js/JMap.js"></script>
@@ -59,12 +59,61 @@
 				</c:choose>
 			</c:forEach>
 			<input type="hidden" name="events"> 
-			<div style="padding-top:110px"></div>
+			<input type="hidden" name="days">
+			
+			<h3 class="page-title">근무표 조회</h3>
+			
+			<div class="panel panel-headline">
+				<div class="panel-heading">
+					<h4 class="panel-title" style="font-size:20px; padding-left:15px;">근무표 조회 연도와 달을 선택하세요.</h4>
+				</div>
+			
+				<div class="panel-body">
+<!-- 					<div class="input-group date" id="rosterYearMonthStart"> -->
+<!-- 					<input type="text" class="form-control" id="rosterStartDate" name="rosterStartDate"/> -->
+<!-- 					<span class="input-group-addon"> -->
+<!-- 						<span class="fa fa-calendar" > -->
+<!-- 						</span> -->
+<!-- 					</span> -->
+<!-- 					</div> -->
+						<select id="rosterYear" name="rosterYear" onchange="changeList()">
+							<option value="2016">2016</option>
+							<option value="2017">2017</option>
+							<option value="2018">2018</option>
+							<option value="2019">2019</option>
+						</select>년
+						
+						<select id="rosterMonth" name="rosterMonth" class="w_40 mgb_5" onchange="changeList()">
+							<option value="01">1</option>
+							<option value="02">2</option>
+							<option value="03">3</option>
+							<option value="04">4</option>
+							<option value="05">5</option>
+							<option value="06">6</option>
+							<option value="07">7</option>
+							<option value="08">8</option>
+							<option value="09">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+						</select>월
+				</div>
+			</div>
+			
+			<div style="padding-top:40px"></div>
 			<div id="dp"></div>
 			
 			<input type="hidden" name="empName2" value="">
 			<input type="hidden" name="yearMonth2" value="">
-			<input type="button" name="saveBtn" class="btn btn-primary" value="저장하기" onClick="saveRosterBtn()">
+			
+			<form action="weekRoster" method="post" name="hiddenWeekRosterForm">
+				<input type="hidden" name="formYearMonth" value="">
+			</form>
+			
+			<input type="button" class="btn btn-primary" name="individualRoster" value="개인근무표" onClick="">
+			<input type="button" class="btn btn-primary" name="weekRoster" value="주간근무표" onClick="weekRoster()">
+			<input type="button" class="btn btn-primary" name="monthRoster" value="월간근무표" onClick="">
+			<input type="button" class="btn btn-primary" name="editButton" value="편집" onClick="">
 			
 		</div>
 	</div>
@@ -80,7 +129,9 @@
     var yearMonth;
     var empName;					//input hidden(emppName1,2)에 값을 넣어주기 위해 만들어준 변수
 	var yearMonth;					//input hidden(yearMonth1,2)에 값을 넣어주기 위해 만들어준 변수
-    
+    var year;
+	var month;
+	
 	function validate(){	
 		//일반사원은 근무표만 볼수있으면 되기때문에 디비에서 값을 가지고옴. ajax로 동기화 통신을 해서 값을 가지고오는중. 
 		//비동기로 하면 값을 못 읽어들이기 때문에 동기로 처리해줌.
@@ -95,21 +146,31 @@
     	if($('input[name=empName]').val() == undefined){
     		empName = $('input[name=empName2]').val();
      		yearMonth = $('input[name=yearMonth2]').val();
+//      		console.log(yearMonth);
+			year = yearMonth.substring(0,4);
+			month = yearMonth.substring(5,7);
+			
+			$("#rosterYear").val(year);
+     		$("#rosterMonth").val(month);
+			
+     		console.log("1 : " + year);
+     		console.log("1 : " + month);
     	}else{
     		empName = $('input[name=empName]').val();
      		yearMonth = $('input[name=yearMonth]').val();
+     		year = yearMonth.substring(0,4);
+     		month = yearMonth.substring(5,7);
+     		
+     		$("#rosterYear").val(year);
+     		$("#rosterMonth").val(month);
+     		
+     		console.log("2 : " + year);
+     		console.log("2 : " + month);
+     		//$("#rosterYear").val();
     	}
     	
-    	var year = yearMonth.substring(0,4);
-    	var month = yearMonth.substring(5,7);
-    	var day = yearMonth.substring(8,10);
-    	
-    	var tmpYearMonth = new Date(year, month-1, day);
-    	tmpYearMonth.setDate(tmpYearMonth.getDate() - 5);
-    	
-    	yearMonth = tmpYearMonth.getFullYear() + '-' + ((tmpYearMonth.getMonth()+1)<10 ? '0' + (tmpYearMonth.getMonth()+1) : (tmpYearMonth.getMonth()+1)) + '-' +
-        (tmpYearMonth.getDate()<10 ? '0'+tmpYearMonth.getDate() : tmpYearMonth.getDate());
-    	
+    	console.log("yearMonth233 : " + yearMonth);
+    	//console.log("yearMonth2 : " + yearMonth2);
  		//empName이 ex)[김재우, 박민찬, 진두환] 이런형식으로 있기때문에 이름 하나만 이용하려면은 split으로 짤라주어야함. 그거를 배열로 만든거.
  		var empNameArray = empName.split(",");
  		obj = new Object();
@@ -130,7 +191,7 @@
 		
 		options = {
             startDate: "",
-            days: 36,
+            days: "",
             scale: "Day",
             timeHeaders: [
                 { groupBy: "Month", format: "MMM yyyy" },
@@ -172,36 +233,12 @@
 // 				}
             ],
 
-            // event moving
-            onEventMoved: function (args) {
-                dp.message("Moved: " + args.e.text());
-                //$("input[name='events']").val(JSON.stringify(options.events));
-            },
-
-            // event resizing
-            onEventResized: function (args) {
-                dp.message("Resized: " + args.e.text());
-                //$("input[name='events']").val(JSON.stringify(options.events));
-            },
-
-            // event creating
-            onTimeRangeSelected: function (args) {
-                var name = prompt("New event name:", "Event");
-                dp.clearSelection();
-                if (!name) return;
-                var e = new DayPilot.Event({
-                    start: args.start,
-                    end: args.end,
-                    id: DayPilot.guid(),
-                    resource: args.resource,
-                    text: name
-                });
-                dp.events.add(e);
-                dp.message("Created");
-            },
-
-            scrollTo : ""
-
+            scrollTo : "",
+            eventMoveHandling: "Disabled",
+            eventResizeHandling: "Disabled",
+            eventDeleteHandling: "Disabled",
+            eventClickHandling: "Disabled",
+            eventHoverHandling: "Bubble"
         };
 
 		var eventsObj = new Object();
@@ -212,7 +249,6 @@
 		//eventsObj에 options.events에 들어가는 데이터들을 다 넣고
 		//eventsArray 배열에 오브젝트를 넣어줌.
 		paging.ajaxSubmit("/spring/holidayRosterEventsList.ajax", "", function(result){
-			console.log("hhh");
 			for(var i = 0 ; i < result.length ; i++){
 				eventsObj.start = result[i].start;
 				eventsObj.end = result[i].end;
@@ -223,9 +259,7 @@
 				eventsArray.push(eventsObj);
 				eventsObj = {};
 			}
-			
 			options.events = eventsArray;
-			
     	}, false);
 		
 		options.resources = jArray;
@@ -237,6 +271,57 @@
 		return options;
 	}
 	
+	function daysInMonth(month, year) {
+	    var days;
+	    switch (month) {
+	        case 1: // Feb, our problem child
+	            var leapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+	            days = leapYear ? 29 : 28;
+	            break;
+	        case 3: case 5: case 8: case 10: 
+	            days = 30;
+	            break;
+	        default: 
+	            days = 31;
+	        }
+	    console.log("year : " + year + " month : " + month + " days : " + days);
+	    
+	    return days;
+	}
+	
+	//바뀌면 update를 해줘서 표 안을 바꿔줌.
+	function changeList(){
+		yearMonthChange();
+		
+		if($("input[name='yearMonth']").val() == undefined){
+			dp.startDate = $("input[name='yearMonth2']").val();
+		}else{
+			dp.startDate = $("input[name='yearMonth']").val();
+		}
+		
+		console.log("dp.start222 : " + dp.startDate);
+// 		dp.startDate = $("input[name='yearMonth2']").val();
+		dp.days = $("input[name='days']").val();
+		
+		dp.update();
+	}
+	
+	//year, month가 바뀌면 바뀐 데이터를 hidden에 넣어주는 기능
+	function yearMonthChange(){
+		var year = $("select[name=rosterYear]").val();
+		var month = $("select[name=rosterMonth]").val();
+		var day = "1";
+		
+		var rosterDate = new Date(year, (month -1), "1");
+		
+		$("input[name='days']").val(daysInMonth(rosterDate.getMonth(), rosterDate.getFullYear()));
+		
+		var yearMonth = rosterDate.getFullYear() + '-' + ((rosterDate.getMonth()+1)<10 ? '0' + (rosterDate.getMonth()+1) : (rosterDate.getMonth()+1)) + '-' +
+        (rosterDate.getDate()<10 ? '0'+rosterDate.getDate() : rosterDate.getDate());
+		
+		$("input[name='yearMonth2']").val(yearMonth);
+	}
+	
     $(document).ready(function() {
 		option2 = validate();
 		var headerMap = new JMap();
@@ -244,48 +329,10 @@
 		var deleteData;
 		
         dp = $("#dp").daypilotScheduler(option2);
-		dp.allowEventOverlap = false;
 		
 		dp.resourceBubble = new DayPilot.Bubble();
-		
-		//마우스 오른쪽 버튼 누르면 edit, delete, select 부분 나오는 api
-		dp.contextMenu = new DayPilot.Menu({items: [
-        	{text:"Edit", onClick: function(args) { 
-        		dp.events.edit(args.source); } },
-        	{text:"Delete", onClick: function(args) { 
-        		var deleteObj = new Object();
-        		var deleteArray = new Array();
-        		
-        		//json 형식으로 만들어주기 위해 오브젝트를 만들고 오브젝트를 배열에 넣어줌.
-        		deleteObj.start = args.source.start();
-        		deleteObj.id = args.source.id();
-        		deleteObj.end = args.source.end();
-        		deleteObj.resource = args.source.resource();
-        		deleteObj.text = args.source.text();
-        		deleteArray.push(deleteObj);
-        		deleteObj = {};
-        		
-        		console.log("delete : " + JSON.stringify(deleteArray));
-        		
-        		//map 형식으로 만들어줌.
-            	var dataObj = {"holidayRosterDelete" : JSON.stringify(deleteArray)};
-        		
-        		paging.ajaxSubmit("/spring/holidayRosterDelete.ajax", dataObj, function(result){
-            		
-            	});
-        		
-        		dp.events.remove(args.source); } },
-        	{text:"-"},
-        	{text:"Select", onClick: function(args) { 
-        		dp.multiselect.add(args.source); } },
-		]}
-		);
 
-	    dp.eventMovingStartEndEnabled = true;
-	    dp.eventResizingStartEndEnabled = true;
-	    dp.timeRangeSelectingStartEndEnabled = true;
-		
-	    //내장 api 마우스를 갖다대면 조그맣게 나오는 화면 
+		//내장 api 마우스를 갖다대면 조그맣게 나오는 화면 
 	    dp.bubble = new DayPilot.Bubble({
 	        onLoad: function(args) {
 	            var startBubble = args.source.start();			//events안에서 start(ex : "2018-02-11T00:00:00")
@@ -437,24 +484,7 @@
 	 				}
 	 				tmpDate.setDate(tmpDate.getDate() + 1);
 	 			}
-	        	
-	        	
-// 	        	for(var j = startDate.getDate() ; j < endDate.getDate() ; j++){
-// 	        		if(j == headerStartDate.getDate()){
-// 	        			if(headerOneInsert){
-//  	            			resultString += headerStartDate.getFullYear() + "-" + headerStartDate.getMonth() + "-" + headerStartDate.getDate() + "\n";
-//  	            			headerOneInsert = false;
-//  	            		}
-	        			
-// 	        			if(headerMap.containsKey(array[i].text)){
-// 	        				headerMap.put(array[i].text, headerMap.get(array[i].text) + 1);
-// 	            		}else{
-// 	            			headerMap.put(array[i].text, 1);
-// 	            		}
-// 	        		}
-// 	        	}
 	        }
-	        
 	        
 	      	//map에 key값만 가져옴.
 	      	var keyArray = headerMap.keys();
@@ -474,25 +504,17 @@
 		console.log("ss : " + JSON.stringify(option2.events));
 		
     });
-	
-    function saveRosterBtn(){
-    	$("input[name='events']").val(JSON.stringify(options.events));
-    	//$("form[name='hiddenForm']").submit();
+    
+    function weekRoster(){
+    	var data;
     	
-    	//var dataObj = {"eventsArray":JSON.stringify($("input[name='events']").val())};
-    	var data = JSON.stringify($("input[name='events']").val());
+    	if($('input[name=yearMonth]').val() == undefined){
+    		$('input[name=formYearMonth]').val($('input[name=yearMonth2]').val());
+    	}else{
+    		$('input[name=formYearMonth]').val($('input[name=yearMonth]').val());
+    	}
     	
-    	//특정문자 '\'를 제거해주는 작업
-		data = data.replace(/\\/g,'');
-    	
-    	//map 형식으로 만들어줌.
-    	var dataObj = {"eventsArray":data};
-    	
-		paging.ajaxSubmit("/spring/holidayRosterDBInsert.ajax",dataObj,function(result){
-			console.log(result);
-		});
-		
-		alert("저장되었습니다.");
+    	$("form[name='hiddenWeekRosterForm']").submit();
     }
     
 	$(document).ready(function() { 
@@ -501,7 +523,11 @@
 // 		if (filename === "") filename = "index.html"; 
 // 			$(".menu a[href='" + filename + "']").addClass("selected");  
 
-		//근무표안에 들어가는 cell 높이 넓이 지정해주는 부분.
+// 		yearMonthChange(); 
+		changeList();
+		
+		//근무표안에 들어가는 cell 높이 넓이 지정해주는 부분. 
+		
 		dp.eventHeight = 50;
 		dp.cellWidth = 50;	
 		

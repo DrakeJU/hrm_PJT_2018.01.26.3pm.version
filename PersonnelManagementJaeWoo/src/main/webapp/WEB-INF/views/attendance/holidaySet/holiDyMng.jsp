@@ -15,7 +15,6 @@
 <script src="/spring/resources/common/fullcalendar/js/gcal.js"></script><!-- 구글캘린더 -->
 </head>
 <body>
-
 	<!-- MAIN -->
 	<div class="main">
 		<!-- MAIN CONTENT -->
@@ -28,12 +27,13 @@
 						<div class="panel panel-headline">
 							<div>
 								<!-- Nav tabs -->
-								<ul class="nav nav-tabs" role="tablist" id='fullcalrendar_vacMng'>
+								<ul class="nav nav-tabs" role="tablist"
+									id='fullcalrendar_vacMng'>
 									<li role="presentation" class="active">
-										<a href="#firstTab" aria-controls="home" role="tab" data-toggle="tab">firstTab</a>
+										<a href="#firstTab" aria-controls="home" role="tab" data-toggle="tab">달력</a>
 									</li>
 									<li role="presentation">
-										<a href="#secondTab" aria-controls="profile" role="tab" data-toggle="tab">secondTab</a>
+										<a href="#secondTab" aria-controls="profile" role="tab" data-toggle="tab">표</a>
 									</li>
 								</ul>
 
@@ -42,15 +42,15 @@
 									<!-- 첫번째 탭 시작(달력) -->
 									<div role="tabpanel" class="tab-pane active" id="firstTab">
 										<div class="row">
-											<div class="col-sm-10">
+											<div class="col-md-10">
 												<div class="panel">
 													<div id="calendar"></div>
 												</div>
 											</div>
 										</div>
 										<!-- Date Insert Modal -->
-										<div id="insertModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-											<div class="modal-dialog modal-sm">
+										<div id="insertModal" class="modal fade">
+											<div class="modal-dialog modal-md">
 												<div class="modal-content">
 													<div class="modal-header">
 														<h4 class="modal-title">휴일 등록하기</h4>
@@ -58,41 +58,68 @@
 													<div class="modal-body">
 														<div class="row">
 															<div class="col-md-10" style="padding-top: 10px;">
-																<form id="insertForm" method="post">
-																	<p>날짜
-																	<div class="input-group date" id="crtDate">
-																		<input type="text" class="form-control" id="vastCrtDate" value="date.format()" /> 
-																		<span class="input-group-addon"> 
-																		<span class="glyphicon glyphicon-calendar"> </span> <!-- 달력 아이콘 --> </span>
+																<form id="insertForm" method="post" class="form-inline">
+																	<table class="table border-top separate">
+																	<tr >
+																		<td style="text-align: right" width="30%">날&emsp;&emsp;짜 :</td>
+																		<td><div class="input-group date" id="crtDate">
+																			<input type="text" class="form-control" id="startDate" name="startDate" value="" size="15">
+																			<span class="input-group-addon">
+																				<span class="glyphicon glyphicon-calendar"> </span> <!-- 달력 아이콘 -->
+																			</span>
+																		</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right" width="10%">일자 구분 :</td>
+																		<td>
+																		<select class="form-control">
+																			<option value="regualWork">정상근무</option>
+																			<option value="unpaidDayoff">무급휴무일</option>
+																			<option value="unpaidHoli">무급휴무</option>
+																			<option value="paidHoli">유급휴일</option>
+																		</select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right"width="10%">휴일 구분 :</td>
+																		<td>
+																		<select class="form-control">
+																			<option value="regualWork">선택</option>
+																			<option value="regualWork">정기 공휴일</option>
+																			<option value="unpaidDayoff">임시 공휴일</option>
+																		</select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right" width="10%">휴일 내용 :</td>
+																		<td>
+																			<input type="text" class="form-control w_100" value="">
+																		</td>
+																	</tr>
+																	</table>
+
+																	<p>
+																	<div class="ins-box mt10" >
+																		<ul >
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> 무급휴무일 : 근로의 의무, 출근할 의무가 없고 임금도 지급되지 않는 휴일</li>
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> (취업규칙,단체협약등이 없다면 토요일은 무급휴무일)</li>
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> 무급휴일 : 근로의 의무가 있으나 취업규칙,단체협약 등을 통하여 무급으로 하고 쉬는 휴일</li>
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> 유급휴일 : 근로기준법 등에 의거 근로가 면제되는 날로 유급으로 하고 쉬는 휴일</li>
+																		</ul>
 																	</div>
-
-																	일자구분 : <select>
-																		<option value="regualWork">정상근무</option>
-																		<option value="unpaidDayoff">무급휴무일</option>
-																		<option value="unpaidHoli">무급휴무</option>
-																		<option value="paidHoli">유급휴일</option>
-																	</select> <br> 
-																	휴일구분 : <select>
-																		<option value="regualWork">선택</option>
-																		<option value="regualWork">정기 공휴일</option>
-																		<option value="unpaidDayoff">임시 공휴일</option>
-																	</select>
-
-																	<p>
-																	<p>
-																		<!-- 관리자 권한: 달력 -->
 																</form>
-																<div class="modal-footer">
-																	<button type="button" id="insertBtn" class="btn btn-default" data-dismiss="modal">저장</button>
-																	<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-																</div>
+
 															</div>
 														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" id="insertBtn" class="btn btn-default" data-dismiss="modal">저장</button>
+														<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 													</div>
 												</div>
 											</div>
 										</div>
-
 										<!-- Data View Modal -->
 										<div id="viewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 											<div class="modal-dialog modal-md">
@@ -102,38 +129,74 @@
 													</div>
 													<div class="modal-body">
 														<div class="row">
-															<div class="col-md-10" style="padding-top: 20px;">
-																제목 <input type="text" name="title"> 내용
-																<textarea rows="7" cols="70" name="content" style="resize: none"></textarea>
-																날짜
+															<div class="col-md-10" style="padding-top: 10px;">
+																<form id="viewForm" method="post" class="form-inline">
+																	<table class="table border-top separate">
+																	<tr >
+																		<td style="text-align: right" width="30%">날&emsp;&emsp;짜 :</td>
+																		<td><div class="input-group date" id="crtDate">
+																			<input type="text" class="form-control" id="startDate" name="startDate" value="" size="15">
+																			<input type='hidden' id='aaa'>
+																			<span class="input-group-addon">
+																				<span class="glyphicon glyphicon-calendar"> </span> <!-- 달력 아이콘 -->
+																			</span>
+																		</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: right"width="30%">일자 구분 :</td>
+																		<td>
+																		<select name="holiselectbox"class="form-control">
+																			<option value="regualWork">정상근무</option>
+																			<option value="unpaidDayoff">무급휴무일</option>
+																			<option value="unpaidHoli">무급휴무</option>
+																			<option value="paidHoli">유급휴일</option>
+																		</select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: right"width="30%">휴일 구분 :</td>
+																		<td>
+																		<select class="form-control">
+																			<option value="regualWork">선택</option>
+																			<option value="regualWork">정기 공휴일</option>
+																			<option value="unpaidDayoff">임시 공휴일</option>
+																		</select>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td style="text-align: right"width="30%">휴일 내용 :</td>
+																		<td>
+																			<input type="text" id="holiMemo" class="form-control w_100" value="">
+																		</td>
+																	</tr>
+																	</table>
 
-																<!-- 관리자 권한: 달력 -->
-																<div class="input-group date" id="crtDate">
-																	<input type="text" class="form-control" id="vastCrtDate" /> 
-																		<span class="input-group-addon">
-																		<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
-																	</span>
-																</div>
-																<p>시간
-																<p>
-																	<input type="text">
-																<div class="modal-footer">
-																	<button type="button" class="btn btn-default"
-																		data-dismiss="modal">수정</button>
-																	<button type="button" class="btn btn-default"
-																		data-dismiss="modal">삭제</button>
-																	<button type="button" class="btn btn-default"
-																		data-dismiss="modal">닫기</button>
-																</div>
+																	<p>
+																	<div class="ins-box mt10" >
+																		<ul >
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> 무급휴무일 : 근로의 의무, 출근할 의무가 없고 임금도 지급되지 않는 휴일</li>
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> (취업규칙,단체협약등이 없다면 토요일은 무급휴무일)</li>
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> 무급휴일 : 근로의 의무가 있으나 취업규칙,단체협약 등을 통하여 무급으로 하고 쉬는 휴일</li>
+																			<li style="font-size:10px"><i class="fa fa-exclamation-circle"></i> 유급휴일 : 근로기준법 등에 의거 근로가 면제되는 날로 유급으로 하고 쉬는 휴일</li>
+																		</ul>
+																	</div>
+																</form>
+
 															</div>
 														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" id="updateBtn" class="btn btn-default" data-dismiss="modal">수정</button>
+														<button type="button" id="deleteBtn" class="btn btn-default" data-dismiss="modal">삭제</button>
+														<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 									<!-- 두번째 탭 시작 -->
-									<div role="tabpanel" class="tab-pane" id="secondTab">..22222dfdkfjdafjkdas.</div>
+									<div role="tabpanel" class="tab-pane" id="secondTab">get ready for second tap.<br> <h1>Dead Line is Feb 27th.</h1></div>
 								</div>
 							</div>
 						</div>
@@ -142,120 +205,5 @@
 			</div>
 		</div>
 	</div>
-	<!-- script -->
-	<script>
-	function mouseMove() {
-		$("table tr td.fc-day,table tr td.fc-day-top").on('mouseover', function () {
-			color = $(this).css('background-color');
-			$(this).css({'background-color': '#bbe1fd', 'opacity': '0.3'});
-		});
-		$("table tr td.fc-day,table tr td.fc-day-top").on('mouseout', function () {
-			$(this).css({'background-color': color, 'opacity': '1'});
-		}); //마우스 이벤트
-	}
-	$(function () {
-		$('#crtDate').datetimepicker({ //휴가 등록일 달력
-			viewMode: 'days',
-			format: 'YYYY-MM-DD'
-		});
-	});
-	
-	$('#calendar').fullCalendar({
-		header: {
-			left: '',
-			center: 'title',
-			right: 'today prev,next'
-		},
-		lang: "ko",
-		defaultDate: new Date(),
-		editable: true,
-		googleCalendarApiKey: "AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE",
-		eventSources: [
-			{
-				//공휴일
-				googleCalendarId : "ko.south_korea#holiday@group.v.calendar.google.com"
-                    , className : "koHolidays"
-                    , color : "#FF0000"
-                    , textColor : "#FFFFFF"
-			}
-		],
-
-		eventClick: function (calEvent, jsEvent, view) {
-			/* alert('Event: ' + calEvent.title);
-			 alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-			 alert('View: ' + view.name); */
-			if (calEvent.url != null) {
-				return false;
-			}
-			alert(calEvent.title);
-			$(this).attr("data-toggle", "modal");
-			$(this).attr("data-target", "#viewModal");
-
-		}, //일정상세보기
-		eventMouseover: function (event, jsEvent, view) {
-			//alert("mouseover");
-		}, //일정삭제
-		dayClick: function (date, jsEvent, view) {
-
-			/* alert('Clicked on: ' + date.format());
-
-			alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-			alert('Current view: ' + view.name); */
-
-			$("table tr td.fc-day,table tr td.fc-day-top").attr("data-toggle", "modal");
-			$("table tr td.fc-day,table tr td.fc-day-top").attr("data-target", "#insertModal");
-
-		} //일정등록
-	});
-
-	mouseMove(); //마우스이벤트
-
-	//왼쪽버튼 클릭시
-	$("button.fc-prev-button").click(function () {
-		mouseMove();
-	});
-
-	//왼쪽버튼 클릭시
-	$("button.fc-next-button").click(function () {
-		mouseMove();
-	});
-
-	//today버튼 클릭시
-	$("button.fc-today-button").click(function () {
-		mouseMove();
-	});
-
-	//일정등록 저장버튼클릭시
-	$("#insertBtn").click(function () {
-		//alert("저장");
-		if (confirm("저장하시겠습니까?") == true) {
-			$("#insertForm").attr("action", "/spring/scheduleInsert.do").submit();
-		} else {
-			return false;
-		}
-	});
-	//nav tab
-	$('#fullcalrendar_vacMng a').click(function (e) {
-		e.preventDefault()
-		$(this).tab('show')
-	});
-
-	//day 클릭
-	$('#cale	ndar').fullCalendar({
-	    dayClick: function(date, jsEvent, view) {
-
-	        alert('Clicked on: ' + date.format());
-
-	        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-
-	        alert('Current view: ' + view.name);
-
-	        // change the day's background color just for fun
-	        $(this).css('background-color', 'red');
-
-	    }
-	});
-</script>
 </body>
 </html>

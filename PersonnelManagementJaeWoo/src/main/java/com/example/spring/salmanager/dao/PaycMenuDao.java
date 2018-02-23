@@ -39,23 +39,39 @@ public class PaycMenuDao {
     	
     	deduction=(List<HashMap<String,Object>>) map.get("list");
     	
-    	
+    
     	System.out.println("getMap : "+deduction);
     	//map.put("list", getEmpemnoSal);
     	//map.put("yymm",map.get("yymm"));
     	//System.out.println("getempemno : "+m1);
     	//HashMap<String, Object> m1 = new HashMap<String, Object>();
     	
+    	int totaldamt = 0;
+    	int totalaamt = 0;
+    	int totalfamt = 0;
     	//System.out.println("PaycMenuDao : "+map);
     	for(int i=0; i<deduction.size(); i++) {
     		//String emym = map.get("yymm")+getEmpemnoSal.get(i).get("EMP_EMNO").toString(); // ex)201811 + emp_emno
     		int damt = 0;
+    		int aamt = 0;    		
+    		int famt = 0;
     		damt = 
     				Integer.parseInt((String) deduction.get(i).get("npen"))
     			   +Integer.parseInt((String) deduction.get(i).get("hfee"))
     			   +Integer.parseInt((String) deduction.get(i).get("efee"))
     			   +Integer.parseInt((String) deduction.get(i).get("itax"))
     			   +Integer.parseInt((String) deduction.get(i).get("ltax"));
+    		
+    		
+    		aamt = Integer.parseInt((String) deduction.get(i).get("SEMP_SAL"))
+     			   +Integer.parseInt((String) deduction.get(i).get("SEMP_TAMT"))
+     			   +Integer.parseInt((String) deduction.get(i).get("SEMP_FDEX"))
+     			   +Integer.parseInt((String) deduction.get(i).get("SEMP_NW_CST"))
+     			   +Integer.parseInt((String) deduction.get(i).get("SEMP_BW_CST"))
+    		 	   +Integer.parseInt((String) deduction.get(i).get("SEMP_CMC"));
+    		
+    		famt = damt + aamt;
+    		totalaamt +=aamt;
     		//map.put("emym",emym);
     		//map.put("emp_emno",getEmpemnoSal.get(i).get("EMP_EMNO").toString());
     		
@@ -84,6 +100,8 @@ public class PaycMenuDao {
     		m1.put("itax",deduction.get(i).get("itax"));
     		m1.put("ltax",deduction.get(i).get("ltax"));
     		m1.put("damt", String.valueOf(damt));
+    		m1.put("aamt", String.valueOf(aamt));
+    		m1.put("famt",String.valueOf(famt));
     		//m1.put("getMap", deduction.get(i));
     		
     		if(searchEmym.size() == 0) { //insert
@@ -101,6 +119,12 @@ public class PaycMenuDao {
     		
     		m1.clear();
     	}
+    	
+    	
+    	map.put("yymm",map.get("yymm"));
+    	map.put("totalaamt",totalaamt);
+    	//System.out.println("map.get"+m1);
+    	this.sqlSession.update(nameSpaceName+"payc_main_aamt",map);
     	
     	return map;
         //this.sqlSession.insert(nameSpaceName+"makePaycInsert", map);

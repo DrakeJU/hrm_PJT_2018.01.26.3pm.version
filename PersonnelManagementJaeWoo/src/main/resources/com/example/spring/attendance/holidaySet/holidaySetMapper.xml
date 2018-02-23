@@ -8,10 +8,10 @@
 		VALUES(#{code}, #{title}, #{AnnualLeaveReflection}, #{note})
 		WHERE NOT EXISTS ( SELECT * FROM VACATION WHERE VAST_C = #{code})
 	</insert>
-	
+
 	<!-- 연차에 따른 휴가일수 디비 저장 -->
 	<insert id=  "conWorkVacSetDBInsert" parameterType="jsonDataVac" >
-		INSERT INTO 
+		INSERT INTO
 			continous_work_year 		#근속연수 공통코드 테이블
 			(COWY_CONTINOUS_TYPE 		#근속항목(연수)
 			,COWY_VAC_DAYS				#휴가일수
@@ -21,9 +21,13 @@
 			,#{vacofyear}
 			,'N'						#삭제여부
 			,#{note});
-			
+
 	</insert>
-	
+
+	<delete id="holidayRosterDelete" parameterType="deleteEventsData">
+		delete from workroster where ID = #{id};
+	</delete>
+
 	<insert id="holidayRoster" parameterType="HashMap">
 		INSERT INTO
 			holidayRosterSetting
@@ -34,23 +38,23 @@
 			 #{yearMonth}
 			);
 	</insert>
-	
+
 	<select id="holidayRosterList" resultType="HashMap">
 		SELECT * FROM holidayrostersetting
 		order by holidayRosterSettingSerialNumber desc
 		limit 1;
 	</select>
-	
+
 	<select id="holidayRosterEventsList" resultType="HashMap">
 		SELECT start, end, text, resource, id FROM workroster
 	</select>
-	
+
 	<insert id = "holidayRosterDBInsert" parameterType="eventsData" >
 		INSERT INTO WORKROSTER(ID, START, END, RESOURCE, TEXT)
 		VALUES(#{id}, #{start}, #{end}, #{resource}, #{text})
 		ON DUPLICATE KEY UPDATE START = #{start}, END = #{end}, RESOURCE = #{resource}, TEXT = #{text}
 	</insert>
-	
+
 	<!-- 연차에 따른 휴가일수 리스트 불러오기 -->
 	<select id="conWorkVacSetupList" resultType="HashMap">
 		SELECT
@@ -59,5 +63,27 @@
 			,COWY_NOTE as cn 		#비고
 		FROM continous_work_year
 	</select>
-	 
+
+
+	<select id="calendarList" resultType="HashMap">
+	SELECT
+		DATE_FORMAT(id,"%Y-%m-%d") AS start,
+		memo AS title,
+		'#f4f4f4' as color,
+		"#aa1a1a" as textColor
+	FROM
+		calendar
+	WHERE
+		memo != ""
+	</select>
+	
+	
+	<select id="calendarListDB" parameterType="String" resultType="HashMap">
+		SELECT 
+		   memo
+		   ,DATE_FORMAT(db_date,"%Y-%m-%d") as dbDate
+		   ,event
+		FROM calendar
+		WHERE db_date = #{start}
+	</select>
 </mapper>

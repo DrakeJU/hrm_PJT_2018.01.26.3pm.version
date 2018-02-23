@@ -97,6 +97,15 @@
   font-size: 50%;
 }
 
+
+/* 삭제 버튼 아이콘 */
+.fa fa-close:after{
+  color: #3a3a3a;
+  font-size: 100%;	
+  cursor: pointer;
+	
+}
+
 /* 테이블 헤더 컬러 (오름차순 기능 있는 것)*/
 .tableColor{
 	color: #2D559F; 

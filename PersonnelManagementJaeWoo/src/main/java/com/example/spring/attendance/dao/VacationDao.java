@@ -26,6 +26,71 @@ public class VacationDao {
 	private SqlSession sqlSession;
 	private String nameSpaceName = "vacation.";
 	
+	/* 대시보드 - 사원정보 */
+	public List<HashMap<String,Object>> empVacInfo(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list
+			= this.sqlSession.selectList(nameSpaceName + "empVacInfo", map);
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
+	
+	/* 대시보드 - 월별 휴가사용개수 그래프 */
+	public List<HashMap<String,Object>> monthlyVacChart(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		float userData = 0;
+		float allData = 0;
+		
+		for(int i=1; i<=12; i++) {
+			
+			HashMap<String,Object> chartDataMap = new HashMap<String,Object>();
+			
+			if(i==1) {
+				map.put("baseMonth",map.get("baseMonth").toString().substring(0,4)+"0"+i);
+			}
+			
+			userData = this.sqlSession.selectOne(nameSpaceName + "monthlyVacUserChart", map);				
+			allData = this.sqlSession.selectOne(nameSpaceName + "monthlyVacAllChart", map);
+			
+//			logger.info("baseMonth가 +1 되어야함:::"+(Integer.parseInt(map.get("baseMonth").toString())+1));
+
+			chartDataMap.put("date", map.get("baseMonth")); //년월
+			chartDataMap.put("userData", userData); //사원 월별 유급휴가 사용개수
+			chartDataMap.put("allData", allData); //사원 월별 유급휴가 사용개수
+			list.add(chartDataMap); //사원별로 연차개수 리스트에 담기
+			map.put("baseMonth", String.valueOf((Integer.parseInt(map.get("baseMonth").toString())+1)));
+//			logger.info("baseMonth!!!!!!!!!!!!!!!"+map.get("baseMonth"));
+		}
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
+	
+	/* 오늘의 휴가자 */
+	public List<HashMap<String,Object>> vacTodayEmpList() {
+		
+		List<HashMap<String,Object>> list
+			= this.sqlSession.selectList(nameSpaceName + "vacTodayEmpList");
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
+	
+	/* 대시보드 - 내가 이번달에 사용한 항목별 휴가 */
+	public List<HashMap<String,Object>> thisMonthVacChart(HashMap<String,Object> map) {
+		
+		List<HashMap<String,Object>> list
+			= this.sqlSession.selectList(nameSpaceName + "thisMonthVacChart",map);
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
 	
 	/*  휴가일수설정  사원 리스트 출력   */
 	public List<HashMap<String,Object>> vacationCountEmpList(HashMap<String,Object> map) {
@@ -172,8 +237,8 @@ public class VacationDao {
 		String[] words = s1.split("/");
 		
 		for(String empEmno : words) {
-			logger.info("empEmno: " + empEmno);
-			map.put("empEmno", empEmno);
+			logger.info("empEmno: " + empEmno.substring(0, empEmno.indexOf("^")));
+			map.put("empEmno", empEmno.substring(0, empEmno.indexOf("^")));
 			map.put("vacCnt", empEmno.substring(empEmno.indexOf("^")+1));
 //			logger.info("test"+map.get("vacCnt"));
 			
@@ -227,9 +292,15 @@ public class VacationDao {
 		return list;
 	}
 	
+	
+	/* 휴가 신청하기 - 휴가명 셀렉 */
+	public List<HashMap<String,Object>> vacationTypeList(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "vacationTypeList", map);
+		return list;
+	}
+	
 	/* 휴가 신청하기 */
 	public int vacationRequest(HashMap<String,String> map) {
-		
 		logger.info("vacationREQ DAO 진입>>>>" + map);
 		
 		int list = this.sqlSession.insert(nameSpaceName + "vacationRequest", map); 
@@ -250,7 +321,28 @@ public class VacationDao {
 		return list;
 	}
 		
+	/* 휴가조회(사원)- 휴가내역 상세보기 모달  */
+	public List<HashMap<String,Object>> empVacListDetail(HashMap<String,Object> map) {
+//		logger.debug("dao >>> "+map);
+		
+		List<HashMap<String,Object>> list
+			= this.sqlSession.selectList(nameSpaceName + "empVacListDetail", map);
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
 	
+	/* 휴가조회(사원)- 휴가내역 삭제  */
+	public int vacationListDelete(HashMap<String,Object> map) {
+//		logger.debug("dao >>> "+map);
+		
+		int list = this.sqlSession.update(nameSpaceName + "vacationListDelete", map);
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
 	
 	/* 휴가 조회하기 - 관리자 */
 	public List<HashMap<String,Object>> vacationListAdmin(HashMap<String,Object> map) {
@@ -341,16 +433,37 @@ public class VacationDao {
 		
 		//휴가 승인완료된 사람들의 일련번호들
 		for(String vastSerialNumber : obj) {
-			logger.info("vastSerialNumber ::" + vastSerialNumber);
-			this.sqlSession.update(nameSpaceName + "vacationProgToggle", vastSerialNumber);
+			logger.info("vastSerialNumber ::" + vastSerialNumber.substring(0,vastSerialNumber.indexOf("^")));
+			map.put("vastSerialNumber", vastSerialNumber.substring(0,vastSerialNumber.indexOf("^")));
+			map.put("vastProgressSituation", vastSerialNumber.substring(vastSerialNumber.indexOf("^")+1));
+			logger.info("test:::"+map.get("vastProgressSituation"));
+			this.sqlSession.update(nameSpaceName + "vacationProgToggle", map);
 			list++;
 		}
-				
+		
 			logger.info("승인대기 DAO list::" + list);
 		return list;
 	}
 
+	/* 휴가 승인대기 삭제 */
+	public int vacationDelete(HashMap<String,Object> map) {
+		logger.info("휴가 삭제 DAO------------"+map);
+		int list = 0;
+		
+		String del = (String) map.get("progToggleResult");
+		if(list == 0) {
+			list = this.sqlSession.update(nameSpaceName + "vacationDelete", map);
+		}
+		
+		logger.info("휴가승인대기 삭제 DAO LIST==="+list);
+		return list;
+	}
 	
+	
+
+	
+	
+
 	/* 휴가 개수 계산하기 */
 	public String vacationCount() {
 		return "";

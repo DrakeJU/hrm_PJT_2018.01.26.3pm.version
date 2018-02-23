@@ -67,12 +67,15 @@
 
 </style>
 
-
-
-
-
-
 <script type="text/javascript">
+	
+	function paycExcelExport(){
+	    $("[id=lookpayc]").excelexportjs({
+	       containerid: 'lookpayc',
+	       datatype: 'table'
+	    });
+	 }
+		
 	
 	function newPayc() { //----------------------급여대장폼
 		var arr = new Array();
@@ -191,39 +194,107 @@
 				console.log("결과데이터 : "+JSON.stringify(data));
 				selectrcount = data.list.length;
 				
+				var color;
+				
 				for(var i=0; i<data.list.length; i++) {
 					
-					 $("[id=select_list]").append("<tr><td id=sempname"+i+">"+ data.list[i].EMP_NAME +"</td>"
+					if(i%2==0){
+						
+						color = "<tr class='active'>";
+					}else{
+						color = "<tr>";
+					}
+					 $("[id=select_list]").append(color
+					 								  +"<td id=sempname"+i+">"+ data.list[i].EMP_NAME +"</td>"
 					 								  +"<td class=align-right id=ssal"+i+">"+ data.list[i].SCAL_SAL +"</td>"
 					 								  +"<td class=align-right id=sfdex"+i+">"+ data.list[i].SCAL_FDEX +"</td>"
 					 								  +"<td>"+data.list[i].SCAL_CMC+"</td>"
 					 								  +"<td></td>"
-					 								  +"<td class=align-right>"+data.list[i].SCAL_NW_CST+"</td>"
+					 								  +"<td class=align-right></td>"
 					 								  +"<td>"+data.list[i].SCAL_ITAX+"</td>"
 					 								  +"<td>"+data.list[i].SCAL_LTAX+"</td>"
 					 								  +"<td>"+ data.list[i].SCAL_NPEN +"</td>"
 					 								  +"<td>"+ data.list[i].SCAL_HFEE +"</td>"
 					 								  +"<td></td>"
 					 								
-					 								  +"</tr>");
+					 							+"</tr>");
 			
-					 $("[id=select_list]").append("<tr><td id=sempcode"+i+">"+data.list[i].EMP_EMNO+"</td>"
+					 $("[id=select_list]").append(color
+							 						+"<td id=sempcode"+i+">"+data.list[i].EMP_EMNO+"</td>"
 													+"<td>"+data.list[i].SCAL_BW_CST+"</td>"
-													+"<td></td>"
+													+"<td>"+data.list[i].SCAL_NW_CST+"</td>"
 													+"<td>"+data.list[i].SCAL_L_CST+"</td>"
-													+"<td></td>"
+													+"<td>"+data.list[i].SCAL_TAMT+"</td>"
 													+"<td></td>"
 													+"<td>"+ data.list[i].SCAL_EFEE +"</td>"
 													+"<td></td>"
 													+"<td></td>"
-													+"<td>"+data.list[i].SCAL_DAMT+"</td>"
+													+"<td></td>"
 													+"<td></td>"
 
-													+"</tr>");
+												+"</tr>");
+					 
+					 $("[id=select_list]").append(color
+							 						+"<td id=sempcode"+i+"></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td> <strong>"+data.list[i].SCAL_AAMT+"</strong></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td> <strong>"+data.list[i].SCAL_DAMT+"</strong></td>"
+													+"<td> <strong>"+data.list[i].SCAL_FAMT+"</strong></td>"
+
+												+"</tr>");
 					//console.log(data.list[i].SCAL_EMYM);
 					
 					
 				}
+				/*  $("[id=total]").append("<tr>"
+						 					+"<td rowspan='3'>합계</td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+				 						+"</tr>"
+				 						
+				 						+"<tr>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					
+			 							+"</tr>"
+			 						
+			 							+"<tr>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					+"<td></td>"
+						 					
+		 						  +"</tr>"
+				 ); */
+				
 			},
 				
 			error:function(jqXHR, textStatus, errorThrown){
@@ -250,7 +321,7 @@
 				success : function(data) {
 					console.log("결과데이터 : "+JSON.stringify(data));
 					
-				
+					$("[id=totalaamt"+data.yymm+"]").text(numberWithCommas(data.totalaamt));
 				},
 					
 				error:function(jqXHR, textStatus, errorThrown){
@@ -276,12 +347,18 @@
 			$("#sfdex"+i).remove;
 		} */
 		$("[id=select_list]").children().remove();
+		$("[id=total]").children().remove();
 	/* 	$("td[id*=sempname]").remove();
 		$("td[id*=ssal]").remove();
 		$("td[id*=sfdex]").remove();
 	    $("td[id*=sempcode]").remove(); */
 		
 	}
+	
+	function numberWithCommas(x) {
+	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+
 //----------------------------------------------------------------------------------	
 </script>
 
@@ -318,7 +395,7 @@
 									<c:forEach var="regi" items="${list}" varStatus="status">
 										<tr>
 											<td rowspan="2">${regi.SREG_YYMM}</td> 
-											 <form id="cal" name="yymm">
+											<form id="cal" name="yymm">
 												<input type="hidden" name="yymm${status.index}" value="${regi.SREG_YYMM}">
 											</form> 
 											<td rowspan="2">${regi.SREG_NAME}</td>
@@ -345,18 +422,18 @@
 												<div class="modal-dialog modal-fullsize" role="document">
 													  <div class="modal-content modal-fullsize">
 														<div class="modal-content">
-														
+
 															<div class="modal-body" data-spy="scroll" style="position: relative;">
 																<h1 id="paycyymm"></h1>
-																<table class="table table-bordered tbmiddle">
+																<table id="lookpayc" class="table table-bordered tbmiddle" >
 																	 		
-															 			<tr>
+															 			<tr class="info">
 																			<td>성명</td>
 																			<td>급여</td>
 																			<td>식대</td>
 																			<td>차량유지비</td>
 																			<td>직책수당</td>
-																			<td>야간근로수당</td>
+																			<td>휴가</td>
 																			<td>소득세</td>
 																			<td>주민세</td>
 																			<td>국민연금</td>
@@ -364,40 +441,42 @@
 																			<td>장기요양</td>
 																		</tr>
 																	
-																		<tr>
+																		<tr class="info">
 																			<td>사번</td>
 																			<td>휴일근무수당</td>
-																			<td>휴가</td>
-																			<td>지각</td>
-																			<td>조퇴</td>
-																			<td>상여금</td>
+																			<td>야간근로수당</td>
+																			<td>지각,조퇴</td>
+																			<td>교통비</td>
+																		    <td>상여금</td>
 																			<td>고용보험</td>
 																			<td>기타공제</td>
 																			<td>정산환급금</td>
-																			<td>공제총액</td>
-																			<td>실지급액</td>
+																			<td></td>
+																			<td></td>
 																			
 																		</tr>
 																	
-																		<tr>
+																		<tr class="info">
 																			<td>직급</td>
 																			<td></td>
 																			<td></td>
 																			<td></td>
 																			<td></td>
+																			<td><strong>지급총액</strong></td>
 																			<td></td>
 																			<td></td>
 																			<td></td>
-																			<td></td>
-																			<td></td>
-																			<td></td>
+																			<td><strong>공제총액</strong></td>
+																			<td><strong>실지급액</strong></td>
 																		</tr>
 																		
 																		<tbody id="select_list">
 																		
 																		</tbody>
 																		
-																	
+																		<tbody id="total">
+																		
+																		</tbody>
 																</table>
 																
 															</div>
@@ -406,7 +485,9 @@
 																
 																<button type="button" class="btn btn-default pull-left"
 																	data-dismiss="modal" onclick="removeSelect();">닫기</button>
-														
+																
+																<button type="button" id ="exceldown" class="btn btn-info pull-left"
+														  			 onclick="paycExcelExport();">엑셀 다운</button>
 																
 															</div>	
 														</div>
@@ -416,7 +497,7 @@
 											<br>명세서<br>확정<br>삭제
 											</td>
 
-											<td rowspan="2" align="right">0</td>
+											<td id="totalaamt${regi.SREG_YYMM}" rowspan="2" align="right">${regi.SREG_AAMT}</td>
 
 										</tr>
 

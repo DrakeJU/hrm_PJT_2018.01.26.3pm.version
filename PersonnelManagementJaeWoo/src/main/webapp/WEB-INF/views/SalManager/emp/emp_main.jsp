@@ -144,9 +144,9 @@ var checkcount = 0;
 			
 			alert("아무것도 체크하지 않았습니다.!");
 		}
-		checkcount = 
+		checkcount = 0;
 		 
-   }
+	}
    
 	
    function exi_emp_code(){ //기존계산 체크폼

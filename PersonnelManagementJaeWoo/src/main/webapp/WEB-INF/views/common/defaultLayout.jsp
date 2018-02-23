@@ -71,6 +71,8 @@
 	<script src="/spring/resources/common/js/bootstrap-datetimepicker.js"></script>
 	<script src="/spring/resources/common/js/jquery.tablesorter.js"></script> <!-- 테이블 정렬 -->
 	<script src="/spring/resources/common/js/commMenu.js"></script>
+	<script src="/spring/resources/common/js/jquery.printelement.js"></script> <!-- 인쇄 -->
+	<script src="/spring/resources/common/js/excelexportjs.js"></script> <!-- 엑셀다운 -->
 	<tiles:insertAttribute name="scripts"/>
 </body>
 </html>

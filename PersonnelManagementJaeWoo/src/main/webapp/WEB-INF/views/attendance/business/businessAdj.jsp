@@ -54,18 +54,18 @@
  			}else if(rslt.success == "Y"){
  	 			$.each(rslt.empList, function(k, v) {
 					$('#empModalTbody').append(
- 	 					"<tr style='display:table;width:100%;table-layout:fixed;'>"+
-						"<td>"+
-							"<label class='fancy-checkbox-inline'>"+
-								"<input type='checkbox' name='emnoChk'>"+ //checkbox
-								"<span></span>"+
-							"</label>"+
-						"</td>"+
-						"<td>"+ v.empEmno +"</td>"+ //사원번호
-						"<td>"+ v.empName +"</td>"+ //사원명
-						"<td>"+ v.deptName +"</td>"+ //부서명
-						"<td>"+ v.rankName +"</td>"+ //직급명
-					"</tr>"
+	 	 				"<tr style='display:table;width:100%;table-layout:fixed;'>"+
+							"<td>"+
+								"<label class='fancy-checkbox-inline'>"+
+									"<input type='checkbox' name='emnoChk'>"+ //checkbox
+									"<span></span>"+
+								"</label>"+
+							"</td>"+
+							"<td>"+ v.empEmno +"</td>"+ //사원번호
+							"<td>"+ v.empName +"</td>"+ //사원명
+							"<td>"+ v.deptName +"</td>"+ //부서명
+							"<td>"+ v.rankName +"</td>"+ //직급명
+						"</tr>"
 					);
  	 			});
  			}
@@ -181,7 +181,7 @@
 										<span class="glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#emnoModal" onclick="empListModal('${pageContext.request.contextPath}/businessRequestEmpList.ajax','busiFrm')"></span> <!-- 검색 아이콘 -->
 										<input type="button" class="btn btn-danger" style="float:right;"name="search" value="검색" onclick="searchForm(busiFrm)">
 										
-									</td>
+									</td>  
 								</tr>
 							</table>
 						</form>		

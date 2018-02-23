@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.spring.attendance.entity.DeleteEventsData;
 import com.example.spring.attendance.entity.EventsData;
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
-import com.example.spring.attendance.entity.EventsData;
 
 
 @Repository("holidaySetDao")
@@ -43,6 +43,18 @@ public class HolidaySetDao {
 		int result = -1;
 		
 		result = this.sqlSession.insert(nameSpaceName + "holidayRoster", infoMap);
+		
+		return result;
+	}
+	
+	public int holidayRosterDelete(ArrayList<DeleteEventsData> deleteEventData) {
+		int result = -1;
+		
+		for(int i = 0 ; i < deleteEventData.size() ; i++) {
+			DeleteEventsData tmp = (DeleteEventsData)deleteEventData.get(i);
+			
+			result = this.sqlSession.delete(nameSpaceName + "holidayRosterDelete", tmp);
+		}
 		
 		return result;
 	}
@@ -97,5 +109,28 @@ public class HolidaySetDao {
 		logger.debug("dao List: "+list);
 		
 		return list;
+	}
+	//일정등록 dao
+	public int calendarInsert(HashMap<String, String> map) {
+		
+		int result = 0;
+		
+		result = this.sqlSession.insert(nameSpaceName+"calendarInsert",map);
+		
+		return result;
+	}
+	//
+	public List<String> calendarList(){
+		
+		List<String> list = this.sqlSession.selectList(nameSpaceName+"calendarList");
+		System.out.println("List DAO ========================"+list);
+		return list;
+	}
+	//db에서 휴일 정보 읽어오기
+	public HashMap<String, String> calendarListDB(String start){
+		
+		HashMap<String, String> map = this.sqlSession.selectOne(nameSpaceName+"calendarListDB",start);
+		System.out.println("ListDB DAO ========================"+map);
+		return map;
 	}
 }

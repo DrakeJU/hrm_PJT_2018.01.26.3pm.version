@@ -28,6 +28,112 @@ public class VacationController {
 	private VacationService vacationService;
 	private String PRE_VIEW_PATH = "/vacation/";
 	
+	/* 메인 대시보드 */
+	@RequestMapping(value="/dashboard")
+	public String dashboard() {
+		return "dashboard";
+	}
+	
+	/* 휴가관리 메인 대시보드 */
+	@RequestMapping(value="/vacationDashboard")
+	public String vacationDashboard() {
+		return "vacationDashboard";
+	}
+	
+	/* 대시보드 - 사원휴가정보 */
+	@RequestMapping(value="/empVacInfo.ajax")
+	public @ResponseBody HashMap<String, Object> empVacInfo(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("파라미터다!!!!"+map);
+		
+		List<HashMap<String,Object>> list = vacationService.empVacInfo(map);
+		
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("empVacInfo", list);
+			
+			if(!(map.get("empVacInfo").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
+	/* 대시보드 - 월별 휴가사용개수 그래프 */
+	@RequestMapping(value="/monthlyVacChart.ajax")
+	public @ResponseBody HashMap<String, Object> monthlyVacChart(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("파라미터다!!!!"+map);
+		
+		List<HashMap<String,Object>> list = vacationService.monthlyVacChart(map);
+		
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("monthlyVacChart", list);
+			
+			if(!(map.get("monthlyVacChart").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
+	/* 대시보드 - 오늘의 휴가자 */
+	@RequestMapping(value="/vacTodayEmpList.ajax")
+	public @ResponseBody HashMap<String, Object> vacTodayEmpList() {
+		
+		List<HashMap<String,Object>> list = vacationService.vacTodayEmpList();
+		
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("vacTodayEmpList", list);
+			
+			if(!(map.get("vacTodayEmpList").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
+	/* 대시보드 - 내가 이번달에 사용한 항목별 휴가 */
+	@RequestMapping(value="/thisMonthVacChart.ajax")
+	public @ResponseBody HashMap<String, Object> thisMonthVacChart(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("파라미터다!!!!"+map);
+		
+		List<HashMap<String,Object>> list = vacationService.thisMonthVacChart(map);
+		
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("thisMonthVacChart", list);
+			
+			if(!(map.get("thisMonthVacChart").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
 	
 	/* 휴가일수설정 */
 	@RequestMapping(value="/vacationCount")
@@ -171,6 +277,28 @@ public class VacationController {
 		return "vacationRequest";
 	}
 	
+	/* 휴가 신청하기 - 휴가 셀렉박스 리스트 */
+	@RequestMapping(value="vacTypeList.ajax")
+	public @ResponseBody HashMap<String,Object> vacTypeList(
+			@RequestParam HashMap<String,Object> map){
+		
+		List<HashMap<String,Object>> list = vacationService.vacationTypeList(map);
+		
+		if(list != null) {
+			map.put("vacationTypeList", list);
+			if(!(map.get("vacationTypeList").toString()).equals("[]")) {
+				map.put("success", "Y");
+			} else {
+				map.put("success", "N");
+			}
+		} else {
+			map.put("success", "N");
+		}
+		
+		return map;
+	}
+	
+	
 	/* 휴가 신청 insert */
 	@RequestMapping(value = "/vacationRequest.ajax")
 	public @ResponseBody HashMap<String,String> vatacionRequestInsert(
@@ -197,7 +325,7 @@ public class VacationController {
 		
 		logger.info("휴가신청사원 모달 CONTROLLER::::" + map);
 		
-		List<HashMap<String,Object>> list = vacationService.vacationCountEmpList(map);
+		List<HashMap<String,Object>> list = vacationService.vacationCountEmpList(map);	//휴가명 리스트
 
 		if(list == null) {
 			map.put("success", "N");
@@ -238,6 +366,54 @@ public class VacationController {
 			
 			if(!(map.get("empRemindingVacList").toString()).equals("[]") && 
 			   !(map.get("vacationProgressList").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
+	/* 휴가조회(사원)- 휴가내역 상세보기 모달  */
+	@RequestMapping(value="/empVacListDetail.ajax")
+	public @ResponseBody HashMap<String, Object> empVacListDetail(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("휴가조회(사원): " + map);
+		
+		List<HashMap<String,Object>> empVacListDetail = vacationService.empVacListDetail(map); //사원별 휴가개수
+
+		if(empVacListDetail == null) {
+			map.put("success", "N");
+		}else {
+			map.put("empVacListDetail", empVacListDetail);
+			
+			if(!(map.get("empVacListDetail").toString()).equals("[]")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
+	/* 휴가조회(사원)- 휴가내역 삭제  */
+	@RequestMapping(value="/vacationListDelete.ajax")
+	public @ResponseBody HashMap<String, Object> vacationListDelete(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("휴가조회(사원): " + map);
+		
+		int vacationListDelete = vacationService.vacationListDelete(map); //사원별 휴가개수
+
+		if(vacationListDelete == 0) {
+			map.put("success", "N");
+		}else {
+			map.put("vacationListDelete", vacationListDelete);
+			
+			if(!(map.get("vacationListDelete").toString()).equals("0")) {
 				map.put("success", "Y");
 			}else {
 				map.put("success", "N");
@@ -366,7 +542,7 @@ public class VacationController {
 	@RequestMapping(value="/vacationProgSave.ajax")
 	public @ResponseBody HashMap<String,Object> vacationProgressSave(
 			@RequestParam HashMap<String,Object> map) {
-		logger.info("휴가 승인 완료 저장하기>>>>" + map);
+		logger.info("휴가 승인 완료 저장하기 parameter>>>>" + map);
 		
 		int list = vacationService.vacationProgressSave(map);
 		
@@ -377,14 +553,23 @@ public class VacationController {
 		}
 	
 		return map;
-		
 	}//승인완료 저장
 	
 	
-	/* 휴가 월마감 */
-	@RequestMapping(value="/vacationMonthlyReport")
-	public String vacationMonthlyReport() {
-		return "vacationMonthlyReport";
+	/* 휴가 승인대기 삭제 */
+	@RequestMapping(value="vacationDel.ajax")
+	public @ResponseBody HashMap<String,Object> vacationDelete(
+			@RequestParam HashMap<String,Object> map){
+		logger.info("휴가 승인대기 삭제 parameter>>>>" + map);
+
+		int list = vacationService.vacationDelete(map);
+		
+		if(list != 0) {
+			map.put("success", "Y");
+		} else {
+			map.put("success", "N");
+		}
+		return map;
 	}
 	
 	
@@ -394,5 +579,10 @@ public class VacationController {
 		return "salMonthlyReport";
 	}
 	
+	/* 휴가 월마감 (보류)*/
+	@RequestMapping(value="/vacationMonthlyReport")
+	public String vacationMonthlyReport() {
+		return "vacationMonthlyReport";
+	}
 	
 }

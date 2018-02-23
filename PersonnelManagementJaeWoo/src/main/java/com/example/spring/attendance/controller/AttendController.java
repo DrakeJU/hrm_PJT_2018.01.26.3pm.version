@@ -135,21 +135,19 @@ public class AttendController {
 		return "mnthngAttdCrtCls";
 	}
 	
-	//CRUD-R
 	@RequestMapping(value="/readMnthngAttdCrtCls")
-	public ModelAndView readMnthngAttdCrtCls(
+	public @ResponseBody HashMap<String, Object> readMnthngAttdCrtCls(
 			@RequestParam HashMap<String, String> paramMap
 			) {
 		
 		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
 		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("workYyMm", paramMap.get("workYyMm"));
-		mv.addObject("resultList", attendService.readMnthngAttdCrtCls(paramMap));
-		mv.addObject("resultSttsMap", attendService.readMnthngAttdCrtClsStts(paramMap));
-		mv.setViewName("mnthngAttdCrtCls");
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("workYyMm", paramMap.get("workYyMm"));
+		resultMap.put("resultList", attendService.readMnthngAttdCrtCls(paramMap));
+		resultMap.put("resultSttsMap", attendService.readMnthngAttdCrtClsStts(paramMap));
 		
-		return mv;
+		return resultMap;
 	}
 	
 	@RequestMapping(value="/readMnthngAttdCrtClsStts")
@@ -170,13 +168,41 @@ public class AttendController {
 	 * 메뉴명 : [출결관리] - [월근태현황]
 	 * 개요    : 
 	 * @Author : 이용선
-	 * @Date   : 2018.01.??
+	 * @Date   : 2018.02.08
 	 ***************************************************************************************/
 	
+	//사원번호 - 사원정보조회
 	@RequestMapping(value = "/mnthAttdStat")
 	public String mnthAttdStat() {
 		return "mnthAttdStat";
 	}
+ 	                 
+	@RequestMapping(value = "/mAttdSelectEmpList.ajax")
+	public @ResponseBody HashMap<String, Object> mAttdSelectEmpList(
+			@RequestParam HashMap<String, Object> map){
+		
+		System.out.println("mAttdSelectEmpList 진입 성공");
+		
+		List<HashMap<String, Object>> list = attendService.mAttdSelectEmpList(map);
+		
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("success", "Y");
+			map.put("empList", list);
+		}
+		
+		return map;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]
@@ -202,6 +228,17 @@ public class AttendController {
 		mv.addObject("resultList", attendService.readHdayExtnNightWorkInqr(paramMap));
 		mv.setViewName("hdayExtnNightWorkInqr");
 		return mv;
+	}
+	
+	@ResponseBody 
+	@RequestMapping(value = "/employee_extended_work.ajax")
+	public HashMap<String, Object> employee_extended_work_deadline(
+			@RequestParam HashMap<String, Object> map) {
+		//HashMap<String, Object> m1 = new HashMap<String, Object>();
+		
+		//System.out.println("extended_work : "+map);
+		attendService.employee_extended_work_deadline(map);
+		return map;
 	}
 	
 }

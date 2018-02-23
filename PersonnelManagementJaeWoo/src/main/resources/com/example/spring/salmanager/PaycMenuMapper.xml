@@ -96,8 +96,9 @@
 		(SREG_YYMM
 		,SREG_NAME
 		,SREG_PDAY
-		,SREG_PYYMM)
-		VALUES(#{pyymm},#{paycname},#{payday},#{payyymm})
+		,SREG_PYYMM
+		,SREG_AAMT)
+		VALUES(#{pyymm},#{paycname},#{payday},#{payyymm},0)
 	
 	</insert>
 	
@@ -107,7 +108,7 @@
 		
 					SCAL_EMYM, EMP_EMNO, SCAL_SAL, SCAL_TAMT, SCAL_FDEX, SCAL_CMC,
 					SCAL_NW_CST, SCAL_BW_CST, SCAL_L_CST, SCAL_NPEN, SCAL_HFEE,
-					SCAL_ITAX, SCAL_LTAX, SCAL_EFEE, SCAL_DAMT, SCAL_YYMM)
+					SCAL_ITAX, SCAL_LTAX, SCAL_EFEE, SCAL_AAMT, SCAL_DAMT, SCAL_FAMT, SCAL_YYMM)
      	VALUES (	
      		
      	 #{emym},
@@ -126,7 +127,9 @@
      	 #{itax},
      	 #{ltax},
      	 #{efee},
+     	 #{aamt},
      	 #{damt},
+     	 #{famt},
     	 #{yymm}
     	
      	)
@@ -158,12 +161,18 @@
 		 	SCAL_ITAX = #{itax},
 		 	SCAL_LTAX = #{ltax},
 		 	SCAL_EFEE = #{efee},
-		 	SCAL_DAMT = #{damt}
-			WHERE EMP_EMNO = #{emp_emno};
+		 	SCAL_AAMT = #{aamt},
+		 	SCAL_DAMT = #{damt},
+		 	SCAL_FAMT = #{famt}
+			WHERE SCAL_EMYM = #{emym};
 	
 	</update>
-
 	
+	<update id="payc_main_aamt">
+		UPDATE SAL_register SET SREG_AAMT = format(#{totalaamt},0)
+		WHERE SREG_YYMM=#{yymm}
+	</update> 
+
 	
 	
 </mapper>

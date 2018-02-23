@@ -24,7 +24,7 @@
     				
     				var totalNoticeNum = data.totalNoticeNum;
     				
-    				console.log(totalNoticeNum);
+    				//console.log(totalNoticeNum);
     				var choicePage = data.choicePage;
     				var viewNoticeMaxNum = data.viewNoticeMaxNum;
     				var viewPageMaxNum = data.viewPageMaxNum;
@@ -34,16 +34,16 @@
     				typeof viewPageMaxNum == 'undefined' ? viewPageMaxNum = 10 : viewPageMaxNum;
 
     				//총 페이지 수
-    				var totalPageNum = Math.floor(((totalNoticeNum-1)/(viewPageMaxNum))+1);
+    				var totalPageNum = Math.floor(((totalNoticeNum-1)/(viewNoticeMaxNum))+1);
     				
-    				//시작 페이지 번호
-    				var startPageNum = Math.floor(((choicePage-1)/(viewPageMaxNum*viewPageMaxNum))+1);
-
+    				//시작 페이지 번호  
+    				var startPageNum = Math.floor((choicePage-1)/viewPageMaxNum)*viewPageMaxNum+1;
+    				
     				//마지막 페이지 번호
-    				var endPageNum = startPageNum+viewPageMaxNum;
+    				var endPageNum = (startPageNum+viewPageMaxNum)-1;
 
     				if(endPageNum>totalPageNum) {
-    					endPageNum = totalPageNum+1;
+    					endPageNum = totalPageNum;
     				}//if
     				
     				//$(this) html 초기화 
@@ -61,7 +61,7 @@
     				}//if
     				
     				//페이징 부분 + string
-    				for(var i=startPageNum; i<endPageNum; i++){
+    				for(var i=startPageNum; i<=endPageNum; i++){
     					if(i==choicePage){
     						obj += "<li class='page-item active'>";
     					}else{
@@ -80,7 +80,6 @@
     				}//if
     				
     				$(this).children("ul").append(obj);
-    				
 
     				//이벤트 등록
     				$(".page-item a").on('click',function(){

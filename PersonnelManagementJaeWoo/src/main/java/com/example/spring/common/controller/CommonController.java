@@ -1,6 +1,8 @@
 package com.example.spring.common.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
@@ -29,12 +31,22 @@ public class CommonController {
 
 	//공통 사이드 메뉴 리스트 
 	@RequestMapping(value="/navList.ajax")
-	public @ResponseBody HashMap<String,Object> navMenu(@RequestParam HashMap<String,String> map) {
+	public @ResponseBody HashMap<String,Object> navMenu(HttpSession session,@RequestParam HashMap<String,String> map) {
 		
 		HashMap<String,Object> menuMap = new HashMap<String,Object>();
-		menuMap.put("mnPrntMap",commonService.selectMenu(map));
-		menuMap.put("navList",commonService.navList());
 		
+		//현재페이지의 메뉴 map
+		menuMap.put("mnPrntMap",commonService.selectMenu(map));
+		
+		//관리자 여부 if
+		if(session.getAttribute("adminYn").equals("Y")) {
+			//관리자 사이드 메뉴 list
+			menuMap.put("navList",commonService.adminNavList());
+		}else {
+			//권한별 사이드 메뉴 list
+			menuMap.put("navList",commonService.navList((String)session.getAttribute("userEmno")));
+		}//if
+
 		return menuMap;
 	}//navMenu
 	
@@ -58,7 +70,6 @@ public class CommonController {
 			session.setAttribute("userId", userMap.get("empId"));
 			session.setAttribute("adminYn", userMap.get("empAdminYn"));
 			session.setAttribute("userAuthList",commonService.authorityProcess(userMap));
-			
 		}//if 정상적인 로그인 인 경우 
 		
 		return userMap;
@@ -75,6 +86,6 @@ public class CommonController {
 	@RequestMapping(value="main.do")
 	public String main() {
 		return "main"; 
-	}
+	}//main
 
 }//CommonController
