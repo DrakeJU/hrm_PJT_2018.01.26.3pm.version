@@ -288,12 +288,12 @@ public class VacationDao {
 	
 	
 	/* 휴가 조회 -관리자 휴가현황 리스트 총 개수  */
-	/*public int vacListMaxNum(HashMap<String,Object> map) {
-		logger.info("총 개수 DAO___"+map);
-		int list = (Integer)this.sqlSession.selectOne(nameSpaceName+"vacListMaxNum",map);
-		logger.info("총 개수 DAO list---------------"+list);
-		return list;
-	}*/
+//	public int vacListMaxNum(HashMap<String,Object> map) {
+//		logger.info("총 개수 DAO___"+map);
+//		int list = (Integer)this.sqlSession.selectOne(nameSpaceName+"vacListMaxNum",map);
+//		logger.info("총 개수 DAO list---------------"+list);
+//		return list;
+//	}
 	
 	
 	/* 휴가 조회하기 - 관리자 */

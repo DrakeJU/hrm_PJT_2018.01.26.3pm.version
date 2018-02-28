@@ -65,7 +65,7 @@
 			<input type="hidden" name="empName2" value="">
 			<input type="hidden" name="yearMonth2" value="">
 			<input type="button" name="saveBtn" class="btn btn-primary" value="저장하기" onClick="saveRosterBtn()">
-			
+			<input type="button" id="selectRosterMake" name="selectRosterMake" class="btn btn-primary" value="선택 인원 근무 생성">
 		</div>
 	</div>
 </div>
@@ -156,13 +156,13 @@
              ],
 
             events: [
-//                 {
-//                     start: "2014-01-25T00:00:00",
-//                     end: "2014-01-25T12:00:00",
-//                     id: DayPilot.guid(),
-//                     resource: "강병욱",
-//                     text: "Event"
-//                 },
+//                  {
+// 				start: "2015-12-28T00:00:00",
+// 	            end: "2015-12-29T12:00:00",
+// 	            id: DayPilot.guid(),
+// 	            resource: "강병욱",
+// 	            text: "Event"
+//                  },
 // 				{
 // 					start: "2014-01-25T00:00:00",
 //                     end: "2014-01-26T00:00:00",
@@ -231,6 +231,13 @@
 		options.resources = jArray;
 		options.startDate = yearMonth;
 		options.scrollTo = yearMonth;
+		
+		console.log("길이 : " + options.resources.length);
+		
+		for(var i = 0 ; i < options.resources.length ; i++){
+			var result = Math.floor(Math.random() * 3) + 1;
+			console.log("result : " + result);
+		}
 		
 		console.log("events : " + JSON.stringify(options.events));
 		
@@ -495,21 +502,189 @@
 		alert("저장되었습니다.");
     }
     
+    function selectRosterMake(selectArray, startDate, endDate, startDateString){
+    	var tmpEvents = new Array();
+    	var tmpDate = new Date();
+    	var standardDate = new Date(startDateString[0], startDateString[1], startDateString[2]);
+    	
+    	standardDate.setDate(standardDate.getDate() + 1);
+    	
+    	tmpDate = startDate;
+    	tmpDate.setDate(tmpDate.getDate() + 1);
+    	
+    	console.log("selectArrayStart  : " + JSON.stringify(selectArray));
+    	
+    	var name = prompt("넣을 근무를 입력해주세요.", "주/야/심");
+    	
+    	name = name.split('/');
+    	
+		var diff = endDate - startDate;
+		var currDay = 24 * 60 * 60 * 1000;// 시 * 분 * 초 * 밀리세컨
+		var diffDay= parseInt(diff/currDay);
+    	
+// 		console.log("dp : " + JSON.stringify(dp.events));
+		
+    	for(var i = 0 ; i < selectArray.length ; i++){
+        	
+    		for(var j = 0 ; j <= diffDay ; j++){
+    			var tmpObj = new Object();
+    			
+    			var tmpString = tmpDate.getFullYear() + '-' + ((tmpDate.getMonth()+1)<10 ? '0' + (tmpDate.getMonth()+1) : (tmpDate.getMonth()+1)) + '-' +
+    	        (tmpDate.getDate()<10 ? '0'+tmpDate.getDate() : tmpDate.getDate());
+    			
+    			tmpObj.id = DayPilot.guid();
+    			tmpObj.start = tmpString + "T00:00:00";
+    			tmpObj.end = tmpString + "T12:00:00";
+    			tmpObj.resource = selectArray[i].name;
+    			tmpObj.text = name[j%3];
+    			
+    			//tmpEvents.push(tmpObj);
+    			dp.events.list.push(tmpObj);
+    			tmpObj = "";
+    			
+    			tmpDate.setDate(tmpDate.getDate() + 1);
+    		}
+    		tmpDate.setYear(standardDate.getFullYear());
+    		tmpDate.setMonth(((standardDate.getMonth()+1)<10 ? '0' + (standardDate.getMonth()+1) : (standardDate.getMonth()+1)));
+    		tmpDate.setDate(standardDate.getDate()<10 ? '0'+tstandardDatempDate.getDate() : standardDate.getDate());
+    	}
+    	
+    	console.log("tmpEvents55 : " + JSON.stringify(tmpEvents));
+    	console.log("길이 : " + tmpEvents.length);
+    	
+//     	console.log(JSON.stringify(option2.events));
+    	console.log("변함1010");
+    	
+//     	dp.events.list = [{
+//             start: "2015-12-27T00:00:00",
+//             end: "2015-12-27T12:00:00",
+//             id: DayPilot.guid(),
+//             resource: "강병욱",
+//             text: "Event"
+//     	},
+//     	{
+//             start: "2015-12-28T00:00:00",
+//             end: "2015-12-28T12:00:00",
+//             id: DayPilot.guid(),
+//             resource: "강병욱",
+//             text: "Event"
+//     	}
+//     	];
+
+		//dp.events.list = tmpEvents;
+		//dp.events.list.push(tmpEvents);
+		
+		console.log("eventsTest : " + JSON.stringify(dp.events.list));
+		
+    	dp.update();
+    	
+    }
+    
 	$(document).ready(function() { 
 // 		var url = window.location.href; 
 // 		var filename = url.substring(url.lastIndexOf('/')+1); 
 // 		if (filename === "") filename = "index.html"; 
-// 			$(".menu a[href='" + filename + "']").addClass("selected");  
+// 			$(".menu a[href='" + filename + "']").addClass("selected"); 
 
+
+		
+		var rowArray = new Array();
 		//근무표안에 들어가는 cell 높이 넓이 지정해주는 부분.
 		dp.eventHeight = 50;
 		dp.cellWidth = 50;	
 		
+		var data;
+		var endDate;
+		var startDate;
+		var startDateString;
+		
 		console.log(option2.resources);
 		
-		dp.update();
+		dp.rowClickHandling = "Select";
+		
+	    dp.onRowSelect = function(args) {
+	        window.console && console.log(args.row.toJSON());
+	    };
+	    dp.onRowSelected = function(args) {
+// 	    	var tmp = new Object();
+// 	    	tmp.id = args.row.id;
+// 	    	tmp.name = args.row.name;
+	    	
+// 	    	rowArray.push(tmp);
+	    	
+	    	console.log("args.row[0] : " + JSON.stringify(args.row.index));
+	    	console.log("args.selected : " + args.selected);
+	    	
+	        var msg = "This row was " + (args.selected ? "" : "de") + "selected: " + args.row.name;
+// 	        console.log("array : " + JSON.stringify(rowArray));
+	        dp.message(msg);
+	        window.console && console.log(dp.rows.selection.get().length);
+	        console.log("id : " + args.row.id);
+			console.log("name : " + args.row.name);
+			console.log("name33 : " + JSON.stringify((dp.rows.selection.get())[0]));
+// 			console.log("name44 : " + (dp.rows.selection.get()[0]).index);
+			console.log("end : " + ((dp.rows.selection.get()[0]).start)); 
+			console.log("test22 : " + JSON.stringify(dp.rows.selection.get()));
 			
+			data = dp.rows.selection.get();
+			
+			console.log("data55 : " + data.length);
+			
+			startDateString = String((dp.rows.selection.get()[0]).start);
+			startDateString = startDateString.substring(0,10);
+			startDateString = startDateString.split('-');
+			startDate = new Date(startDateString[0], startDateString[1]-1, startDateString[2]);
+			
+// 			console.log("startDateString : " + startDateString);
+			
+			var endDateString = String((dp.rows.selection.get()[0]).start);
+			endDateString = endDateString.substring(0,10);
+			endDateString = endDateString.split('-');
+			console.log("바뀜2 : " + endDateString);
+			endDate = new Date(endDateString[0], endDateString[1]-1, endDateString[2]);
+			console.log("days : " + dp.days);
+			endDate.setDate(endDate.getDate() + dp.days - 1);
+			
+			//selectRosterMake(JSON.stringify(dp.rows.selection.get()));
+			
+			console.log("바뀜13 : " + endDate);
+	    };
+		
+	    $('#selectRosterMake').click(function(){
+	    	selectRosterMake(data, startDate, endDate, startDateString);
+	    });
+	    
+// 		dp.selectedRows = ["강병욱"];
+		
+		dp.onRowFilter = function(args) {
+	        if (args.row.name.toUpperCase().indexOf(args.filter.toUpperCase()) === -1) {
+	            args.visible = false;
+	        }
+	    };
+		
+// 	    option2.events =                  [{
+// 	            start: "2015-12-28T00:00:00",
+// 	            end: "2015-12-29T12:00:00",
+// 	            id: DayPilot.guid(),
+// 	            resource: "강병욱",
+// 	            text: "Event"
+// 	    }];
+	    
+	    console.log("events3 : " + JSON.stringify(dp.events.list));
+	    
+// 	    dp.events.list = [{
+// 	            start: "2015-12-27T00:00:00",
+// 	            end: "2015-12-27T12:00:00",
+// 	            id: DayPilot.guid(),
+// 	            resource: "강병욱",
+// 	            text: "Event"
+// 	    }];
+	    
+		dp.update();
+		console.log("바뀜6");
 	});
+	
+	
 </script> 
 	<!-- /bottom -->
 

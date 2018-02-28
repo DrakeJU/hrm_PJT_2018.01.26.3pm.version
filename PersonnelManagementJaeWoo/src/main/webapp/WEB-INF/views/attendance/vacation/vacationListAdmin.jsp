@@ -26,23 +26,17 @@ $(function(){
 	enterKey();	//검색 후 엔터키 작동
 });
 
-//리스트 전 처리 후 출력 함수 호출
-var searchStart = function(choicePage){
-	vacEmpList(choicePage);
-	console.log("dddd");
-}
-
 
 /* 휴가 조회 리스트  ajax */
 		
-// function vacEmpList(choicePage){
-var vacEmpList = function(choicePage){
+function vacEmpList(){
+// var vacEmpList = function(choicePage){
 
-	if(choicePage == undefined || choicePage == null){
-		choicePage = 1;
-	}//선택 페이지값이 들어오지 않은 경우 if
+// 	if(choicePage == undefined || choicePage == null){
+// 		choicePage = 1;
+// 	}//선택 페이지값이 들어오지 않은 경우 if
 	
-	paging.ajaxFormSubmit("vacationListAdmin.ajax", "vacListAdminFrm", function(rslt){
+	paging.ajaxFormSubmit("vacationListAdmin.exc", "vacListAdminFrm", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:"+JSON.stringify(rslt));
 		
@@ -107,24 +101,27 @@ var vacEmpList = function(choicePage){
 				);
 			});//each list
 
-// 			if(choicePage == undefined){
-// 				choicePage = 1;
-// 			}//선택 페이지값이 들어오지 않은 경우 if
 			
-			//페이징 생성
-			var obj = {"totalNoticeNum":rslt.totalNoticeNum, "choicePage":choicePage};
-			$("nav[name='pagingNav']").pagingNav(obj,"pageClick");
+// 			//페이징 생성
+// 			var obj = {};
+// 			obj.totalNoticeNum = rslt.vacListMaxNum;	//리스트 총 개수(MaxNum)
+// 			obj.choicePage = choicePage;
+			
+// 			$("nav[name='pagingNav']").pagingNav(obj,function(target){
+// 				vacEmpList(target.attr("name"));
+// 			});//pagingNav
 		
 			
 			//테이블 내용 가운데 정렬	
 			$('#vacListTable').children().addClass('text-center');	
 			//테이블 sort
 			$(function(){
-				$('#vacListTable').tablesorter();
+				$("table").trigger("update"); 
+// 				$('#vacListTable').tablesorter();
 			});
 			$(function(){
 				$('#vacListTable').tablesorter({sortList: [[0,0], [1,0]]});
-			});
+			});	 	
 				
 		}//if-table 생성
 		
@@ -144,21 +141,19 @@ var vacEmpList = function(choicePage){
 	
 };	// vacationAdemin List : END
 
-/*paging 처리 */ 
-var pageClick = function(target){
-	console.log(target+"xxxxxxxxxxxxxxxx");
-	searchStart(target.attr("name"));
-	
-}//pageClick
+// /*paging 처리 */ 
+// var pageClick = function(target){
+// 	console.log(target+"xxxxxxxxxxxxxxxx");
+// 	searchStart(target.attr("name"));
+// }//pageClick
 
 
 /*검색 버튼 */
-function searchClick(){		
+function searchClick(){
 	vacEmpList();
 };
 
 /* 검색어 입력 후 엔터키 작동 */
- 
 function enterKey(){
 	$("#keyword").keydown(function(f){
 		if(f.keyCode == 13){	//javaScript에서는 13이 enter키를 의미함
@@ -219,12 +214,26 @@ function vacationProgressList() {
 
 /* 휴가 신청현황 개수 표시 */
 $(function() {
-	paging.ajaxSubmit("vacationProgCntNum.ajax", "", function(rslt) {
+	paging.ajaxSubmit("vacationProgCntNum.exc", "", function(rslt) {
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:" + JSON.stringify(rslt));
 		$("#countNum").html(rslt);
 	});
 });
+
+
+//인쇄
+function vacListPrint(){
+	$('#mainDiv').printElement();
+}
+
+//엑셀 다운
+function vacListExcelExport(){
+	$("#vacListTable").excelexportjs({
+		containerid: 'vacListTable',
+		datatype: 'table'
+	});
+}
 
 
 
@@ -249,7 +258,7 @@ function empVacationList(empEmno){
 	$('#empEmno').val(empEmno);	
 	console.log(empEmno);
 	
-	paging.ajaxFormSubmit("empVacationList.ajax", "empVacFrm", function(rslt){
+	paging.ajaxFormSubmit("empVacationList.exc", "empVacFrm", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:"+JSON.stringify(rslt));
 		
@@ -305,10 +314,12 @@ function empVacationList(empEmno){
 /*모달 리스트 END */
 
 
+
+
 </script>
 </head>
 <body>
-	<div class="main" style="min-height: 867px;">
+	<div class="main" style="min-height: 867px;" id="mainDiv">
 		<div class="main-content">
 			<div class="container-fluid">
 			<h3 class="page-title">휴가조회(관리자)</h3>
@@ -415,15 +426,14 @@ function empVacationList(empEmno){
 						</div>
 <!-- ******************************************************************************************************************* -->								
 						<!-- 페이징 네비게이션 시작 -->
-						<nav name="pagingNav" aria-label='Page navigation example' align='center'>
-						</nav>
+<!-- 						<nav name="pagingNav" aria-label='Page navigation example' align='center'></nav> -->
 						<!-- 페이징 네비게이션 끝 -->
 						<!-- END list table 영역 -->
 						    
 						<!-- 버튼영역 -->
-						<div class="text-center"> 
-							<button type="button" class="btn btn-info">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<button type="button" class="btn btn-success">엑셀다운</button>
+						<div class="text-center">
+							<button type="button" class="btn btn-primary" id="printBtn" onClick="vacListPrint()">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-primary" id="excelBtn" onClick="vacListExcelExport()">엑셀다운</button>
 						</div>
 						<!-- END 버튼영역 -->
 					</div>

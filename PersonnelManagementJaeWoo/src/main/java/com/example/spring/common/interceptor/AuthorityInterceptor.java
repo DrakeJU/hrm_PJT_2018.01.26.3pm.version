@@ -54,6 +54,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
 			}//for
 	
             //해당 url에 권한이 없을시 종료
+			response.sendRedirect("/spring/urlCheck.do");
 			return false;
 		}//if else
 	}//preHandle

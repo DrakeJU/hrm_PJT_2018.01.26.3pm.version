@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.spring.attendance.dao.HolidaySetDao;
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.DayMinPerson;
 import com.example.spring.attendance.entity.DeleteEventsData;
 import com.example.spring.attendance.entity.EventsData;
 
@@ -45,6 +46,12 @@ public class HolidaySetService {
 		return result;
 	}
 	
+	public List<HashMap<String,String>> holidayRosterEventsList2(HashMap<String,Object> eventsList){
+		List<HashMap<String,String>> list = holidaySetDao.holidayRosterEventsList2(eventsList);
+		
+		return list;
+	}
+	
 	public List<HashMap<String,String>> holidayRosterEventsList(){
 		List<HashMap<String,String>> list = holidaySetDao.holidayRosterEventsList();
 		
@@ -71,6 +78,12 @@ public class HolidaySetService {
 		return result;
 	}
 
+	public int holidayRosterSetting(HashMap<String, DayMinPerson> map) {
+		int result = holidaySetDao.holidayRosterSetting(map);
+		
+		return result;
+	}
+	
 	//년차수에 따른 연차 List 불러오기
 	public List<HashMap<String,Object>> conWorkVacSetupList(HashMap<String,Object> map) {
 
@@ -88,9 +101,12 @@ public class HolidaySetService {
 		
 		String today = sdfToday.format(cal.getTime());
 		String startDate = map.get("startDate").replaceAll("-", ""); //2018-01-24 -> 20180124
-				
-		map.put("id", startDate );
-		map.put("createDate", today);
+		
+		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++calendar Update SSService : "+map);		
+		
+		map.put("startDate", startDate );
+		
+		//map.put("", value)
 		
 		int result = holidaySetDao.calenderUpdate(map);
 		

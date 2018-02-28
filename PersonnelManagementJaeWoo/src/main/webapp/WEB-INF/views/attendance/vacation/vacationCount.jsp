@@ -12,7 +12,7 @@
 </style>
 <script type="text/javascript">
 
-var url = "vacationCountEmpList.ajax"
+var url = "vacationCountEmpList.exc"
 var formId = "vacCntSelectFrm"; //초기, 검색할 때 id를 기본값으로 세팅
 
 //document.ready
@@ -64,7 +64,7 @@ function vacCntCalculation(){
 		$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
 // 		console.log($('#empEmnoResult').val());
 		
-		paging.ajaxFormSubmit("vacationCountAutoCalculation.ajax", "vacCntEmpFrm", function(rslt){
+		paging.ajaxFormSubmit("vacationCountAutoCalculation.exc", "vacCntEmpFrm", function(rslt){
 			console.log("휴가일수 자동계산:"+JSON.stringify(rslt));
 			
 			if(rslt == null || rslt.success == "N"){
@@ -121,7 +121,7 @@ function vacCntSave(){
 		$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
 		console.log($('#empEmnoResult').val());
 		
-		paging.ajaxFormSubmit("vacationCountUpdate.ajax", "vacCntEmpFrm", function(rslt){
+		paging.ajaxFormSubmit("vacationCountUpdate.exc", "vacCntEmpFrm", function(rslt){
 			console.log("ajaxFormSubmit -> callback");
 			console.log("결과데이터:"+JSON.stringify(rslt));
 			
@@ -233,7 +233,7 @@ function vacCntEmpSignUp(){
 
 //휴가일수설정 사원등록 필요 사원 개수
 function vacCntEmpSignUpCntNum(){
-	paging.ajaxSubmit("vacationCountEmpSignUpCntNum.ajax", "", function(rslt){
+	paging.ajaxSubmit("vacationCountEmpSignUpCntNum.exc", "", function(rslt){
 		console.log("결과데이터:"+JSON.stringify(rslt));
 		$("#empSignUpCntNum").html(rslt);
 	});	
@@ -247,16 +247,10 @@ function vacCntEmpSignUpCntNum(){
 			<div class="container-fluid">
 			<h3 class="page-title">휴가일수설정</h3>
 				<div class="panel panel-headline">
-<!-- 					<div class="panel-heading"> -->
-<!-- 						<h3 class="panel-title">휴가항목 선택</h3> -->
-<!-- 							<p class="subtitle">설명이 필요할 경우 추가 예정</p> -->
-<!-- 					</div> -->
 					<div class="panel-body">
 						<form class="form-inline" id="vacCntSelectFrm">
-<!-- 							<i class="fa fa-astㄹerisk-red" aria-hidden="true" ></i>							 -->
 							기준년도
-							<!-- 달력 -->
-							<div class="input-group date" id="yearDateTimePicker">
+							<div class="input-group date" id="yearDateTimePicker"><!-- 달력 -->
 						  	<input type="text" class="form-control" id="baseYear" name="baseYear">
 						    <span class="input-group-addon">
 							    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -268,8 +262,7 @@ function vacCntEmpSignUpCntNum(){
 								<option value="empName">성명</option>
 								<option value="deptName">부서</option>
 							</select>
-							<input type="text" class="form-control" name="keyword">
-							&nbsp;&nbsp;&nbsp;
+							<input type="text" class="form-control" name="keyword">&nbsp;&nbsp;&nbsp;
 							<label class="fancy-checkbox-inline">
 								<input type="checkbox" id="retrChk">
 								<span>퇴직자 포함</span>
@@ -285,9 +278,6 @@ function vacCntEmpSignUpCntNum(){
 				</div>
 				
 				<div class="panel panel-headline">
-<!-- 					<div class="panel-heading"> -->
-<!-- 						<h3 class="panel-title">제목</h3> -->
-<!-- 					</div> -->
 					<div class="panel-body"> 
 						<div class="list_wrapper">
 							<form class="form-inline" id="vacCntEmpFrm">
@@ -313,32 +303,14 @@ function vacCntEmpSignUpCntNum(){
 										</tr>
 									</thead>
 									<tbody id="vacCntEmpListTbody" style="display:block;height:400px;overflow:auto;">
-<!-- 										<tr> -->
-<!-- 											<td> -->
-<!-- 												<label class="fancy-checkbox-inline"> -->
-<!-- 													<input type="checkbox" name=""> -->
-<!-- 													<span></span> -->
-<!-- 												</label> -->
-<!-- 											</td> -->
-<!-- 											<td>123456</td> -->
-<!-- 											<td>개츠비</td> -->
-<!-- 											<td>개발팀</td> -->
-<!-- 											<td>팀장</td> -->
-<!-- 											<td>2007-10-15</td> -->
-<!-- 											<td><input type="text" name="" value="" class="form-control">일</td> -->
-<!-- 										</tr> -->
 									</tbody>
 								</table>
 							</form>
-						</div>
-						<!-- END list table 영역 -->
-						    
-						<!-- 버튼영역 -->
-						<div class="text-center"><br>
+						</div><!-- END list table 영역 -->
+						<div class="text-center"><br><!-- 버튼영역 -->
 							<button type="button" class="btn btn-primary" id="vacCntCalculationBtn" onclick="vacCntCalculation()">휴가일수 자동계산</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<button type="button" class="btn btn-primary" id="vacCntSaveBtn" onclick="vacCntSave()">저장하기</button>
-						</div>
-						<!-- END 버튼영역 -->
+						</div><!-- END 버튼영역 -->
 					</div>
 				</div>
 			</div>

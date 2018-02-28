@@ -23,7 +23,7 @@
 </script>
 </head>
 <body>
-	<div class="main">
+	<div class="main" id="mainDiv">
 		<div class="main-content">
 			<div class="container-fluid">
 				<h3 class="page-title">휴일 /연장 /야간근무 조회</h3>
@@ -121,8 +121,8 @@
 							    
 							<!-- 버튼영역 -->
 							<div class="text-center"> 
-								<button type="button" class="btn btn-info">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<button type="button" class="btn btn-success">엑셀다운</button>
+								<button type="button" class="btn btn-info" onclick="attListPrint()">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-success" onclick="attListExcelExport()">엑셀다운</button>
 							</div>
 							<!-- END 버튼영역 -->
 							
@@ -343,6 +343,19 @@
 				$("nav[name='pagingNav']").pagingNav(obj, "pageClick");
 	
 			}
+		});
+	}
+	
+	//인쇄
+	function attListPrint(){
+		$('#mainDiv').printElement();
+	}
+	
+	//엑셀 다운
+	function attListExcelExport(){
+		$("#empInfoTable").excelexportjs({
+			containerid: 'empInfoTable',
+			datatype: 'table'
 		});
 	}
 </script>

@@ -144,26 +144,26 @@ public class VacationService {
 	
 	
 	/* 휴가 조회 -관리자 휴가현황 리스트 총 개수  */
-	/*public int vacListMaxNum(HashMap<String,Object> map) {
-		int list = vacationDao.vacListMaxNum(map);
-		logger.info("총개수SERVICE;;;;;;;;;"+list);
-		return list; 
-	}*/
+//	public int vacListMaxNum(HashMap<String,Object> map) {
+//		int list = vacationDao.vacListMaxNum(map);
+//		logger.info("총개수SERVICE;;;;;;;;;"+list);
+//		return list; 
+//	}
 	
 	/* 휴가 조회하기 - 관리자 */
 	public List<HashMap<String,Object>> vacationListAdmin(HashMap<String,Object> map) {
 		logger.info("vacation리스트 관리자 SERVICE 진입>>>>" + map);
 		 
-		/*int totalNoticeNum = (Integer)map.get("totalNoticeNum");
+//		int totalNoticeNum = (Integer)map.get("totalNoticeNum");
 //		int choicePage = Integer.parseInt((String)map.get("choicePage"));
-		int choicePage = 1;
-		int viewNoticeMaxNum = 10;
-		int noticeCount= 0; //게시물 시작 순번
+//		int choicePage = 1;
+//		int viewNoticeMaxNum = 10;
+//		int noticeCount= 0; //게시물 시작 순번
 		
-		noticeCount = (choicePage-1)*viewNoticeMaxNum;
+//		noticeCount = (choicePage-1)*viewNoticeMaxNum;
 		
-		map.put("noticeCount", noticeCount);
-		map.put("viewNoticeMaxNum", viewNoticeMaxNum);*/
+//		map.put("noticeCount", noticeCount);
+//		map.put("viewNoticeMaxNum", viewNoticeMaxNum);
 		
 		List<HashMap<String,Object>> list = vacationDao.vacationListAdmin(map);	
 		return list;

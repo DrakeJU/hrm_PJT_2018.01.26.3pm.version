@@ -24,6 +24,11 @@
 
 	</insert>
 
+	<insert id="holidayRosterSetting" parameterType="dayMinPerson">
+		INSERT INTO WORK_PERSON(SHWK_SHF_C, WOPE_DAY, WOPE_MIN_PERSON, WOPE_DEL_YN)
+		VALUES(#{code}, #{day}, #{minPerson}, 'N');
+	</insert>
+	
 	<delete id="holidayRosterDelete" parameterType="deleteEventsData">
 		delete from workroster where ID = #{id};
 	</delete>
@@ -49,10 +54,18 @@
 		SELECT start, end, text, resource, id FROM workroster
 	</select>
 
+	<select id="holidayRosterEventsList2" resultType="HashMap" parameterType="HashMap">
+		SELECT start, end, text, resource, id FROM workroster
+		WHERE START <![CDATA[>=]]> #{startFirstDay} AND START <![CDATA[<=]]> #{startLastDay} OR
+		END <![CDATA[>=]]> #{endFirstDay} AND END <![CDATA[<=]]> #{endLastDay} 
+<!-- 		WHERE start #{firstDayLastDay} AND #{startLastDay}  -->
+<!-- 		END END #{endFirstDay} AND #{endLastDay} -->
+	</select>
+	
 	<insert id = "holidayRosterDBInsert" parameterType="eventsData" >
 		INSERT INTO WORKROSTER(ID, START, END, RESOURCE, TEXT)
 		VALUES(#{id}, #{start}, #{end}, #{resource}, #{text})
-		ON DUPLICATE KEY UPDATE START = #{start}, END = #{end}, RESOURCE = #{resource}, TEXT = #{text}
+		ON DUPLICATE KEY UPDATE START = #{start}, END = #{end}, RESOURCE = #{resource}, TEXT = #{text};
 	</insert>
 
 	<!-- 연차에 따른 휴가일수 리스트 불러오기 -->
@@ -87,11 +100,14 @@
 		WHERE db_date = #{start}
 	</select>
 	
-	<select id="calenderUpdate" parameterType="HashMap" resultType="HashMap">
+	
+	<update id="calenderUpdate" parameterType="HashMap" >
 		UPDATE calendar
-		SET memo = #{viewmemo} ,event = #{selectBox}
-		WHERE db_date = #{startDate}
-	</select>
+		SET 
+			memo = #{holiMemo} 
+			,event = #{selectBox}
+		WHERE id = #{startDate}
+	</update>
 	
 	<select id="SecondTabCalendarTableList" parameterType="HashMap" resultType="HashMap">
 		SELECT 

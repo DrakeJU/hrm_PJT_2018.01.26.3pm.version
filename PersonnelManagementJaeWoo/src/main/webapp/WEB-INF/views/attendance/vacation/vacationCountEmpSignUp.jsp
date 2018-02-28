@@ -16,7 +16,7 @@ var formId = "vacCntSelectFrm"; //초기, 검색할 때 id를 기본값으로 �
 
 //document.ready
 $(function(){
-	calender(); //년도달력
+	calendar(); //년도달력
 	vacationCountEmpSignUpList(); //사원정보 리스트 ajax
 });
 
@@ -27,7 +27,7 @@ function vacCntEmpListSearch(){
 
 //사원정보 리스트 ajax
 function vacationCountEmpSignUpList(){
-	paging.ajaxFormSubmit("vacationCountEmpSignUpList.ajax", formId, function(rslt){
+	paging.ajaxFormSubmit("vacationCountEmpSignUpList.exc", formId, function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:"+JSON.stringify(rslt));
 
@@ -114,7 +114,7 @@ function vacCntSave(){
 	$('#empEmnoResult').val(empEmnoResult); //input hidden에 value로 입력
 // 	console.log($('#empEmnoResult').val());
 	
-	paging.ajaxFormSubmit("vacCntEmpSignUpInsert.ajax", "vacCntEmpFrm", function(rslt){
+	paging.ajaxFormSubmit("vacCntEmpSignUpInsert.exc", "vacCntEmpFrm", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터:"+JSON.stringify(rslt));
 		
@@ -138,7 +138,7 @@ function checkAllFunc(){ //최상단 체크박스를 click하면
 }
 
 //년도 달력
-function calender(){
+function calendar(){
 	$('#baseYear').val(moment().format('YYYY'));	//올해 년도 보여줌
 	$('#yearDateTimePicker').datetimepicker({
 		viewMode: 'years',
@@ -148,9 +148,6 @@ function calender(){
 	//년도의 최대값을 올해로 제한
 	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment());
 };
-
-
-
 </script>
 </head>
 <body>
@@ -161,10 +158,8 @@ function calender(){
 				<div class="panel">
 					<div class="panel-body">
 						<form class="form-inline" id="vacCntSelectFrm">
-<!-- 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i>							 -->
 							기준년도
-							<!-- 달력 -->
-							<div class="input-group date" id="yearDateTimePicker">
+							<div class="input-group date" id="yearDateTimePicker"><!-- 달력 -->
 						  	<input type="text" class="form-control" id="baseYear" name="baseYear"/>
 						    <span class="input-group-addon">
 							    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
@@ -208,20 +203,14 @@ function calender(){
 									</tbody>
 								</table>
 							</form>
-						</div>
-						<!-- END list table 영역 -->
-						    
-						<!-- 버튼영역 -->
-						<div class="text-center"><br>
+						</div><!-- END list table 영역 -->						
+						<div class="text-center"><br><!-- 버튼영역 -->
 							<button type="button" class="btn btn-primary" id="vacCntSaveBtn" onclick="vacCntSave()">저장하기</button>
-						</div>
-						<!-- END 버튼영역 -->
+						</div><!-- END 버튼영역 -->
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- END MAIN CONTENT -->
-	</div>
-	<!-- END MAIN -->
+		</div><!-- END MAIN CONTENT -->
+	</div><!-- END MAIN -->
 </body>
 </html>

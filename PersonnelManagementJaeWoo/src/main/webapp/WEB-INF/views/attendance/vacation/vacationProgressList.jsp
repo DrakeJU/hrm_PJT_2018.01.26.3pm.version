@@ -30,7 +30,7 @@ $(function(){
 
 function progList() {
 			
-		paging.ajaxFormSubmit("vacationProgressList.ajax", "f1", function(rslt){
+		paging.ajaxFormSubmit("vacationProgressList.exc", "f1", function(rslt){
 			console.log("ajaxFormSubmit -> callback");
 			console.log("결과데이터" + JSON.stringify(rslt));
 			
@@ -40,7 +40,7 @@ function progList() {
 			$('#progressTbody').empty();	//사원 리스트
 			
 			//테이블 스크롤 
-			$('#progressTable').children('thead').css("width","calc(100% - 1.1em)");
+// 			$('#progressTable').children('thead').css("width","calc(100% - 1.1em)");
 			
 			//부서명 셀렉박스
 			if(rslt.deptNameList == null){
@@ -111,17 +111,19 @@ function progList() {
 				$('#progressTable').children().addClass('text-center');
 				//table sorter
 				$(function(){
-					$('#progressTable').tablesorter();
+					$("table").trigger("update"); 
+					//$('#progressTable').tablesorter();
 				});
 				$(function(){
 					$('#progressTable').tablesorter({sortList: [[0,0],[1,0]]});
+					//$('#progressTbody').empty();	//사원 리스트
 				});
 	
 			}//if-table 생성
 				
 			//마우스오버
 			$('#progressTbody tr').hover(function(){		
-				//승인기면 x 아이콘 생성하고
+				//승인대기면 x 아이콘 생성하고
 				if($(this).children().eq(10).text() == "승인대기"){
 					$(this).append("<span class='fa fa-close right-icon' name='delBtn' onclick='vacDel(this)'></span>");
 					
@@ -266,7 +268,7 @@ function vacProgSave(){
 	$('#progToggleResult').val(progToggleResult);
 		console.log("저장후::"+$('#progToggleResult').val());
 	
-	paging.ajaxFormSubmit("vacationProgSave.ajax", "f2", function(rslt){
+	paging.ajaxFormSubmit("vacationProgSave.exc", "f2", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이터" + JSON.stringify(rslt));
 		
@@ -309,7 +311,7 @@ function vacDel(){
 			console.log("삭제 후::::"+$('#progToggleResult').val());
 			
 			$('#vastSerialNumber').val($('#progToggleResult').val());
-		paging.ajaxFormSubmit("vacationDel.ajax","f2", function(rslt){
+		paging.ajaxFormSubmit("vacationDel.exc","f2", function(rslt){
 			console.log("ajaxFormSubmit -> callback");
 			console.log("결과데이터" + JSON.stringify(rslt));
 			
@@ -370,7 +372,7 @@ function vacDel(){
 							<input type="hidden" id="rankHidden">
 							<input type="hidden" id="situationHidden"><!-- 결재상태 -->
 							<!-- 새로고침 -->
-							<input type="button" class="btn btn-primary" name="reStart" value="전체보기" onclick="window.location.reload()">
+<!-- 							<input type="button" class="btn btn-primary" name="reStart" value="전체보기" onclick="window.location.reload()"> -->
 						</form>
 					</div>
 				</div>

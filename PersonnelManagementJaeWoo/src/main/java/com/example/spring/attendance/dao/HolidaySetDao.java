@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.spring.attendance.entity.DayMinPerson;
 import com.example.spring.attendance.entity.DeleteEventsData;
 import com.example.spring.attendance.entity.EventsData;
 import com.example.spring.attendance.entity.JsonData;
@@ -68,6 +69,13 @@ public class HolidaySetDao {
 		
 	}
 	
+	
+	public List<HashMap<String,String>> holidayRosterEventsList2(HashMap<String,Object> eventsList){
+		List<HashMap<String,String>> list = this.sqlSession.selectList(nameSpaceName + "holidayRosterEventsList2", eventsList);
+		
+		return list;
+	}
+	
 	public List<HashMap<String,String>> holidayRosterEventsList(){
 		List<HashMap<String,String>> list = this.sqlSession.selectList(nameSpaceName + "holidayRosterEventsList");
 		
@@ -81,6 +89,18 @@ public class HolidaySetDao {
 			EventsData tmp = (EventsData)eventsArrayList.get(i);
 			
 			result = this.sqlSession.insert(nameSpaceName + "holidayRosterDBInsert", tmp);
+		}
+		
+		return result;
+	}
+	
+	public int holidayRosterSetting(HashMap<String, DayMinPerson> map) {
+		int result = -1;
+		
+		for(String mapKey : map.keySet()) {
+			DayMinPerson tmp = (DayMinPerson)map.get(mapKey);
+			
+			result = this.sqlSession.insert(nameSpaceName + "holidayRosterSetting", tmp);
 		}
 		
 		return result;
@@ -115,8 +135,9 @@ public class HolidaySetDao {
 		
 		int result = 0;
 		
-		result = this.sqlSession.insert(nameSpaceName+"calenderUpdate",map);
-		
+		System.out.println("=========================   DAO  ==================================== mmmmmap   : "+map);
+		result = this.sqlSession.update(nameSpaceName+"calenderUpdate",map);
+		System.out.println("==============================================result===================="+result);
 		return result;
 	}
 	//휴일 일정 리스트 dao
@@ -130,7 +151,7 @@ public class HolidaySetDao {
 	public HashMap<String, String> calendarListDB(String start){
 		
 		HashMap<String, String> map = this.sqlSession.selectOne(nameSpaceName+"calendarListDB",start);
-		System.out.println("ListDB DAO ========================"+map);
+		System.out.println("ListDB DAO ================ㅇㅁㄹㅇㄴ========"+map);
 		return map;
 	}
 	//휴일설정 2번째 탭 리스트 읽어오기

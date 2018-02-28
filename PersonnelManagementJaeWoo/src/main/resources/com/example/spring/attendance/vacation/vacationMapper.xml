@@ -152,13 +152,25 @@
 	FROM DUAL
 	</select>
 	
-	<!-- 휴가일수설정 휴가일수 저장하기 -->
+	<!-- 휴가일수설정 휴가일수 저장하기 START-->
+	<!-- 
+		근태월마감 완성되면 UPDATE로하고  
+		안되면 INSERT로 해야 함
+	-->
 	<update id="vacationCountUpdate" parameterType="HashMap">
 	/* 휴가일수설정  휴가일수 저장하기 */
 	UPDATE EMPLOYEE_REMINDING_VAC SET
 	EMRE_VAC_UD = #{vacCnt}
 	WHERE EMP_EMNO = #{empEmno} AND BASE_YEAR = #{baseYear2}
 	</update>
+	
+<!-- 	<insert id="vacationCountUpdate" parameterType="HashMap"> -->
+
+<!-- 	</insert> -->
+	
+	
+	
+	<!-- 휴가일수설정 휴가일수 저장하기 END-->
 	
 	<!-- 휴가일수설정 사원등록 개수 -->
 	<select id="vacationCountEmpSignUpCntNum" resultType="java.lang.Integer">
@@ -275,7 +287,7 @@
 		EMP_EMNO,					#사원번호
 		ATTENDANCE_C,				#근태코드
 		VAST_C,						#휴가코드
-		VAST_CRT_DATE,				#휴가신청일자
+		VAST_REQ_DATE,				#휴가신청일자
 		VAST_START_DATE,			#휴가시작날짜
 		VAST_END_DATE,				#휴가종료날짜
 		VAST_VAC_UD,				#휴가일수
@@ -320,7 +332,7 @@
 	<select id="empVacListDetail" parameterType="HashMap" resultType="HashMap">
 	SELECT
 		VS.VAST_SERIAL_NUMBER AS vastSerialNumber, #휴가내역일련번호
-		CONCAT(LEFT(VS.VAST_CRT_DATE,4),'.',SUBSTRING(VS.VAST_CRT_DATE,5,2),'.',RIGHT(VS.VAST_CRT_DATE,2)) AS vastCrtDate, #휴가신청일
+		CONCAT(LEFT(VS.VAST_REQ_DATE,4),'.',SUBSTRING(VS.VAST_REQ_DATE,5,2),'.',RIGHT(VS.VAST_REQ_DATE,2)) AS vastCrtDate, #휴가신청일
 		VS.VAST_C AS vastC, #휴가코드
 		VS.VAST_PROGRESS_SITUATION AS vastProgressSituation, #진행상태
 		CONCAT(LEFT(VS.VAST_START_DATE,4),'.',SUBSTRING(VS.VAST_START_DATE,5,2),'.',RIGHT(VS.VAST_START_DATE,2)) AS vastStartDate, #휴가시작일
@@ -375,7 +387,7 @@
 <!-- 			OR (V.EMRE_VAC_UD - V.EMRE_PVAC_UD) LIKE CONCAT('%', #{keyword}, '%') -->
 <!-- 		</if> -->
 <!-- 		<if test="retTypeList != null and !retTypeList.equals('')"> -->
-<!-- 			AND RET.RETR_DEL_YN = #{retTypeList}	#재직(N) 여부  -->
+<!-- 			AND RET.RETR_DEL_YN ='N'	#재직(N) 여부  -->
 <!-- 		</if>	 -->
 <!-- 		<if test="deptNameList != null and !deptNameList.equals('')"> -->
 <!-- 			AND D.DEPT_CODE = #{deptNameList}	#부서명 셀렉트 -->
@@ -488,7 +500,7 @@
 	<select id="empVacList" parameterType="HashMap" resultType="HashMap">
 		SELECT 
 			VAST_SERIAL_NUMBER as vastSerialNumber, #신청일련번호
-			VS.VAST_CRT_DATE as vastCrtDate,	#신청일자 
+			VS.VAST_REQ_DATE as vastCrtDate,	#신청일자 
 			VC.VAST_TYPE as vastType,	#휴가타입	
 			CONCAT(LEFT(VS.VAST_START_DATE,4),'.', SUBSTRING(VS.VAST_START_DATE,5,2),'.', RIGHT(VS.VAST_START_DATE,2),'~', 
 				LEFT(VS.VAST_END_DATE,4),'.', SUBSTRING(VS.VAST_END_DATE,5,2),'.', RIGHT(VS.VAST_END_DATE,2)) as vastTerm,		#휴가기간
@@ -529,7 +541,8 @@
 		SELECT 
 			COUNT(VAST_PROGRESS_SITUATION) AS progCntNum 
 		FROM VAC_STATEMENT
-		WHERE VAST_PROGRESS_SITUATION = '승인대기';
+		WHERE VAST_PROGRESS_SITUATION = '승인대기'
+		AND VAST_DEL_YN='N';
 	</select>
 	
 	<!-- 휴가 신청현황 - 승인 결재 현황 셀렉박스 -->
@@ -549,7 +562,7 @@
 			E.EMP_NAME AS empName,	#사원이름
 			D.DEPT_NAME AS deptName,	#부서명
 			R.RANK_NAME AS rankName,	#직급
-			CONCAT(LEFT(VS.VAST_CRT_DATE,4),'.',SUBSTRING(VS.VAST_CRT_DATE,5,2),'.',RIGHT(VS.VAST_CRT_DATE,2)) AS vastCrtDate,	#휴가신청날짜
+			CONCAT(LEFT(VS.VAST_REQ_DATE,4),'.',SUBSTRING(VS.VAST_REQ_DATE,5,2),'.',RIGHT(VS.VAST_REQ_DATE,2)) AS vastCrtDate,	#휴가신청날짜
 			VC.VAST_C AS vastC,					#휴가코드
 			VC.VAST_TYPE AS vastType,			#휴가명
 			IF(VS.VAST_START_DATE = VS.VAST_END_DATE, CONCAT(LEFT(VS.VAST_START_DATE,4),'.', SUBSTRING(VS.VAST_START_DATE,5,2),'.', RIGHT(VS.VAST_START_DATE,2)), 
@@ -579,7 +592,7 @@
 			AND E.EMP_EMNO = #{empEmno}		
 		</if>
 		<if test="baseMonth != null and !baseMonth.equals('')">
-			AND VS.VAST_CRT_DATE LIKE CONCAT('%', (REPLACE(#{baseMonth}, '-', '')), '%')
+			AND VS.VAST_REQ_DATE LIKE CONCAT('%', (REPLACE(#{baseMonth}, '-', '')), '%')
 			AND RET.RETR_DEL_YN = 'N'
 		</if>
 		<if test="keyword != null and !keyword.equals('')">	<!-- 검색어 입력 -->
@@ -587,7 +600,7 @@
 			OR E.EMP_NAME LIKE CONCAT('%', #{keyword}, '%')			#이름
 			OR D.DEPT_NAME LIKE CONCAT('%', #{keyword}, '%')		#부서
 			OR R.RANK_NAME LIKE CONCAT('%', #{keyword}, '%')		#직급	
-			OR VS.VAST_CRT_DATE LIKE CONCAT('%', #{keyword}, '%')		#신청일
+			OR VS.VAST_REQ_DATE LIKE CONCAT('%', #{keyword}, '%')		#신청일
 			OR VC.VAST_TYPE LIKE CONCAT('%', #{keyword}, '%')			#휴가구분
 			OR VS.VAST_START_DATE LIKE CONCAT('%', #{keyword}, '%')		#휴가기간START
 			OR VS.VAST_END_DATE LIKE CONCAT('%', #{keyword}, '%')		#휴가기간END

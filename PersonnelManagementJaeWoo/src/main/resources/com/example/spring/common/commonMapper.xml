@@ -27,9 +27,9 @@
 		</if>
 		order by mnPrntNo ASC, mnIdx ASC	
 	</select>
-	<select id="navSet" parameterType="Int" resultType="HashMap">
+	<select id="navSet" parameterType="HashMap" resultType="HashMap">
 		select 
-			GREATEST(@r, LEAST(-1,(select @r:= menu.mn_prnt_no from menu where MN_NO=@r))) as mnNo
+			CAST(GREATEST(@r, LEAST(-1,(select @r:= menu.mn_prnt_no from menu where MN_NO=@r))) as unsigned) as mnNo
 		from (select @r<![CDATA[:=]]>#{mnNo}) as x, (select * from menu where mn_no<![CDATA[<]]>#{mnNo}) as xx
 		where @r<![CDATA[<>]]>0
 	</select>
@@ -73,5 +73,11 @@
 		where emp_emno =  #{empEmno} /*사원코드*/
 		and atr_aplystrt<![CDATA[<=]]> now()+0 /*권한시작날짜*/
 		and atr_aplyfini<![CDATA[>=]]> now()+0 /*권한종료날짜*/
+	</select>
+	<select id="urlCheck" parameterType="String" resultType="HashMap">
+		select
+			mn_use_yn as mnUseYn
+		from menu
+		where mn_url = #{mnUrl}
 	</select>
 </mapper>

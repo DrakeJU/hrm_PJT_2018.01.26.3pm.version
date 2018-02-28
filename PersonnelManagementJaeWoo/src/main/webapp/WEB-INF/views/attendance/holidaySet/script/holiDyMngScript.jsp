@@ -12,7 +12,7 @@
 	paging.ajaxSubmit("calendarList.exc","",function(rslt){
 		$("input[name='startDate']").val($('input[id="aaa"]').val()); //시작날짜
 
-		console.log("ajaxxxxxxxxxxxx: " + JSON.stringify(rslt));
+		//console.log("ajaxxxxxxxxxxxx: " + JSON.stringify(rslt));
 
 		calendarView(rslt); //캘린더함수호출
 	});//페이지 로딩시 사용자의 db 일정정보를 가져온다
@@ -45,10 +45,10 @@
 				obj.start = start;
 				paging.ajaxSubmit('calendarListDB',obj,function(rslt){
 		       		console.log("결과데이터 : " + JSON.stringify(rslt));
-		       		console.log("RSLT"+rslt.dbDate);
+		       		console.log("RSLT========"+rslt.dbDate);
 					$("#viewModal").find("form[id='viewForm']").find("input[id='startDate']").val(rslt.dbDate);
 					$("#viewModal").find("form[id='viewForm']").find("input[name='holiMemo']").val(rslt.memo);
-					$("#viewModal").find("form[id='viewForm']").find("select[name='holiselectbox']").val(rslt.event).prop("selected",true);
+					$("#viewModal").find("form[id='viewForm']").find("select[name='selectBox']").val(rslt.event).prop("selected",true);
 					//alert(JSON.stringify(rslt.event));
 					//alert($("#viewModal").find("form[id='viewForm']").find("input[name='holiselectbox']").val(rslt.event));
 				});
@@ -110,7 +110,6 @@
 	//일정등록 저장버튼클릭시
 	$("#insertBtn").click(function(){
 		var url = "/spring/calenderUpdate.do";
-		//var frim = $("#insertForm").attr("id");
 		
 		if(confirm("저장하시겠습니까?") == true){
 			paging.ajaxFormSubmit(url,"insertForm", function(result){
@@ -126,10 +125,9 @@
 			return false;
 		}
 	});
-	//일정등록 수정 버튼클릭시
+	//일정 보기 수정 버튼클릭시
 	$("#updateBtn").click(function(){
 		var url = "/spring/calenderUpdate.do";
-		//var frim = $("#insertForm").attr("id");
 		
 		if(confirm("수정하시겠습니까?") == true){
 			paging.ajaxFormSubmit(url,"viewForm", function(result){
@@ -138,7 +136,7 @@
 					alert("수정되었습니다");
 					location.href="/spring/holiDyMng";
 				}else{
-					alert("저장실패. 다시 입력해주세요");
+					alert("수정 실패. 다시 입력해주세요");
 				}
 			});
 		}else{
@@ -167,10 +165,12 @@
 
 	    }
 	});
-	//xbnt 클릭
+	//xbnt 클릭시 내용 비우기
 	$('[name=xbtn]').click(function(){
-		$("input[name=holiMemo]").val("");
+		$("input[name='holiMemo']").val("");
 	});
+	
+	
 	//second tab calendar List
 	/* 표 리스트 불러오기 start */
  	function secondTbodyList(){ //휴가 날자,휴가구분,메모 리스트 출력

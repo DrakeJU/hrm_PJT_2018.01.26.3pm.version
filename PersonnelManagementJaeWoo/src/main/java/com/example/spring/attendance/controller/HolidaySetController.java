@@ -4,7 +4,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.ibatis.javassist.bytecode.Descriptor.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.attendance.entity.JsonData;
 import com.example.spring.attendance.entity.JsonDataVac;
+import com.example.spring.attendance.entity.WeekRoster;
+import com.example.spring.attendance.entity.DayMinPerson;
 import com.example.spring.attendance.entity.DeleteEventsData;
 import com.example.spring.attendance.entity.EventsData;
 import com.example.spring.attendance.service.HolidaySetService;
@@ -95,35 +99,115 @@ public class HolidaySetController {
 	
 	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
 	@RequestMapping(value = "/holidayRosterSettingDBInsert")
-	public ModelAndView holidayRosterSettingDBInsert(@RequestParam HashMap<String,Object> infoMap) {
+	public ModelAndView holidayRosterSettingDBInsert(@RequestParam HashMap<String,Object> rosterSetting) {
 		//HashMap<String, String> empNameMap = new HashMap<String, String>();
 			
-		System.out.println("---------------------infoMap2" + infoMap);
+		System.out.println("---------------------infoMap2" + rosterSetting);
+		
+		HashMap<String,Object> infoMap = new HashMap<String, Object>();
+		HashMap<String, DayMinPerson> minPersonMap = new HashMap<String, DayMinPerson>();
+		
+		String yearMonth = (String) rosterSetting.get("yearMonth");
+		
+		infoMap.put("empName", rosterSetting.get("empName"));
+		infoMap.put("yearMonth", rosterSetting.get("yearMonth"));
+		
+		System.out.println("yearMonth : " + yearMonth);
+		
+		rosterSetting.remove("empName");
+		rosterSetting.remove("yearMonth");
+		
+		for(String mapKey : rosterSetting.keySet()) {
+//			System.out.println(mapKey + " : " + rosterSetting.get(mapKey));
+			String day = mapKey.substring(0, mapKey.length()-1);
+			String last = mapKey.substring(mapKey.length()-1);
+			String value = (rosterSetting.get(mapKey)).toString();
 			
+			DayMinPerson tmp = new DayMinPerson();
+			
+			
+			if(last.equals("D")) {
+				tmp.setMinPerson(String.valueOf(stringToInt(value)));
+				tmp.setDay(day);
+				String result = "C" + yearMonth + last;
+				tmp.setCode(result);
+			}else if(last.equals("E")) {
+				tmp.setMinPerson(String.valueOf(stringToInt(value)));
+				tmp.setDay(day);
+				String result = "C" + yearMonth + last;
+				tmp.setCode(result);
+			}else if(last.equals("N")) {
+				tmp.setMinPerson(String.valueOf(stringToInt(value)));
+				tmp.setDay(day);
+				String result = "C" + yearMonth + last;
+				tmp.setCode(result);
+			}
+			
+			minPersonMap.put(mapKey, tmp);
+			
+		}
+		
+//		for(String mapKey : rosterSetting.keySet()) {
+//			DayMinPerson tmp = (DayMinPerson)minPersonMap.get(mapKey);
+//			System.out.println("ssdd : " + mapKey);
+//			System.out.println(tmp.getDay() + " : " + tmp.getCode() + " : " + tmp.getMinPerson());
+//		}
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("holidayRoster");
 		mv.addObject("infoMap", infoMap);
 			
+		holidaySetService.holidayRosterSetting(minPersonMap);
 		holidaySetService.holidayRoster(infoMap);
 			
 		return mv;
 	}
 	
-	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
-	@RequestMapping(value = "/holidayRosterWorkerNumberDBInsert")
-	public ModelAndView holidayRosterWorkerNumberDBInsert(@RequestParam HashMap<String,Object> infoMap) {
-		//HashMap<String, String> empNameMap = new HashMap<String, String>();
-				
-		System.out.println("---------------------infoMap" + infoMap);
-				
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("holidayRoster");
-		mv.addObject("infoMap", infoMap);
-				
-		holidaySetService.holidayRoster(infoMap);
+	public static int stringToInt(String number) {
+		int result = -1;
 		
-		return mv;
+		if(number.equals("zero")) {
+			result = 0;
+		}else if(number.equals("one")) {
+			result = 1;
+		}else if(number.equals("two")) {
+			result = 2;
+		}else if(number.equals("three")) {
+			result = 3;
+		}else if(number.equals("four")) {
+			result = 4;
+		}else if(number.equals("five")) {
+			result = 5;
+		}else if(number.equals("six")) {
+			result = 6;
+		}else if(number.equals("seven")) {
+			result = 7;
+		}else if(number.equals("eight")) {
+			result = 8;
+		}else if(number.equals("nine")) {
+			result = 9;
+		}else if(number.equals("ten")) {
+			result = 10;
+		}
+		
+		return result;
 	}
+	
+//	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
+//	@RequestMapping(value = "/holidayRosterWorkerNumberDBInsert")
+//	public ModelAndView holidayRosterWorkerNumberDBInsert(@RequestParam HashMap<String,Object> infoMap) {
+//		//HashMap<String, String> empNameMap = new HashMap<String, String>();
+//				
+//		System.out.println("---------------------infoMap" + infoMap);
+//				
+//		ModelAndView mv = new ModelAndView();
+//		mv.setViewName("holidayRoster");
+//		mv.addObject("infoMap", infoMap);
+//				
+//		holidaySetService.holidayRoster(infoMap);
+//		
+//		return mv;
+//	}
 	
 	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
 	@RequestMapping(value = "/individualRoster")
@@ -133,7 +217,7 @@ public class HolidaySetController {
 	
 	//관리자 - 근무표 근무 인원 db에서 불러오는 컨트롤러.
 	@RequestMapping(value = "/holidayRosterEventsList.ajax")
-	public @ResponseBody List<HashMap<String, String>> holidayRosterEventsList(@RequestParam HashMap<String,String> eventsList) {
+	public @ResponseBody List<HashMap<String, String>> holidayRosterEventsList(@RequestParam HashMap<String,Object> eventsList) {
 		System.out.println("eventsList : " + eventsList);
 		
 		List<HashMap<String, String>> map = new ArrayList<HashMap<String, String>>();
@@ -142,6 +226,20 @@ public class HolidaySetController {
 		
 		System.out.println("------------- holidayRosterEventsList : "+map);
 		
+		return map;
+	}
+	
+	//관리자 - 근무표 근무 인원 db에서 불러오는 컨트롤러.
+	@RequestMapping(value = "/holidayRosterEventsList2.ajax")
+	public @ResponseBody List<HashMap<String, String>> holidayRosterEventsList2(@RequestParam HashMap<String,Object> eventsList) {
+		System.out.println("eventsList2323 : " + eventsList);
+		
+		List<HashMap<String, String>> map = new ArrayList<HashMap<String, String>>();
+			
+		map = holidaySetService.holidayRosterEventsList2(eventsList);
+			
+		System.out.println("------------- holidayRosterEventsList : "+map);
+			
 		return map;
 	}
 	

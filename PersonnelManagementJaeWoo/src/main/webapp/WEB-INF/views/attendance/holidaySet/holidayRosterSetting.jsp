@@ -40,8 +40,9 @@
 		$("input[name='yearMonth']").val(yearMonth);
 		
 		console.log("yearMonth : " + $("input[name='yearMonth']").val());
+		
 		$("form[name='rosterSetting']").submit();
-		$("form[name='hiddenForm']").submit();
+// 		$("form[name='hiddenForm']").submit();
 	}
 	
 	var searching =false; //검색 활성화 값 boolean
@@ -238,7 +239,7 @@
 					D : Day E : Evening N : Night
 				</div>
 				
-				<form action="holidayRosterWorkerNumberDBInsert" method="post" name="rosterSetting">			
+				<form action="holidayRosterSettingDBInsert" method="post" id="rosterSetting" name="rosterSetting">			
 				<div class="panel-body">
 					휴　일 - D : 
 					<select name="holidayD" class="w_40 mgb_5">
@@ -592,6 +593,8 @@
 					</select>
 					<br>
 				</div>
+				<input type="hidden" name="empName">
+				<input type="hidden" name="yearMonth">
 				</form>	
 				
 				<div class="panel-heading">
@@ -649,10 +652,10 @@
 
 	<input type="hidden" name="empEmno">
 
-	<form action="holidayRosterSettingDBInsert" name="hiddenForm" method="post">
-		<input type="hidden" name="empName">
-		<input type="hidden" name="yearMonth">
-	</form>
+<!-- 	<form action="holidayRosterSettingDBInsert" id="hiddenForm" name="hiddenForm" method="post"> -->
+<!-- 		<input type="hidden" name="empName"> -->
+<!-- 		<input type="hidden" name="yearMonth"> -->
+<!-- 	</form> -->
 	<!-- hidden form end-->
 	
 </div>

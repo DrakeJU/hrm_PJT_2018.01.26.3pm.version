@@ -20,7 +20,7 @@ $(function(){
 
 /* ajax - 휴가타입 셀렉박스 */
 function vacTypeList(){
-	paging.ajaxFormSubmit("vacTypeList.ajax", "vacReqFrm", function(rslt){
+	paging.ajaxFormSubmit("vacTypeList.exc", "vacReqFrm", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
 		console.log("결과데이타" + JSON.stringify(rslt));
 		
@@ -162,7 +162,7 @@ function vacSelect(){
 		$("input[type=hidden][name=baseYear]").val(moment().format('YYYY'));	//휴가개수 설정년도
 		$('#vacCntEmpListTbody').empty();	//이전 리스트 삭제
 		
-		paging.ajaxFormSubmit("vacationReqEmpList.ajax","vacEmpListModal", function(rslt){
+		paging.ajaxFormSubmit("vacationReqEmpList.exc","vacEmpListModal", function(rslt){
 			console.log("결과데이터: "+ JSON.stringify(rslt));
 			
 			$('#vacCntEmpListTable').children('thead').css('width','calc(100% - 1.1em)');	//테이블 스크롤 CSS
@@ -241,7 +241,7 @@ function vacSelect(){
 					<div class="panel-body">
 						<form class="form-inline" id="vacReqFrm" name="vacReqFrm" method="post">
 							<input type="hidden" name=""><!-- 권한 -->
-							<input type="hidden" name="empEmno" value="<%=(String)session.getAttribute("userEmno")%>">사원번호
+							<input type="hidden" name="empEmno" value="<%=(String)session.getAttribute("0905000311")%>">사원번호
 							
 							<table class="table table-bordered">
 								<tr>
@@ -285,14 +285,14 @@ function vacSelect(){
 									<td><!-- <i class="fa fa-asterisk-red" aria-hidden="true" ></i> -->신청자</td>
 									<td colspan="5" style="padding-left:0.5em">
 										<div class="input-group">	
-											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번">
+											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번" value="">
 											<span class="input-group-addon" data-toggle="modal" data-target="#empEmnoModal" style="cursor:pointer" onclick="vacationReqEmpList()">
 												<span class="glyphicon glyphicon-search" aria-hidden="true"></span> <!-- 검색 아이콘 -->
 											</span>
 										</div>
-											<input type="text" class="form-control" id="empName" placeholder="이름">
-											<input type="text" class="form-control" id="deptName" placeholder="부서">
-											<input type="text" class="form-control" id="rankName" placeholder="직급">
+											<input type="text" class="form-control" id="empName" placeholder="이름" value="">
+											<input type="text" class="form-control" id="deptName" placeholder="부서" value="">
+											<input type="text" class="form-control" id="rankName" placeholder="직급" value="">
 									</td>									
 								</tr>
 								
@@ -325,7 +325,7 @@ function vacSelect(){
 								</tr>
 							</table>
 							<div class="text-right">
-								<button type="button" class="btn btn-primary" id="submitGo" onclick="check_onclick('${pageContext.request.contextPath}/vacationRequest.ajax', 'vacReqFrm')">신청하기</button>
+								<button type="button" class="btn btn-primary" id="submitGo" onclick="check_onclick('${pageContext.request.contextPath}/vacationRequest.exc', 'vacReqFrm')">신청하기</button>
 <!-- 									<button type="button" class="btn btn-primary" onclick="check_onclick()">신청하기</button> -->
 							</div>
 						</form>

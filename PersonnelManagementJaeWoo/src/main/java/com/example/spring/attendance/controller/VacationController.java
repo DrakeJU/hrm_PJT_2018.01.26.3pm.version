@@ -45,7 +45,7 @@ public class VacationController {
 	
 	
 	/* 휴가일수설정 사원 리스트 출력 */
-	@RequestMapping(value="/vacationCountEmpList.ajax")
+	@RequestMapping(value="/vacationCountEmpList.exc")
 	public @ResponseBody HashMap<String, Object> vacationCountEmpList(
 			@RequestParam HashMap<String,Object> map) {
 		
@@ -70,7 +70,7 @@ public class VacationController {
 	}
 	
 	/* 휴가일수설정 자동 계산 */
-	@RequestMapping(value="/vacationCountAutoCalculation.ajax")
+	@RequestMapping(value="/vacationCountAutoCalculation.exc")
 	public @ResponseBody HashMap<String, Object> vacationCountAutoCalculation(
 			@RequestParam HashMap<String,Object> map) {
 		
@@ -95,7 +95,7 @@ public class VacationController {
 	}
 	
 	//휴가일수설정 휴가일수 저장하기
-	@RequestMapping(value = "/vacationCountUpdate.ajax")
+	@RequestMapping(value = "/vacationCountUpdate.exc")
 	public @ResponseBody HashMap<String,Object> vacationCountUpdate(
 			@RequestParam HashMap<String,Object> map) {
 
@@ -120,7 +120,7 @@ public class VacationController {
 	}
 	
 	/* 휴가일수설정 - 사원등록 필요 개수 */
-	@RequestMapping(value="/vacationCountEmpSignUpCntNum.ajax")
+	@RequestMapping(value="/vacationCountEmpSignUpCntNum.exc")
 	public @ResponseBody int vacationCountEmpSignUpCntNum() {
 		
 		int empSignUpCntNum = vacationService.vacationCountEmpSignUpCntNum();
@@ -130,7 +130,7 @@ public class VacationController {
 	} 
 	
 	/* 휴가일수설정 - 사원등록 리스트 출력 (사원정보 테이블 != 사원별 잔여휴가 테이블)*/
-	@RequestMapping(value="/vacationCountEmpSignUpList.ajax")
+	@RequestMapping(value="/vacationCountEmpSignUpList.exc")
 	public @ResponseBody HashMap<String, Object> vacationCountEmpSignUpList(
 			@RequestParam HashMap<String,Object> map) {
 		
@@ -155,7 +155,7 @@ public class VacationController {
 	}
 	
 	//휴가일수설정 - 사원등록 저장하기
-	@RequestMapping(value = "/vacCntEmpSignUpInsert.ajax")
+	@RequestMapping(value = "/vacCntEmpSignUpInsert.exc")
 	public @ResponseBody HashMap<String,Object> vacCntEmpSignUpInsert(
 			@RequestParam HashMap<String,Object> map) {
 
@@ -173,7 +173,7 @@ public class VacationController {
 	}
 
 	/* 휴가일수설정에 등록된 사원인지 체크 */
-	@RequestMapping(value="empVacChk.ajax")
+	@RequestMapping(value="empVacChk.exc")
 	public @ResponseBody int empVacChk(@RequestParam HashMap<String,Object> map){
 				
 		int empVacChk = vacationService.empVacChk(map);
@@ -188,7 +188,7 @@ public class VacationController {
 	}
 	
 	/* 휴가 신청하기 - 휴가 셀렉박스 리스트 */
-	@RequestMapping(value="vacTypeList.ajax")
+	@RequestMapping(value="vacTypeList.exc")
 	public @ResponseBody HashMap<String,Object> vacTypeList(
 			@RequestParam HashMap<String,Object> map){
 		
@@ -210,7 +210,7 @@ public class VacationController {
 	
 	
 	/* 휴가 신청 insert */
-	@RequestMapping(value = "/vacationRequest.ajax")
+	@RequestMapping(value = "/vacationRequest.exc")
 	public @ResponseBody HashMap<String,String> vatacionRequestInsert(
 			@RequestParam HashMap<String,String> map){ 
 		
@@ -229,7 +229,7 @@ public class VacationController {
 	
 	
 	/* 신청하기 속 : 사원검색 모달창 : 사원리스트 */
-	@RequestMapping(value="/vacationReqEmpList.ajax")
+	@RequestMapping(value="/vacationReqEmpList.exc")
 	public @ResponseBody HashMap<String,Object> vacationReqEmpList(
 			@RequestParam HashMap<String,Object> map){
 		
@@ -259,7 +259,7 @@ public class VacationController {
 	}
 	
 	/* 휴가조회(사원)-사원별 휴가 개수, 휴가신청내역  */
-	@RequestMapping(value="/vacationListSelect.ajax")
+	@RequestMapping(value="/vacationListSelect.exc")
 	public @ResponseBody HashMap<String, Object> vacationListSelect(
 			@RequestParam HashMap<String,Object> map) {
 		
@@ -286,7 +286,7 @@ public class VacationController {
 	}
 	
 	/* 휴가조회(사원)- 휴가내역 상세보기 모달  */
-	@RequestMapping(value="/empVacListDetail.ajax")
+	@RequestMapping(value="/empVacListDetail.exc")
 	public @ResponseBody HashMap<String, Object> empVacListDetail(
 			@RequestParam HashMap<String,Object> map) {
 		
@@ -310,7 +310,7 @@ public class VacationController {
 	}
 	
 	/* 휴가조회(사원)- 휴가내역 삭제  */
-	@RequestMapping(value="/vacationListDelete.ajax")
+	@RequestMapping(value="/vacationListDelete.exc")
 	public @ResponseBody HashMap<String, Object> vacationListDelete(
 			@RequestParam HashMap<String,Object> map) {
 		
@@ -340,13 +340,13 @@ public class VacationController {
 	}
 	
 	/* 휴가 조회 리스트 -관리자  */
-	@RequestMapping(value="/vacationListAdmin.ajax")
+	@RequestMapping(value="/vacationListAdmin.exc")
 	public @ResponseBody HashMap<String,Object> vacationListAdmin(
 			@RequestParam HashMap<String,Object> map){
 		logger.info("휴가조회관리자 Controller 진입 매개변수>>>>" + map);
 
 //		map.put("totalNoticeNum", vacationService.vacListMaxNum(map)); //리스트 총 개수
-//		map.put("vacationListAdmin", vacationService.vacationListAdmin(map));	//총 휴가현황 리스트
+		map.put("vacationListAdmin", vacationService.vacationListAdmin(map));	//총 휴가현황 리스트
 		
 		
 		List<HashMap<String,Object>> retType = vacationService.retTypeList(map);	//재직 여부 
@@ -375,7 +375,7 @@ public class VacationController {
 	}
 	
 	/* 휴가조회 관리자 : 사원 휴가 현황 정보 모달창 */
-	@RequestMapping(value="empVacationList.ajax")
+	@RequestMapping(value="empVacationList.exc")
 	public @ResponseBody HashMap<String,Object> empVacationList(
 			@RequestParam HashMap<String,Object> map){
 		logger.info("휴가조회관리자 모달 controller;;;;;" + map);
@@ -404,7 +404,7 @@ public class VacationController {
 
 
 	/* 휴가 조회 - 승인대기 개수 */
-	@RequestMapping(value="/vacationProgCntNum.ajax")
+	@RequestMapping(value="/vacationProgCntNum.exc")
 	public @ResponseBody int vacationProgCntNum() {
 		logger.info("vacation 휴가승인 개수 CONTROLLER///////");
 		
@@ -422,7 +422,7 @@ public class VacationController {
 	
 	
 	/* 휴가 신청현황 리스트 결과 페이지 */
-	@RequestMapping(value="/vacationProgressList.ajax")
+	@RequestMapping(value="/vacationProgressList.exc")
 	public @ResponseBody HashMap<String,Object> vacationProgressListPage(
 			@RequestParam HashMap<String,Object> map) {
 		logger.info("vacation 휴가 신청현황 리스 CONTROLLER 진입////");
@@ -453,7 +453,7 @@ public class VacationController {
 	
 	
 	/* 휴가 승인완료 저장 */
-	@RequestMapping(value="/vacationProgSave.ajax")
+	@RequestMapping(value="/vacationProgSave.exc")
 	public @ResponseBody HashMap<String,Object> vacationProgressSave(
 			@RequestParam HashMap<String,Object> map) {
 		logger.info("휴가 승인 완료 저장하기 parameter>>>>" + map);
@@ -471,7 +471,7 @@ public class VacationController {
 	
 	
 	/* 휴가 승인대기 삭제 */
-	@RequestMapping(value="vacationDel.ajax")
+	@RequestMapping(value="vacationDel.exc")
 	public @ResponseBody HashMap<String,Object> vacationDelete(
 			@RequestParam HashMap<String,Object> map){
 		logger.info("휴가 승인대기 삭제 parameter>>>>" + map);

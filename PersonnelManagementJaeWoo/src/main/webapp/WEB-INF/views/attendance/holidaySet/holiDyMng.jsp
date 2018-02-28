@@ -150,7 +150,7 @@
 																	<tr>
 																		<td style="text-align: right"width="30%">일자 구분 :</td>
 																		<td>
-																		<select name="holiselectbox"class="form-control">
+																		<select name="selectBox"class="form-control">
 																			<option value="regualWork">정상근무</option>
 																			<option value="unpaidDayoff">무급휴무일</option>
 																			<option value="unpaidHoli">무급휴무</option>

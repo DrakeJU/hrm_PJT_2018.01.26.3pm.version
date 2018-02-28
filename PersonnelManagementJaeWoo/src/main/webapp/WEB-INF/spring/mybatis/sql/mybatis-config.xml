@@ -13,6 +13,7 @@
 		<typeAlias alias="jsonDataVac" type="com.example.spring.attendance.entity.JsonDataVac"/>
 		<typeAlias alias="eventsData" type="com.example.spring.attendance.entity.EventsData"/>
 		<typeAlias alias="deleteEventsData" type="com.example.spring.attendance.entity.DeleteEventsData"/>
+		<typeAlias alias="dayMinPerson" type="com.example.spring.attendance.entity.DayMinPerson"/>
 	</typeAliases>
 	
 	<plugins>

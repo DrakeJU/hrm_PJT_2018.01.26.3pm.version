@@ -19,9 +19,9 @@ public class CommonService {
 	private CommonDao commonDao;
 	
 	//권한 별 사이드바 list
-	public List<HashMap<String,Object>> navList(String empEmno){
+	public List<HashMap<String,String>> navList(String empEmno){
 		
-		List<HashMap<String,Object>> navList =commonDao.navList(empEmno);
+		List<HashMap<String,String>> navList =commonDao.navList(empEmno);
 		return navList;
 	}//navList
 	
@@ -52,4 +52,12 @@ public class CommonService {
 		List<HashMap<String,Object>> userAuthList = commonDao.authorityProcess(map);
 		return userAuthList;
 	}//authorityProcess
+	
+	//url check
+	public HashMap<String,String> urlCheck(String mnUrl){
+			
+		HashMap<String,String> map = commonDao.urlCheck(mnUrl);
+		return map;
+	}//urlCheck
+	
 }//CommonService
