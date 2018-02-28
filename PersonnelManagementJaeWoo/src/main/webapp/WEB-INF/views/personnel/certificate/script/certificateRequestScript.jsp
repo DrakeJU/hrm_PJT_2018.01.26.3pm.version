@@ -10,6 +10,8 @@
 	//hidden('#reqUserEmno')는 스크립트 영역 밑의 <body>영역에 있음
 	String userEmno = (String)request.getAttribute("userEmno");
 %>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script language="javascript">
 
 	$(document).ready(function(){
@@ -21,6 +23,7 @@
 		
 	});
 	
+	
 	//증명서 신청 시 사원정보
 	function certificateRequestEmpInfoFunc(empEmno){
 		
@@ -29,7 +32,7 @@
 		
 		paging.ajaxSubmit(url,data,function(result){
 			
-			console.log("data: " + JSON.stringify(result));
+			console.log("증명서 신청 시 사원정보: " + JSON.stringify(result));
 
 			var thisBody = $("#crtfRequestEmpInfo tbody");
 			thisBody.find("input[name='crtfRequestDate']").val(result.crtfRequestDate);
@@ -50,28 +53,24 @@
 		
 		paging.ajaxSubmit(url,data,function(result){
 			
-			console.log("listData: " + JSON.stringify(result));
+			console.log("증명서 신청내역: " + JSON.stringify(result));
 			
 			var thisBody = $("#crtfRequestList table tbody");
 			
 			if(result.length <= 0 || result == null){	//증명서 신청내역이 없을경우
 				
 				if(thisBody.find("tr")){
-					
 					thisBody.find("tr").each(function(){
 						$(this).remove();
 					});
-
 				}//if
 				
 			}else{										//증명서 신청내역이 있을경우
 				
 				if(thisBody.find("tr")){
-					
 					thisBody.find("tr").each(function(){
 						$(this).remove();
 					});
-					
 				}//if
 				
 				$.each(result,function(idx){
@@ -85,9 +84,11 @@
 								"<td name='crtfUse'>" + result[idx].crtfUse + "</td>" + 
 								"<td name='crtfRequestDate'>" + result[idx].crtfRequestDate + "</td>" + 
 								"<td name='crtfIssueDate'>" + result[idx].crtfIssueDate + "</td>" + 
-								"<td name='crtfProgressSituation'>" + result[idx].crtfProgressSituation + "</td>" + 
+								//"<td name='crtfProgressSituation'>" + result[idx].crtfProgressSituation + "</td>" + 
+								"<td name='crtfProgressSituation'><input type='checkbox' id='toggleSwitch' data-toggle='toggle' data-size='small' data-on='승인완료' data-off='승인대기'></td>" +
 							"</tr>"
 					);
+					
 				});
 			
 			}//if
@@ -132,8 +133,6 @@
 		}//if
 	});
 	
-	
-	
 	//증명서 상세정보
 	function certificateRequestInfoFunc(data){
 		
@@ -170,43 +169,100 @@
 		
 		paging.ajaxSubmit("empInfo.do",obj,function(rslt){
 			
-			console.log("data2: " + JSON.stringify(rslt));
-			
 			 $("#viewModal #viewForm input[name='deptName']").val(rslt.deptName); //부서명
 			 $("#viewModal #viewForm input[name='rankName']").val(rslt.rankName); //직위/직급명
 		});
 		
 	}
 	
-	//증명서 신청내역 검색
-	function crtfSearchFunc(){
+	//증명서 신청내역 검색조건에 따른 하위 select 변환/증명서 신청내역 검색
+	function crtfSearchSelectChangeFunc(){
 		
-		var crtfSearchSelectName = $("#crtfSearch").find("select[name='crtfSearchSelectLg'] option:selected").val();
+		var crtfSearchSelect = $("#crtfSearch").find("select[name='crtfSearchSelectLg'] option:selected").val();
 		var crtfSearchSelectMd = $("#crtfSearch").find("select[name='crtfSearchSelectMd']");
-		var crtfSearchSelectCRTF = $("#crtfSearch").find("select[name='crtfSearchSelectCRTF']");
-		var crtfSearchSelectCPS = $("#crtfSearch").find("select[name='crtfSearchSelectCPS']");
-
-		if(crtfSearchSelectName == "certificate"){
-			
-			crtfSearchSelectMd.style.display="none";
-			crtfSearchSelectCRTF.style.display="";
-			crtfSearchSelectCPS.style.display="none";
-			
-		}else if(crtfSearchSelectName == "crtfProgressSituation"){
-
-			crtfSearchSelectMd.style.display="none";
-			crtfSearchSelectCRTF.style.display="none";
-			crtfSearchSelectCPS.style.display="";
-			
+		
+		$("#crtfSearch").find("select[name='crtfSearchSelectMd'] > option").remove();
+		
+		if(crtfSearchSelect == 'certificate'){
+			$("#crtfSearch").find("select[name='crtfSearchSelectMd']").append(
+									"<option>선택</option>" + 
+									"<option>재직증명서</option>" + 
+									"<option>경력증명서</option>" + 
+									"<option>퇴직증명서</option>");
+		}else if(crtfSearchSelect == 'crtfProgressSituation'){
+			$("#crtfSearch").find("select[name='crtfSearchSelectMd']").append(
+									"<option value='default'>선택</option>" + 
+									"<option>승인대기</option>" +  
+									"<option>승인완료</option>");
 		}else{
+			$("#crtfSearch").find("select[name='crtfSearchSelectMd']").append(
+									"<option value='default'>선택</option>");
+		}//if
 			
-			crtfSearchSelectMd.style.display="";
-			crtfSearchSelectCRTF.style.display="none";
-			crtfSearchSelectCPS.style.display="none";
-			
+	}//crtfSearchFunc
+	
+	//증명서 신청내역 목록 검색하기
+	$("#crtfSearchBtn").on("click",function(){
+		
+		var empEmno = $("#reqUserEmno").val();
+		var crtfSearchSelect = $("#crtfSearch").find("select[name='crtfSearchSelectLg'] option:selected").val();
+		var crtfSearchSelectVal = $("#crtfSearch").find("select[name='crtfSearchSelectMd'] option:selected").text();
+		
+		if(crtfSearchSelect == "default"){
+			alert("검색조건을 선택해주세요.");
+			return false;
+		}else if(crtfSearchSelectVal == "선택"){
+			alert("검색조건을 선택해주세요.");
+			return false;
 		}//if
 		
-	}
+		var url = "/spring/certificateRequestList.do";
+		var data = {"empEmno":empEmno,"crtfSearchSelect":crtfSearchSelect,"crtfSelect":crtfSearchSelectVal};
+		
+		paging.ajaxSubmit(url,data,function(result){
+			console.log("dataaaa: " + JSON.stringify(result));
+			var thisBody = $("#crtfRequestList table tbody");
+			
+			if(result.length <= 0 || result == null){	//증명서 신청내역이 없을경우
+				
+				if(thisBody.find("tr")){
+					
+					thisBody.find("tr").each(function(){
+						$(this).remove();
+					});
+	
+				}//if
+				
+			}else{										//증명서 신청내역이 있을경우
+				
+				if(thisBody.find("tr")){
+					
+					thisBody.find("tr").each(function(){
+						$(this).remove();
+					});
+					
+				}//if
+				
+				$.each(result,function(idx){
+				
+					thisBody.append(
+							"<tr data-toggle='modal' data-target='#viewModal' onClick='certificateRequestInfoFunc($(this))'>" + 
+								"<td name='crtfSeq'>" + result[idx].crtfSeq + "</td>" + 
+								"<td name='empEmno'>" + result[idx].empEmno + "</td>" + 
+								"<td name='empName'>" + result[idx].empName + "</td>" + 
+								"<td name='commName'>" + result[idx].commName + "</td>" + 
+								"<td name='crtfUse'>" + result[idx].crtfUse + "</td>" + 
+								"<td name='crtfRequestDate'>" + result[idx].crtfRequestDate + "</td>" + 
+								"<td name='crtfIssueDate'>" + result[idx].crtfIssueDate + "</td>" + 
+								"<td name='crtfProgressSituation'>" + result[idx].crtfProgressSituation + "</td>" + 
+							"</tr>"
+					);
+				});
+			
+			}//if
+		});
+	
+	});
 	
 	//상세보기, 미리보기 버튼 클릭시
 	$("#viewBtn").click(function(){

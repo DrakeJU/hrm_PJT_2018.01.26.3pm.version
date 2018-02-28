@@ -18,6 +18,14 @@ public class ScheduleService {
 	@Resource(name="scheduleDao")
 	private ScheduleDao scheduleDao;
 	
+	//사원정보가져오기
+	public HashMap<String, Object> empInfo(String emno){
+			
+		HashMap<String, Object> map = scheduleDao.empInfo(emno);
+			
+		return map;
+	}
+	
 	//일정등록 service
 	public int scheduleInsert(HashMap<String, String> map) {
 		

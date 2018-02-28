@@ -30,13 +30,23 @@ public class CertificateController {
 	
 	//증명서발급메인화면 
 	@RequestMapping(value="certificateIssue.do")
-	public String certificateIssue() {
+	public ModelAndView certificateIssue(HttpServletRequest request) {
 		
-		return "certificateIssue";
+		HttpSession session = request.getSession();
+				
+		System.out.println("session : " + session.getAttribute("userEmno"));
+		
+		String emno = String.valueOf(session.getAttribute("userEmno"));
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("empInfo",certificateService.empInfo(emno));
+		mv.setViewName("certificateIssue");
+		
+		return mv;
 	}
 	
-	//증명서 정보 가져오기
-	@RequestMapping(value="certificateList.exc")
+	//증명서 정보 가져오기(관리자)
+	@RequestMapping(value="certificateList.do")
 	public @ResponseBody HashMap<String, Object> certificateList(@RequestParam HashMap<String, Object> map){
 		
 		map.put("certificateMaxNum", certificateService.certificateMaxNum(map));
@@ -45,10 +55,20 @@ public class CertificateController {
 		return map;
 	}
 	
+	//증명서 정보 가져오기(사원)
+	@RequestMapping(value="certificateListEmp.do")
+	public @ResponseBody HashMap<String, Object> certificateListEmp(@RequestParam HashMap<String, Object> map){
+		
+		map.put("certificateMaxNum", certificateService.certificateMaxNum(map));
+		map.put("crtfList", certificateService.certificateList(map));
+	
+		return map;
+	}
+	
 	//사원정보가져오기
 	@RequestMapping(value="empInfo.do")
 	public @ResponseBody HashMap<String, Object> empInfo(@RequestParam String emno){
-		
+		System.out.println("empInfo controller emno : " + emno);
 		HashMap<String, Object> map = certificateService.empInfo(emno);
 		
 		return map;
@@ -125,9 +145,9 @@ public class CertificateController {
 	
 	//증명서 신청내역 목록
 	@RequestMapping(value="certificateRequestList.do")
-	public @ResponseBody List<HashMap<String,Object>> certificateRequestList(@RequestParam(value="empEmno") String empEmno){
+	public @ResponseBody List<HashMap<String,Object>> certificateRequestList(@RequestParam HashMap<String,Object> paramMap){
 		
-		List<HashMap<String,Object>> list = certificateService.certificateRequestList(empEmno);
+		List<HashMap<String,Object>> list = certificateService.certificateRequestList(paramMap);
 		
 		return list;
 		

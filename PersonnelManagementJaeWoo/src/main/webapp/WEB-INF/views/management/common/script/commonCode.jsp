@@ -55,9 +55,21 @@
 			
 			
 			
-			/* 메인 공통코드 검색 목록 */
-			$("#searchPanel .panel-body").find("#searchBtn").on("click", function(){	//검색 버튼 눌렀을 떄
+			//검색 버튼 눌렀을 떄
+			$("#searchPanel .panel-body").find("#searchBtn").on("click", function(){
+				commSearchList();
+			});
 			
+			//검색 Enter 키 눌렀을 때
+			$("#searchPanel .panel-body").find("input[name='commonSearch']").on("keydown",function(e){
+				if(e.keyCode == 13){
+					commSearchList();
+				}//if
+			});
+				
+			/* 메인 공통코드 검색 목록 */
+			function commSearchList(){
+				
 				var commonSelect = $("#searchPanel").find("select[name='commonSelect'] option:selected").val();//검색조건
 				var commonSearch = $("#searchPanel").find("input[name='commonSearch']").val();	//검색내용
 				
@@ -71,72 +83,67 @@
 					alert("검색내용을 입력해주세요.");
 					return false;
 				}else{
-					commSearchListAjaxSubmit(url,data);	//검색조건 목록 ajax함수 호출
+				
+					paging.ajaxSubmit(url,data,function(result){
+						
+						$("#commList").find("tbody > tr").remove();	//기존 공통코드 목록 삭제
+						
+						$.each(result,function(index,value){	//검색조건에 맞는 목록 동적 생성
+						
+							$("#commList").find("tbody").append(
+									"<tr name='commCodeInfo' onClick='commInfoListFunc($(this))' data-toggle='modal' style='cursor:pointer'>" + 
+										"<td name='commCode'>" + result[index].commCode + "</td>" +			//공통코드
+										"<td name='commName'>" + result[index].commName + "</td>" +			//공통코드 명
+										"<td name='commCodeInfo'>" + result[index].commCodeInfo + "</td>" +	//공통코드 정보
+										"<td name='commRegMn'>" + result[index].commRegMn + "</td>" +		//공통코드 등록자
+										"<td name='commCodeCrt'>" + result[index].commCodeCrt + "</td>" +	//공통코드 생성일
+										"<td name='commCodeUpdt'>" + result[index].commCodeUpdt + "</td>" +	//공통코드 수정일
+										"<td name='commDelYn'>Y</td>" +										//공통코드 사용여부
+										"<td name='commUpdt' onclick='event.cancelBubble = true'>" + 		
+											"<button type='button' class='btn btn-default' name='updateBtn'>수정</button>" +	//수정버튼
+											"<button type='button' class='btn btn-default' name='deleteBtn'>삭제</button>" +	//삭제버튼
+										"</td>" +
+									"</tr>"	
+	
+							);
+							
+						});//each
+						
+						// 동적 생성한 태그에도 이벤트를 걸어주기 위해 해당 이벤트함수 호출
+						$("div[id='commList'] table button[name='updateBtn']").on("click",function(){//공통코드 수정버튼 눌렀을 때 함수 실행
+							commUpdateFunc($(this));	//공통코드 수정 함수에 수정하려는 해당 tr의 정보 넘기기
+						});
+						
+						$("#commList table button[name='deleteBtn']").on("click",function(){	//공통코드 삭제버튼 눌렀을 때 함수 실행
+							commDeleteFunc($(this));	//공통코드 삭제 함수에 삭제하려는 해당 tr의 정보 넘기기
+						});
+						
+					});//paging.ajaxSubmit
+					
+					// 검색조건 목록에 맞는 pagingAjax 호출
+					var url = "/spring/commonPaging.do";
+					var commonSelect = $("#searchPanel select > option:selected").val();	//검색조건
+					var commonSearch = $("#searchPanel input[name='commonSearch']").val();	//검색내용
+					var data = {"commonSelect":commonSelect,"commonSearch":commonSearch};
+					
+					paging.ajaxSubmit(url,data,function(result){	//페이징에 관한 기본조건 가져오기 위한 ajax
+						
+						var allPostNum = result.allPostNum;			//전체게시물 개수
+						var postNum = result.postNum;				//화면에 보여질 게시물 개수
+						var pageNum = result.pageNum;				//화면에 보여질 페이지 개수
+						var selectPageNum = result.selectPageNum;	//선택 페이지
+						
+						var data = {"allPostNum":allPostNum,"postNum":postNum,
+								"pageNum":pageNum,"selectPageNum":selectPageNum};
+						
+						pagingFunc(data);	//pagingNav Ajax 호출
+						
+					});
+				
 				}//if
 				
-			});
-				
-			function commSearchListAjaxSubmit(url,data){	//검색조건 목록 ajax함수
-				
-				paging.ajaxSubmit(url,data,function(result){
-					
-					$("#commList").find("tbody > tr").remove();	//기존 공통코드 목록 삭제
-					
-					$.each(result,function(index,value){	//검색조건에 맞는 목록 동적 생성
-					
-						$("#commList").find("tbody").append(
-								"<tr name='commCodeInfo' onClick='commInfoListFunc($(this))' data-toggle='modal' style='cursor:pointer'>" + 
-									"<td name='commCode'>" + result[index].commCode + "</td>" +			//공통코드
-									"<td name='commName'>" + result[index].commName + "</td>" +			//공통코드 명
-									"<td name='commCodeInfo'>" + result[index].commCodeInfo + "</td>" +	//공통코드 정보
-									"<td name='commRegMn'>" + result[index].commRegMn + "</td>" +		//공통코드 등록자
-									"<td name='commCodeCrt'>" + result[index].commCodeCrt + "</td>" +	//공통코드 생성일
-									"<td name='commCodeUpdt'>" + result[index].commCodeUpdt + "</td>" +	//공통코드 수정일
-									"<td name='commDelYn'>Y</td>" +										//공통코드 사용여부
-									"<td name='commUpdt' onclick='event.cancelBubble = true'>" + 		
-										"<button type='button' class='btn btn-default' name='updateBtn'>수정</button>" +	//수정버튼
-										"<button type='button' class='btn btn-default' name='deleteBtn'>삭제</button>" +	//삭제버튼
-									"</td>" +
-								"</tr>"	
-
-						);
-						
-					});//each
-					
-					// 동적 생성한 태그에도 이벤트를 걸어주기 위해 해당 이벤트함수 호출
-					$("div[id='commList'] table button[name='updateBtn']").on("click",function(){//공통코드 수정버튼 눌렀을 때 함수 실행
-						commUpdateFunc($(this));	//공통코드 수정 함수에 수정하려는 해당 tr의 정보 넘기기
-					});
-					
-					$("#commList table button[name='deleteBtn']").on("click",function(){	//공통코드 삭제버튼 눌렀을 때 함수 실행
-						commDeleteFunc($(this));	//공통코드 삭제 함수에 삭제하려는 해당 tr의 정보 넘기기
-					});
-					
-				});//paging.ajaxSubmit
-				
-				// 검색조건 목록에 맞는 pagingAjax 호출
-				var url = "/spring/commonPaging.do";
-				var commonSelect = $("#searchPanel select > option:selected").val();	//검색조건
-				var commonSearch = $("#searchPanel input[name='commonSearch']").val();	//검색내용
-				var data = {"commonSelect":commonSelect,"commonSearch":commonSearch};
-				
-				paging.ajaxSubmit(url,data,function(result){	//페이징에 관한 기본조건 가져오기 위한 ajax
-					
-					var allPostNum = result.allPostNum;			//전체게시물 개수
-					var postNum = result.postNum;				//화면에 보여질 게시물 개수
-					var pageNum = result.pageNum;				//화면에 보여질 페이지 개수
-					var selectPageNum = result.selectPageNum;	//선택 페이지
-					
-					var data = {"allPostNum":allPostNum,"postNum":postNum,
-							"pageNum":pageNum,"selectPageNum":selectPageNum};
-					
-					pagingFunc(data);	//pagingNav Ajax 호출
-					
-				});
-				
-			}//commSearchListAjaxSubmit
+			}//commSearchList
 			/* 메인 공통코드 검색 목록 */
-			
 
 			
 			/* 메인 공통코드 수정 */
@@ -536,7 +543,6 @@
 			
 			var commonSelect = $("#searchPanel").find("select[name='commonSelect'] option:selected").val();//검색조건
 			var commonSearch = $("#searchPanel").find("input[name='commonSearch']").val();	//검색내용
-			
 			var url = "/spring/commonSearchList.do";
 			var data = {"commonSelect":commonSelect,"commonSearch":commonSearch,"selectPageNum":target.attr("name")};
 			

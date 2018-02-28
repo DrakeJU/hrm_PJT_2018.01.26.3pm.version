@@ -60,7 +60,7 @@ public class EmpMenuController {
 		List<HashMap<String, String>> aList = empMenuService.getAllowanceData();
 		logger.debug("abc:::"+aList.get(0).get("scomNhCst"));
 		//mv.addObject("aList",empMenuService.getAllowanceData());
-		mv.addObject("aList",aList);
+		//mv.addObject("aList",aList);
 		
 		mv.setViewName("emp_newsali");
 		return mv;
@@ -72,11 +72,16 @@ public class EmpMenuController {
 
 		HashMap<String, String> map = new HashMap<String, String>();
 		ModelAndView mv = new ModelAndView();
-		System.out.println("map : "+params);
+		//System.out.println("eximap : "+params);
 		
 		
 		mv.addObject("list",empMenuService.exi_checkbox_Choice(params));
+		
+		System.out.println("exilist"+empMenuService.exi_checkbox_Choice(params));
 		mv.addObject("count",empMenuService.exi_checkbox_Choice(params).size());
+	
+		//mv.addObject("aList",empMenuService.getAllowanceData());
+
 		mv.setViewName("emp_exisali");
 		
 		return mv;

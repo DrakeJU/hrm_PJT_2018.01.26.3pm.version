@@ -70,6 +70,7 @@
 			XX.EMP_EMNO AS empEmno 		/*사원번호*/
 			,XX.EMP_NAME AS empName 	/*성명*/
 			,XX.RANK_NAME AS rankName 	/*직위/직급명*/
+			,XX.DEPT_CODE AS deptCode	/*부서코드*/
 			,DEPT_NAME AS deptName 		/*부서명*/
 		FROM(
 				SELECT
@@ -136,35 +137,52 @@
 	</insert>
 	
 	<!-- 증명서 신청내역 목록 -->
-	<select id="certificateRequestList" parameterType="String" resultType="HashMap">
+	<select id="certificateRequestList" parameterType="HashMap" resultType="HashMap">
 	
 		/* /personnel/certificate/certificateMapper.xml - certificateRequestList(증명서 신청내역 목록) */
 		SELECT
-			XX.CRTF_SEQ AS crtfSeq,												/*일련번호*/
-		    XX.EMP_EMNO AS empEmno,												/*사원번호*/
-		    XX.EMP_NAME AS empName,												/*사원이름*/
-		    C.COMM_NAME AS commName,											/*신청서구분*/
-		    XX.CRTF_USE AS crtfUse,												/*용도*/
-		    DATE_FORMAT(XX.CRTF_REQUEST_DATE, "%Y-%m-%d") AS crtfRequestDate,	/*신청일*/
-		    XX.CRTF_ISSUE_DATE AS crtfIssueDate,								/*발행일*/
-		    XX.CRTF_PROGRESS_SITUATION AS crtfProgressSituation,				/*전자결재상태*/
-		    XX.CRTF_DEL_YN AS crtfDelYn											/*삭제여부*/
+			XXX.*
 		FROM
-			(
-		    SELECT
-				X.*,
-				E.EMP_NAME
+		(
+			SELECT
+				XX.CRTF_SEQ AS crtfSeq,												/*일련번호*/
+			    XX.EMP_EMNO AS empEmno,												/*사원번호*/
+			    XX.EMP_NAME AS empName,												/*사원이름*/
+			    C.COMM_NAME AS commName,											/*신청서구분*/
+			    XX.CRTF_USE AS crtfUse,												/*용도*/
+			    DATE_FORMAT(XX.CRTF_REQUEST_DATE, "%Y-%m-%d") AS crtfRequestDate,	/*신청일*/
+			    XX.CRTF_ISSUE_DATE AS crtfIssueDate,								/*발행일*/
+			    XX.CRTF_PROGRESS_SITUATION AS crtfProgressSituation,				/*전자결재상태*/
+			    XX.CRTF_DEL_YN AS crtfDelYn											/*삭제여부*/
 			FROM
 				(
-				SELECT
-					*
-				FROM CERTIFICATE
-				WHERE CRTF_DEL_YN = "N" AND EMP_EMNO = #{empEmno}
-				) X, EMPLOYEE E
-			WHERE E.EMP_EMNO = X.EMP_EMNO
-		) XX, COMMON C
-		WHERE XX.COMM_CODE = C.COMM_CODE
-		ORDER BY XX.CRTF_SEQ DESC
+			    SELECT
+					X.*,
+					E.EMP_NAME
+				FROM
+					(
+					SELECT
+						*
+					FROM CERTIFICATE
+					WHERE CRTF_DEL_YN = "N" AND EMP_EMNO = #{empEmno}
+					) X, EMPLOYEE E
+				WHERE E.EMP_EMNO = X.EMP_EMNO
+			) XX, COMMON C
+			WHERE XX.COMM_CODE = C.COMM_CODE
+			ORDER BY XX.CRTF_SEQ DESC
+		) XXX
+		<where>
+			<if test="crtfSearchSelect != null">
+				<choose>
+					<when test="crtfSearchSelect == 'certificate'">
+						XXX.commName = #{crtfSelect}
+					</when>
+					<when test="crtfSearchSelect == 'crtfProgressSituation'">
+						XXX.crtfProgressSituation = #{crtfSelect}
+					</when>
+				</choose>
+			</if>
+		</where>
 	
 	</select>
 	

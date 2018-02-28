@@ -66,8 +66,8 @@ public class PaycMenuDao {
     		aamt = Integer.parseInt((String) deduction.get(i).get("SEMP_SAL"))
      			   +Integer.parseInt((String) deduction.get(i).get("SEMP_TAMT"))
      			   +Integer.parseInt((String) deduction.get(i).get("SEMP_FDEX"))
-     			   +Integer.parseInt((String) deduction.get(i).get("SEMP_NW_CST"))
-     			   +Integer.parseInt((String) deduction.get(i).get("SEMP_BW_CST"))
+     			   //+Integer.parseInt((String) deduction.get(i).get("SEMP_NW_CST"))
+     			   //+Integer.parseInt((String) deduction.get(i).get("SEMP_BW_CST"))
     		 	   +Integer.parseInt((String) deduction.get(i).get("SEMP_CMC"));
     		
     		famt = damt + aamt;
@@ -89,9 +89,9 @@ public class PaycMenuDao {
     		
     		m1.put("tamt", deduction.get(i).get("SEMP_TAMT"));
     		m1.put("fdex",deduction.get(i).get("SEMP_FDEX"));
-    		m1.put("snc",deduction.get(i).get("SEMP_NW_CST"));
+    		/*m1.put("snc",deduction.get(i).get("SEMP_NW_CST"));
     		m1.put("sbc",deduction.get(i).get("SEMP_BW_CST"));
-    		m1.put("slc",deduction.get(i).get("SEMP_L_CST"));
+    		m1.put("slc",deduction.get(i).get("SEMP_L_CST"));*/
     		m1.put("cmc",deduction.get(i).get("SEMP_CMC"));
     		
      		m1.put("npen",deduction.get(i).get("npen"));

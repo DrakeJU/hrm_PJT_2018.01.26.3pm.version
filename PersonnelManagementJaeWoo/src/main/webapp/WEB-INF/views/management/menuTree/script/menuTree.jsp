@@ -92,10 +92,22 @@
 		    commMenu();
 		};//menuInsert
 	
+		//menu 삭제 함수
 		var menuDelete = function(){
-		    var mnNoData = {}; 
-		    mnNoData.mnNo =  $("[name='mnNo']").text()//가져올 menu code 변수
+		    var mnNoData = {};
+		    mnNoData.mnNoList =  []; //가져올 menu code 배열 저장 변수
 		    
+		    var mnNo = $("[name='mnNo']").text();
+		    var mnAllNode = $("#"+mnNo+" li"); 
+		    
+		    mnNoData.mnNoList.push(mnNo);
+		    
+		    //자식 노드 mnNo 저장
+		   	mnAllNode.each(function(index){
+		   		mnNoData.mnNoList.push($(this).attr("id"));
+		   	});//each
+		    
+		    $("[name='mnNo']").text();
 		    paging.ajaxSubmit("/spring/menuDelete.do",mnNoData,"resultData",true);
 		}//menuDelete
 	
@@ -113,7 +125,6 @@
 		//가져온 menu list 를 menu Tree에 배치하는 함수
 		var menuTree = function menuTree(result){
 		    //ssTree 호출
-		   
 		    $("#tree").ssTree(result.data);
 		    //클릭 이벤트 등록
 		    $("#tree li").clickEvent();

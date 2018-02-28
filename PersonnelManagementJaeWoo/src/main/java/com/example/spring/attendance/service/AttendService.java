@@ -59,16 +59,42 @@ public class AttendService {
 	 * 개요    : 
 	 * @Author : 제영호
 	 * @Date   : 2018.01.??
-	 ***************************************************************************************/
+	 ***************************************************************************************/	
 	
-	public List<HashMap<String, Object>> readMnthngAttdCrtCls(HashMap<String, String> paramMap) {
+	public int readMnthngAttdCrtClsCnt(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
+		return attendDao.readMnthngAttdCrtClsCnt(paramMap);
+	}
+	
+	public List<HashMap<String, Object>> readMnthngAttdCrtCls(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		int choicePage = Integer.parseInt((String)paramMap.get("choicePage"));
+		int viewNoticeMaxNum = Integer.parseInt((String)paramMap.get("viewNoticeMaxNum"));
+		int noticeOffset = (choicePage - 1) * viewNoticeMaxNum;
+		
+		paramMap.put("viewNoticeMaxNum", viewNoticeMaxNum);
+		paramMap.put("noticeOffset", noticeOffset);
+		
 		return attendDao.readMnthngAttdCrtCls(paramMap);
 	}
 	
-	public HashMap<String, Object> readMnthngAttdCrtClsStts(HashMap<String, String> paramMap) {
+	public HashMap<String, Object> readMnthngAttdCrtClsStts(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
 		return attendDao.readMnthngAttdCrtClsStts(paramMap);
+	}
+	
+	public int insertMnthngAttdCrtCls(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		String saveMode = (String)paramMap.get("saveMode");
+		int result = -1;
+		
+		if(saveMode.equals("ALL")) {
+			result = attendDao.insertAllMnthngAttdCrtCls(paramMap);
+		} else {
+			result = attendDao.insertMnthngAttdCrtCls(paramMap);
+		}
+		
+		return result;
 	}
 
 	/***************************************************************************************
@@ -83,7 +109,10 @@ public class AttendService {
 		return attendDao.mAttdSelectEmpList(map);
 	}
 	
-	
+	public List<HashMap<String, Object>> searchMnthAttdStat(HashMap<String, String> paramMap) {
+		// TODO Auto-generated method stub
+		return attendDao.searchMnthAttdStat(paramMap);
+	}
 	
 	
 	
@@ -105,8 +134,20 @@ public class AttendService {
 	 * @Date   : 2018.01.??
 	 ***************************************************************************************/
 
-	public List<HashMap<String, Object>> readHdayExtnNightWorkInqr(HashMap<String, String> paramMap) {
+	public int readHdayExtnNightWorkInqrCnt(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
+		return attendDao.readHdayExtnNightWorkInqrCnt(paramMap);
+	}
+	
+	public List<HashMap<String, Object>> readHdayExtnNightWorkInqr(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		int choicePage = Integer.parseInt((String)paramMap.get("choicePage"));
+		int viewNoticeMaxNum = Integer.parseInt((String)paramMap.get("viewNoticeMaxNum"));
+		int noticeOffset = (choicePage - 1) * viewNoticeMaxNum;
+		
+		paramMap.put("viewNoticeMaxNum", viewNoticeMaxNum);
+		paramMap.put("noticeOffset", noticeOffset);
+		
 		return attendDao.readHdayExtnNightWorkInqr(paramMap);
 	}
 	
@@ -116,5 +157,7 @@ public class AttendService {
 		attendDao.employee_extended_work_deadline(map);
 		return map;
 	}
+
+	
 
 }

@@ -70,11 +70,12 @@ public class CertificateDao {
 	}//certificateRequestInfo
 	
 	//증명서 신청내역 목록
-	public List<HashMap<String,Object>> certificateRequestList(String empEmno){
+	public List<HashMap<String,Object>> certificateRequestList(HashMap<String,Object> paramMap){
 		
-		List<HashMap<String,Object>> list = this.sql.selectList(namespace + "certificateRequestList", empEmno);
+		List<HashMap<String,Object>> list = this.sql.selectList(namespace + "certificateRequestList", paramMap);
 		
 		return list;
+	
 	}//certificateRequestList
 	
 	//증명서 삭제

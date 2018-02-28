@@ -128,6 +128,7 @@
 	var authorityForm = function(url){
 		//보낼 데이터 객체 (사원코드,메뉴코드)
 		var dataObj = {"empEmno":$("input[name='empEmno']").val(),"mnNo":$("#mnNo").attr("name")};
+		
 		paging.ajaxSubmit(url,dataObj,"authoMenuTable",true,"html");//paging.ajaxSubmi
 	};//authorityForm
 	

@@ -31,6 +31,7 @@
 							</div>
 							
 							<div>
+								<input type="hidden" id="empEmno" value="<%=session.getAttribute("userEmno")%>">
 								<input type="checkbox" id="department">회사일정
 							</div>
 							

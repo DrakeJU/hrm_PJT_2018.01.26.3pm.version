@@ -108,21 +108,21 @@
 						$("#chk" + i).prop("checked",true);
 						
 						$('td[name=saltext'+ i +']').text("");
-						$('td[name=bsttext'+ i +']').text("");
-						$('td[name=nsttext'+ i +']').text("");
+					/* 	$('td[name=bsttext'+ i +']').text("");
+						$('td[name=nsttext'+ i +']').text(""); */
 						$('td[name=tamtext'+ i +']').text("");
 						$('td[name=fdetext'+ i +']').text("");
 						$('td[name=cmctext'+ i +']').text("");
-						$('td[name=lsttext'+ i +']').text("");
+						//$('td[name=lsttext'+ i +']').text("");
 						
 						$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 						$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=saltext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=bsttext" + i + "]").append('<input type="text" name=bsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=bsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=nsttext" + i + "]").append('<input type="text" name=nsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=nsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+						/* $("td[name=bsttext" + i + "]").append('<input type="text" name=bsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=bsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+						$("td[name=nsttext" + i + "]").append('<input type="text" name=nsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=nsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">'); */
 						$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=tamtext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 						$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=fdetext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 						$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=cmctext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
-						$("td[name=lsttext" + i + "]").append('<input type="text" name=lsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=lsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+						//$("td[name=lsttext" + i + "]").append('<input type="text" name=lsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=lsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 						//$('td[name=saltext'+ i +']').text("");
 				   }
 				}
@@ -137,12 +137,12 @@
 				
 				$('td[name=saltext'+ i +']').text($('[name=saltext'+i+']').attr('id'));
 				$("input[name=sali" + i + "]").remove();
-				
+			/* 	
 				$("td[name=bsttext" + i + "]").text($('[name=bsttext'+i+']').attr('id'));
 				$("input[name=bsti" + i + "]").remove();
 				
 				$("td[name=nsttext" + i + "]").text($('[name=nsttext'+i+']').attr('id'));
-				$("input[name=nsti" + i + "]").remove();
+				$("input[name=nsti" + i + "]").remove(); */
 				
 				$('td[name=tamtext'+ i +']').text($('[name=tamtext'+i+']').attr('id'));
 				$("input[name=tami" + i + "]").remove();
@@ -153,8 +153,8 @@
 				$('td[name=cmctext'+ i +']').text($('[name=cmctext'+i+']').attr('id'));
 				$("input[name=cmci" + i + "]").remove();
 				
-				$("td[name=lsttext" + i + "]").text($('[name=lsttext'+i+']').attr('id'));
-				$("input[name=lsti" + i + "]").remove();
+			/* 	$("td[name=lsttext" + i + "]").text($('[name=lsttext'+i+']').attr('id'));
+				$("input[name=lsti" + i + "]").remove(); */
 						
 		 }
 
@@ -168,22 +168,22 @@
 			$("#checkPoint"+i).addClass("danger");
 			//alert(list);
 			$('td[name=saltext'+ i +']').text("");
-			$('td[name=bsttext'+ i +']').text("");
-			$('td[name=nsttext'+ i +']').text("");
+		/* 	$('td[name=bsttext'+ i +']').text("");
+			$('td[name=nsttext'+ i +']').text(""); */
 			$('td[name=tamtext'+ i +']').text("");
 			$('td[name=fdetext'+ i +']').text("");
 			$('td[name=fdetext'+ i +']').text("");
 			$('td[name=cmctext'+ i +']').text("");
-			$('td[name=lsttext'+ i +']').text("");
+			//$('td[name=lsttext'+ i +']').text("");
 			
 			$("td[name=empcode" + i + "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 			$("td[name=saltext" + i + "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=saltext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=bsttext" + i + "]").append('<input type="text" name=bsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=bsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=nsttext" + i + "]").append('<input type="text" name=nsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=nsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			//$("td[name=bsttext" + i + "]").append('<input type="text" name=bsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=bsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			//$("td[name=nsttext" + i + "]").append('<input type="text" name=nsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=nsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 			$("td[name=tamtext" + i + "]").append('<input type="text" name=tami'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=tamtext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 			$("td[name=fdetext" + i + "]").append('<input type="text" name=fdei'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=fdetext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 			$("td[name=cmctext" + i + "]").append('<input type="text" name=cmci'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=cmctext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=lsttext" + i + "]").append('<input type="text" name=lsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=lsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
+			//$("td[name=lsttext" + i + "]").append('<input type="text" name=lsti'+ i+ ' style="width=100%; text-align:right;" size="10" value='+$('[name=lsttext'+i+']').attr('id')+' onkeydown="onlyMoneyNumber(this)">');
 		} else {
 			$("#chk" + i).prop("checked",false);
 			$("#checkPoint"+i).removeClass("danger");
@@ -193,11 +193,11 @@
 			$('td[name=saltext'+ i +']').text($('[name=saltext'+i+']').attr('id'));
 			$("input[name=sali" + i + "]").remove();
 			
-			$("td[name=bsttext" + i + "]").text($('[name=bsttext'+i+']').attr('id'));
+/* 			$("td[name=bsttext" + i + "]").text($('[name=bsttext'+i+']').attr('id'));
 			$("input[name=bsti" + i + "]").remove();
 			
 			$("td[name=nsttext" + i + "]").text($('[name=nsttext'+i+']').attr('id'));
-			$("input[name=nsti" + i + "]").remove();
+			$("input[name=nsti" + i + "]").remove(); */
 			
 			$('td[name=tamtext'+ i +']').text($('[name=tamtext'+i+']').attr('id'));
 			$("input[name=tami" + i + "]").remove();
@@ -208,8 +208,8 @@
 			$('td[name=cmctext'+ i +']').text($('[name=cmctext'+i+']').attr('id'));
 			$("input[name=cmci" + i + "]").remove();
 			
-			$("td[name=lsttext" + i + "]").text($('[name=lsttext'+i+']').attr('id'));
-			$("input[name=lsti" + i + "]").remove();
+	/* 		$("td[name=lsttext" + i + "]").text($('[name=lsttext'+i+']').attr('id'));
+			$("input[name=lsti" + i + "]").remove(); */
 			
 		
 		}

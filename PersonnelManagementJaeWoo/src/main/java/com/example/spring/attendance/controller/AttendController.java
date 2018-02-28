@@ -137,13 +137,16 @@ public class AttendController {
 	
 	@RequestMapping(value="/readMnthngAttdCrtCls")
 	public @ResponseBody HashMap<String, Object> readMnthngAttdCrtCls(
-			@RequestParam HashMap<String, String> paramMap
+			@RequestParam HashMap<String, Object> paramMap
 			) {
 		
 		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
+		logger.debug("choicePage : " + paramMap.get("choicePage"));
+		logger.debug("viewNoticeMaxNum : " + paramMap.get("viewNoticeMaxNum"));
 		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("workYyMm", paramMap.get("workYyMm"));
+		resultMap.put("resultListCnt", attendService.readMnthngAttdCrtClsCnt(paramMap));
 		resultMap.put("resultList", attendService.readMnthngAttdCrtCls(paramMap));
 		resultMap.put("resultSttsMap", attendService.readMnthngAttdCrtClsStts(paramMap));
 		
@@ -152,7 +155,7 @@ public class AttendController {
 	
 	@RequestMapping(value="/readMnthngAttdCrtClsStts")
 	public @ResponseBody HashMap<String, Object> readMnthngAttdCrtClsStts(
-			@RequestParam HashMap<String, String> paramMap
+			@RequestParam HashMap<String, Object> paramMap
 			) {
 		
 		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
@@ -161,6 +164,27 @@ public class AttendController {
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("resultSttsMap", attendService.readMnthngAttdCrtClsStts(paramMap));
 
+		return resultMap;
+	}
+	
+	@RequestMapping(value="/insertMnthngAttdCrtCls")
+	public @ResponseBody HashMap<String, Object> insertMnthngAttdCrtCls(
+			@RequestParam HashMap<String, Object> paramMap
+			){
+		
+		logger.debug("saveMode : " + paramMap.get("saveMode"));
+		logger.debug("empEmno : " + paramMap.get("empEmno"));
+		
+		int result = attendService.insertMnthngAttdCrtCls(paramMap);
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		if(result > 0) {
+			resultMap.put("success", "Y");
+		} else {
+			resultMap.put("success", "N");
+		}
+		
 		return resultMap;
 	}
 	
@@ -176,7 +200,8 @@ public class AttendController {
 	public String mnthAttdStat() {
 		return "mnthAttdStat";
 	}
- 	                 
+	
+	//사원번호 검색 모달(돋보기아이콘)버튼====================================================================
 	@RequestMapping(value = "/mAttdSelectEmpList.ajax")
 	public @ResponseBody HashMap<String, Object> mAttdSelectEmpList(
 			@RequestParam HashMap<String, Object> map){
@@ -195,8 +220,19 @@ public class AttendController {
 		return map;
 	}
 	
-	
-	
+	//검색버튼====================================================================
+	@RequestMapping(value= "/searchMnthAttdStat")
+	public @ResponseBody HashMap<String, Object> searchMnthAttdStat(
+			@RequestParam HashMap<String, String> paramMap){
+		
+		
+		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("resultList", attendService.searchMnthAttdStat(paramMap));
+		
+		return resultMap; //
+	}
 	
 	
 	
@@ -217,7 +253,7 @@ public class AttendController {
 	}
 	
 	//CRUD-R
-	@RequestMapping(value="/readHdayExtnNightWorkInqr")
+/*	@RequestMapping(value="/readHdayExtnNightWorkInqr")
 	public ModelAndView readHdayExtnNightWorkInqr(
 			@RequestParam HashMap<String, String> paramMap) {
 		
@@ -228,17 +264,25 @@ public class AttendController {
 		mv.addObject("resultList", attendService.readHdayExtnNightWorkInqr(paramMap));
 		mv.setViewName("hdayExtnNightWorkInqr");
 		return mv;
-	}
+	}*/
 	
-	@ResponseBody 
-	@RequestMapping(value = "/employee_extended_work.ajax")
-	public HashMap<String, Object> employee_extended_work_deadline(
-			@RequestParam HashMap<String, Object> map) {
-		//HashMap<String, Object> m1 = new HashMap<String, Object>();
+	@RequestMapping(value="/readHdayExtnNightWorkInqr")
+	public @ResponseBody HashMap<String, Object> readHdayExtnNightWorkInqr(
+			@RequestParam HashMap<String, Object> paramMap) {
 		
-		//System.out.println("extended_work : "+map);
-		attendService.employee_extended_work_deadline(map);
-		return map;
+		
+		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
+		logger.debug("empEmno : " + paramMap.get("empEmno"));
+		logger.debug("choicePage : " + paramMap.get("choicePage"));
+		logger.debug("viewNoticeMaxNum : " + paramMap.get("viewNoticeMaxNum"));
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("workYyMm", paramMap.get("workYyMm"));
+		resultMap.put("empEmno", paramMap.get("empEmno"));
+		resultMap.put("resultListCnt", attendService.readHdayExtnNightWorkInqrCnt(paramMap));
+		resultMap.put("resultList", attendService.readHdayExtnNightWorkInqr(paramMap));
+		
+		return resultMap;
 	}
 	
 }

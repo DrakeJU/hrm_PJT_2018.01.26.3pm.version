@@ -6,31 +6,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>월 근태 현황</title>
+</head>
 <script>
 
 	/* 근무년월 달력 함수 */
 	$(function () {
-		$('#workingYearMonth').datetimepicker({ //근무년월 달력
+		$('#workYyMm').datetimepicker({ //근무년월 달력
 			viewMode: 'days',
 			format: 'YYYY-MM'
 		});
-		$('#attdStatId').val(moment().format('YYYY-MM'));
+		//$('#mnthAttdIpt').val(moment().format('YYYY-MM'));
 	});
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/* 사원번호 선택  Modal 함수 ======================================*/
-	
-	//퇴직자 포함 체크여부
+	/* 사원번호 선택  Modal 함수 ==========================================================*/
+	/* 퇴직자 포함 체크여부 */
 	function retrCheck(){//모달창을 띄워 사원 list 띄우기
  		if(($('#retrChk').prop("checked")) == true ){
  			$('#retrDelYn').val('on');
@@ -95,14 +84,13 @@
 		});//paging.ajax
 	}//empListModal
 	
-	//사원번호 검색창에 자동 채우기
+	/* 사원번호 검색창에 자동 채우기 */
 	function empEmnoClick(){
  		var chkTr = $('input[name=empEmnoChk]:checked').closest('tr'); //체크된 체크박스와 가장 가까운 tr
  		var empEmnoVal = chkTr.children().eq(2).text(); //tr 하부 2번째 td의 텍스트(사번)
  		var empNameVal = chkTr.children().eq(3).text(); //tr 하부 3번째 td의 텍스트(이름)
  		var deptNameVal = chkTr.children().eq(4).text(); //tr 하부 4번째 td의 텍스트(부서)
  		var rankNameVal = chkTr.children().eq(5).text(); //tr 하부 5번째 td의 텍스트(직급)
-	//console.log(empEmnoVal, nameVal, departmentVal, positionVal);	
  		
  		$('#empEmno').val(empNameVal);
  		$('#hiddenEmpEmno').val(empEmnoVal);
@@ -112,59 +100,30 @@
  		$(".modal-body input[name=keyword]").val(""); //키워드 내용 지우기
  	}
 	
-	
-	//사원번호 검색버튼 ajax
-	function searchForm(obj){
-		
-		//modal empEmnoChk hidden값으로 근태현황 입력창 내용 입력
+	/* 사원번호 검색버튼 ajax
+	<modal empEmnoChk hidden값으로 근태현황 입력창 내용 입력> ======================================*/
+	function searchForm(){
 		$('#empInfo tbody tr td:eq(0)').text($('#hiddenEmpEmno').val());
 		$('#empInfo tbody tr td:eq(1)').text($('#hiddenEmpName').val());
 		$('#empInfo tbody tr td:eq(2)').text($('#hiddenDeptName').val());
 		$('#empInfo tbody tr td:eq(3)').text($('#hiddenRankName').val());
-//  	console.log($('#hiddenEmpEmno').val());
-//  	console.log($('#empInfo tbody tr td:eq(0)').text());
-		
-		
-		
-		//사원번호 로 근태현황에 내용추가
-// 		var empEmno = $("#empEmno").val();
-// 		console.log("empEmno : " + empEmno);
-		
-// 		$(obj).ajaxForm({
-// 			async:true, 
-// 			cash:false, 
-// 			type:"post",
-// 			url	:'',
-// 			data : {"empEmno" : empEmno},
-// 			dataType:"JSON", 
-// 	        success : function(data) {
-// 	        	var jsonStr = JSON.stringify(data);
-// 	            var jsonObj = JSON.parse(jsonStr);
-// 	            $.each($(jsonObj), function(i , objVal){
-// 					var str ="<tr align='center' onclick=''>";
-// 					str+="<td>"+this.empEmno+"</td>";
-// 					str+="<td>"+this.empName+"</td>";
-// 					str+="<td>"+this.deptName+"</td>";
-// 					str+="<td>"+this.rankName+"</td>";
-// 					str+="</tr>";
-// 		            $("#dataTable").append(str);
-// 				});
-	            
-// 	        }, // success 
-	        
-//             error : function(xhr, status) {
-//                 alert(xhr + " : " + status);
-//             }
-// 		})
-	
-
 	}//searchForm
 	
-	
-	
+	/* 근태현황 달력 함수 ======================================================================*/
+	function mnthAttdCal(url, formId){
+		searchForm();// fucntion searchForm 근태현황 입력창 내용 입력
+		
+		paging.ajaxFormSubmit(url, formId, function(rslt){
+			console.log("결과데이터 " + JSON.stringify(rslt));
+			
+			/* 선택한 달에 해당하는  resultList tbody에 출력*/
+			for(i=0; i<rslt.resultList.length; i++){ //url, formId에 따른 결과값(rslt) resultList의 전체 길이를 1부터 length 만큼 출력 
+				$('#mnthAttdCalInfo tbody tr td:eq(' + i + ')').text(rslt.resultList[i].day);
+			}//for
+		});//ajaxFormSubmit
+	}//mnthAttdCal
 	
 </script>
-</head>
 <body>
 	<div class="main" style="min-height: 867px;">
 		<div class="main-content">
@@ -172,14 +131,14 @@
 			<h3 class="page-title">월 근태 현황</h3>
 				<div class="panel">
 					<div class="panel-body">
-						<form class="form-inline" name="mAttdFrm" method="post">	
+						<form class="form-inline" name="mAttdFrm" id="mAttdFrm" method="post" action="/spring/searchMnthAttdStat">	
 							<table class="table table-bordered">
 								<tr align="center">
 									<td>근무년월</td>
 									<td align="left">
 										<!-- 달력 : 근무년월 -->										
-										<div class="input-group date" id="workingYearMonth">
-											<input type="text" class="form-control" id="attdStatId" name=""/>
+										<div class="input-group date" id="workYyMm">
+											<input type="text" class="form-control" id="mnthAttdIpt" name="workYyMm"/>
 												<span class="input-group-addon">
 													<span class="fa fa-calendar" />
 												</span>
@@ -189,7 +148,7 @@
 									<td align="center">
 										<select>
 										<option value="">전체</option>
-										<option value="">인크레파스</option>
+										<option value="" selected>(주)인크레파스</option>
 										<option value="">인사부</option>
 										<option value="">영업부</option>
 										<option value="">성실부</option>
@@ -202,10 +161,10 @@
 											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번입력  / 검색버튼" >
 											<span class="input-group-addon">
 												<span class="glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#empModal" onClick="empListModal('${pageContext.request.contextPath}/mAttdSelectEmpList.ajax','empFrm')"></span> <!-- 검색 아이콘 -->
-											</span>
+											</span>	
 										</div>
 										<!-- 검색버튼 -->
-										<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="search" value="검색" onClick="searchForm(mAttdFrm)">
+										<input type="button" class="btn btn-danger btn-xs" style="float:right;"name="search" value="검색" onClick="mnthAttdCal('/spring/searchMnthAttdStat', 'mAttdFrm')">
 									</td>
 								</tr>
 							</table>
@@ -231,80 +190,45 @@
 								</tr>
 							</tbody>
 						</table>
-						<table border="1" class="table table-bordered">
-							<tr align="center">
-								<td> 1</td>
-								<td> 2</td>
-								<td> 3</td>
-								<td> 4</td>
-								<td> 5</td>
-								<td> 6</td>
-								<td> 7</td>
-								<td> 8</td>
-								<td> 9</td>
-								<td> 10</td>
-								<td> 11</td>
-								<td> 12</td>
-								<td> 13</td>
-								<td> 14</td>
-								<td> 15</td>
-								<td> 16</td>
-								<td>비고</td>
-							</tr>
-							<tr align="center">
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>	
-								<td rowspan="4"></td>	
-							</tr>
-							<tr align="center">
-								<td>17</td>
-								<td>18</td>
-								<td>19</td>
-								<td>20</td>
-								<td>21</td>
-								<td>22</td>
-								<td>23</td>
-								<td>24</td>
-								<td>25</td>
-								<td>26</td>
-								<td>27</td>
-								<td>28</td>
-								<td>29</td>
-								<td>30</td>
-								<td>31</td>
-								<td rowspan="2"></td>
-							</tr>
-							<tr align="center">
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-								<td> 　　　　 </td>
-							</tr>
+						<table border="1" width="100" style="table-layout:fixed" class="table table-bordered" id="mnthAttdCalInfo">
+							<tbody id="mnthAttdCalTbody">
+								<tr align="center">
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+								</tr>
+								<tr align="center">
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 				</div><!-- "panel" -->
@@ -354,12 +278,11 @@
 							<input type="hidden" name="hiddenRankName" id="hiddenRankName"> <!-- 직급 Hidden -->
 						</thead>
 						<tbody id="empModalTbody" style="display:block;height:200px;overflow:auto;"><!-- overflow:auto 스크롤 사용시 필요-->
-						
-						
-						
-						
-						
-						
+							
+							
+							
+							
+							
 						</tbody>
 					</table>
 				 <div class="modal-footer">

@@ -8,7 +8,7 @@
 </head>
 <body>
 <nav class="navbar navbar-default navbar-fixed-top">
-			<div class="brand">
+			<div class="brand" id="logo">
 				<a href="main.do"><img src="/spring/resources/common/img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
 			</div>
 			<div class="container-fluid">

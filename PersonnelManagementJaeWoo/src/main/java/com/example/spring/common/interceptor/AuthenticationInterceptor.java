@@ -14,8 +14,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		
 		HttpSession session  = request.getSession();
 		
-		System.out.println("---------------------interceptor : "+session.getAttribute("userEmno"));
-		
 		if(session.getAttribute("userEmno") == null) {
 			response.sendRedirect("/spring/login.do");
 			return false;

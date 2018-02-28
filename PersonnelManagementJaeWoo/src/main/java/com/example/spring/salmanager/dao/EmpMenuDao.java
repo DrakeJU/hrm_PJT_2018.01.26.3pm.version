@@ -60,9 +60,8 @@ public class EmpMenuDao {
 		HashMap<String, Object> m1 = new HashMap<String, Object>();
 
 		m1.put("list", list);
-
 		List<HashMap<String, Object>> check = this.sqlSession.selectList(nameSpaceName + "exi_checkbox_Choice", m1);
-
+		
 		// System.out.println(list);
 		return check;
 	}
@@ -81,19 +80,18 @@ public class EmpMenuDao {
 		 * slci 지각
 		 * */
 		
-		map.put("SEMP_BW_CST", "0");
-		map.put("SEMP_NW_CST", "0");
-		map.put("SEMP_TAMT", "0");
-		map.put("SEMP_FDEX", "0");
-		map.put("SEMP_CMC", "0");
-		map.put("SEMP_L_CST", "0");
 		
 		System.out.println("checklist : "+map);
-		for (String mapkey : map.keySet()) {
-			System.out.println("key : " + mapkey + ",value : " + map.get(mapkey));
-			insertlist.add((String) map.get(mapkey));
+		
 
-			if (insertlist.size() == 8) {
+		for (String mapkey : map.keySet()) {
+			//System.out.println("key : " + mapkey + ",value : " + map.get(mapkey));
+			
+		
+			insertlist.add((String) map.get(mapkey));
+		
+			
+			if (insertlist.size() == 5) {
 				m1.put("list", insertlist);
 			
 				System.out.println("insertList : "+m1);
@@ -145,17 +143,14 @@ public class EmpMenuDao {
 			else if(key.substring(0,4).equals("nsti") == true) {
 				m1.put("snc", map.get(key));
 			}
-			
 			else if((key.substring(0,4)).equals("tami") == true) {
 				m1.put("tam",map.get(key));
 			}
-		
-			
+
 			else if(key.substring(0,4).equals("fdei") == true) {
 				m1.put("fde",map.get(key));
 			}
-			
-			
+
 			else if(key.substring(0,4).equals("cmci") == true) {
 				m1.put("cmc",map.get(key));
 			}
@@ -165,7 +160,7 @@ public class EmpMenuDao {
 			}
 
 			System.out.println("m1 : "+m1);
-			if(m1.size()==8) {
+			if(m1.size() == 5) {
 				
 				this.sqlSession.update(nameSpaceName + "exi_empcode_update", m1);
 				m1.clear();

@@ -63,7 +63,6 @@ public class MenuTreeController {
 	@RequestMapping(value="/menuDetail.do")
 	public ModelAndView menuDetailTable(HttpServletRequest request) {
 		
-		logger.info(request.getParameter("mnNo"));
 		int mnNo = (int)Integer.parseInt(request.getParameter("mnNo"));
 		ModelAndView mv = new ModelAndView();
 		
@@ -102,10 +101,9 @@ public class MenuTreeController {
 	
 	//메뉴삭제
 	@RequestMapping(value="/menuDelete.do")
-	public @ResponseBody HashMap<String,Object> menuDelete(HttpServletRequest request) {
-		
-		int mnNo  = (int)Integer.parseInt(request.getParameter("mnNo"));
-		int result = (int)(menuTreeService.menuDelete(mnNo));
+	public @ResponseBody HashMap<String,Object> menuDelete(@RequestParam(value="mnNoList[]") List<String> mnNoList,HttpServletRequest request) {
+	
+		int result = (int)(menuTreeService.menuDelete(mnNoList));
 		
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
 		
@@ -114,4 +112,4 @@ public class MenuTreeController {
 		return resultMap;
 	}//menuDelete
 	
-}
+}//MenuTreeController 

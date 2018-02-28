@@ -53,8 +53,8 @@
 			FROM COMMON
 			WHERE COMM_DEL_YN = 'N'
 			<choose>
-				<when test="commonSearch == null">
-					AND COMM_PRNT_CODE = ''
+				<when test="commonSearch == null || commonSearch == ''">
+					AND COMM_PRNT_CODE = 0
 				</when>
 				<otherwise>
 					<choose>
@@ -67,9 +67,9 @@
 						<when test="commonSelect == 'commCodeInfo'">
 							AND COMM_CODE_INFO LIKE CONCAT('%',#{commonSearch},'%')
 						</when>
-						<otherwise>
+						<when test="commonSelect == 'commRegMn'">
 							AND COMM_REG_MN LIKE CONCAT('%',#{commonSearch},'%')
-						</otherwise>
+						</when>
 					</choose>
 				</otherwise>
 			</choose>
@@ -176,8 +176,8 @@
 			COMMON
 		WHERE COMM_DEL_YN = 'N'
 			<choose>
-				<when test="commonSearch == null">
-					AND COMM_PRNT_CODE = ''
+				<when test="commonSearch == ''">
+					AND COMM_PRNT_CODE = 0
 				</when>
 				<otherwise>
 					<choose>
@@ -190,9 +190,9 @@
 						<when test="commonSelect == 'commCodeInfo'">
 							AND COMM_CODE_INFO LIKE CONCAT('%',#{commonSearch},'%')
 						</when>
-						<otherwise>
+						<when test="commonSelect == 'commRegMn'">
 							AND COMM_REG_MN LIKE CONCAT('%',#{commonSearch},'%')
-						</otherwise>
+						</when>
 					</choose>
 				</otherwise>
 			</choose>

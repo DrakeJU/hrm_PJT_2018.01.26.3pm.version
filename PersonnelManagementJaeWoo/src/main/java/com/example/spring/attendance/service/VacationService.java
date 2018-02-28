@@ -23,45 +23,6 @@ public class VacationService {
 	private VacationDao vacationDao;
 	private String PRE_VIEW_PATH = "/vacation/";
 	
-	/* 대시보드 - 사원정보 */
-	public List<HashMap<String,Object>> empVacInfo(HashMap<String,Object> map) {
-		
-		List<HashMap<String,Object>> list = vacationDao.empVacInfo(map);
-		
-		logger.debug("service>>> " + list);
-		
-		return list;
-	}
-	
-	/* 대시보드 - 월별 휴가사용개수 그래프 */
-	public List<HashMap<String,Object>> monthlyVacChart(HashMap<String,Object> map) {
-		
-		List<HashMap<String,Object>> list = vacationDao.monthlyVacChart(map);
-		
-		logger.debug("service>>> " + list);
-		
-		return list;
-	}
-
-	/* 오늘의 휴가자 */
-	public List<HashMap<String,Object>> vacTodayEmpList() {
-		
-		List<HashMap<String,Object>> list = vacationDao.vacTodayEmpList();
-		
-		logger.debug("service>>> " + list);
-		
-		return list;
-	}
-	
-	/* 대시보드- 내가 이번달에 사용한 항목별 휴가*/
-	public List<HashMap<String,Object>> thisMonthVacChart(HashMap<String,Object> map) {
-		
-		List<HashMap<String,Object>> list = vacationDao.thisMonthVacChart(map);
-		
-		logger.debug("service>>> " + list);
-		
-		return list;
-	}
 	
 	/* 휴가일수설정  사원 리스트 출력 */
 	public List<HashMap<String,Object>> vacationCountEmpList(HashMap<String,Object> map) {
@@ -116,7 +77,17 @@ public class VacationService {
 	//휴가일수설정 - 사원등록 저장하기
 	public int vacCntEmpSignUpInsert(HashMap<String,Object> map) {
 		
-		int list = vacationDao.vacCntEmpSignUpInsert(map);
+		int empVacChk = vacationDao.vacCntEmpSignUpInsert(map);
+		
+		logger.debug("service>>> " + empVacChk);
+		
+		return empVacChk;
+	}
+	
+	/* 휴가일수설정에 등록된 사원인지 체크 */
+	public int empVacChk(HashMap<String,Object> map) {
+		
+		int list = vacationDao.empVacChk(map);
 		
 		logger.debug("service>>> " + list);
 		
@@ -172,10 +143,28 @@ public class VacationService {
 	}
 	
 	
+	/* 휴가 조회 -관리자 휴가현황 리스트 총 개수  */
+	/*public int vacListMaxNum(HashMap<String,Object> map) {
+		int list = vacationDao.vacListMaxNum(map);
+		logger.info("총개수SERVICE;;;;;;;;;"+list);
+		return list; 
+	}*/
+	
 	/* 휴가 조회하기 - 관리자 */
 	public List<HashMap<String,Object>> vacationListAdmin(HashMap<String,Object> map) {
 		logger.info("vacation리스트 관리자 SERVICE 진입>>>>" + map);
 		 
+		/*int totalNoticeNum = (Integer)map.get("totalNoticeNum");
+//		int choicePage = Integer.parseInt((String)map.get("choicePage"));
+		int choicePage = 1;
+		int viewNoticeMaxNum = 10;
+		int noticeCount= 0; //게시물 시작 순번
+		
+		noticeCount = (choicePage-1)*viewNoticeMaxNum;
+		
+		map.put("noticeCount", noticeCount);
+		map.put("viewNoticeMaxNum", viewNoticeMaxNum);*/
+		
 		List<HashMap<String,Object>> list = vacationDao.vacationListAdmin(map);	
 		return list;
 	}

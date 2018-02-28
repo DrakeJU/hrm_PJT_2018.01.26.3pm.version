@@ -47,7 +47,7 @@
 		       		console.log("결과데이터 : " + JSON.stringify(rslt));
 		       		console.log("RSLT"+rslt.dbDate);
 					$("#viewModal").find("form[id='viewForm']").find("input[id='startDate']").val(rslt.dbDate);
-					$("#viewModal").find("form[id='viewForm']").find("input[id='holiMemo']").val(rslt.memo);
+					$("#viewModal").find("form[id='viewForm']").find("input[name='holiMemo']").val(rslt.memo);
 					$("#viewModal").find("form[id='viewForm']").find("select[name='holiselectbox']").val(rslt.event).prop("selected",true);
 					//alert(JSON.stringify(rslt.event));
 					//alert($("#viewModal").find("form[id='viewForm']").find("input[name='holiselectbox']").val(rslt.event));
@@ -108,11 +108,40 @@
 	}
 
 	//일정등록 저장버튼클릭시
-	$("#insertBtn").click(function () {
-		//alert("저장");
-		if (confirm("저장하시겠습니까?") == true) {
-			$("#insertForm").attr("action", "/spring/calendarInsert.do").submit();
-		} else {
+	$("#insertBtn").click(function(){
+		var url = "/spring/calenderUpdate.do";
+		//var frim = $("#insertForm").attr("id");
+		
+		if(confirm("저장하시겠습니까?") == true){
+			paging.ajaxFormSubmit(url,"insertForm", function(result){
+				console.log("result : " + result);
+				if(result > 0){
+					alert("저장되었습니다");
+					location.href="/spring/holiDyMng";
+				}else{
+					alert("저장실패. 다시 입력해주세요");
+				}
+			});
+		}else{
+			return false;
+		}
+	});
+	//일정등록 수정 버튼클릭시
+	$("#updateBtn").click(function(){
+		var url = "/spring/calenderUpdate.do";
+		//var frim = $("#insertForm").attr("id");
+		
+		if(confirm("수정하시겠습니까?") == true){
+			paging.ajaxFormSubmit(url,"viewForm", function(result){
+				console.log("result : " + result);
+				if(result > 0){
+					alert("수정되었습니다");
+					location.href="/spring/holiDyMng";
+				}else{
+					alert("저장실패. 다시 입력해주세요");
+				}
+			});
+		}else{
 			return false;
 		}
 	});
@@ -120,6 +149,10 @@
 	$('#fullcalrendar_vacMng a').click(function (e) {
 		e.preventDefault()
 		$(this).tab('show')
+	});
+	
+	$('#fullcalrendar_vacMng .tableCalendar').click(function(){
+		secondTbodyList();
 	});
 
 	//day 클릭
@@ -134,4 +167,110 @@
 
 	    }
 	});
+	//xbnt 클릭
+	$('[name=xbtn]').click(function(){
+		$("input[name=holiMemo]").val("");
+	});
+	//second tab calendar List
+	/* 표 리스트 불러오기 start */
+ 	function secondTbodyList(){ //휴가 날자,휴가구분,메모 리스트 출력
+		
+ 		var today = new Date();
+ 		var dd = today.getDate();
+ 		var mm = today.getMonth()+1; //January is 0!
+ 		var yyyy = today.getFullYear();
+
+ 		if(dd<10) {
+ 		    dd='0'+dd
+ 		} 
+
+ 		if(mm<10) {
+ 		    mm='0'+mm
+ 		} 
+
+ 		today = yyyy+'-'+mm+'-'+dd;
+ 		console.log("찍히니4?");
+ 		console.log(today);
+ 		
+ 		var yearEndDay = yyyy + "-12-31";
+ 		
+ 		console.log(yearEndDay);
+ 		
+ 		var data = {"startEndDay" : today, yearEndDay};
+ 		
+ 		console.log("44");
+		
+ 		$('#tbody').empty(); //이전 리스트 삭제
+ 		
+		paging.ajaxSubmit('SecondTabCalendarTableList', data, function(rslt){
+//  			console.log("second tab calendar List AjaxFormSubmit -> callback");
+ 			console.log("결과데이터:"+JSON.stringify(rslt));
+
+ 			$('#calendarTableOption').children('thead').css('width','calc(100% - 1em)'); //테이블 스크롤때문에 css
+ 			
+			for(var i = 0 ; i < rslt.length ; i++){
+				if(rslt == null){
+					$('#tbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
+	  	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+	  	 			);
+				}else{
+					var hangul;
+					
+					
+					if(rslt[i].event == 'regualWork'){
+						hangul = "정상근무";
+					}else if(rslt[i].event == 'unpaidDayoff'){
+						hangul = "무급휴무일";
+					}else if(rslt[i].event == 'unpaidHoli'){
+						hangul = "무급휴무";
+					}else if(rslt[i].event == 'paidHoli'){
+						hangul = "유급휴일";
+					}
+					
+					$('#tbody').append(
+ 	 					"<tr style='display:table;width:100%;table-layout:fixed;'>"+
+								"<td style='width:6%;' >"+
+							"<label class='fancy-checkbox-inline'>"+
+								"<input type='checkbox' name='chk'>"+ //checkbox
+								"<span></span>"+
+							"</label>"+
+						"</td>"+
+						"<td >"+ rslt[i].dbDate +"</td>"+ 
+						//"<td >"+ rslt[i].event +"</td>"+ 
+						"<td >"+ hangul +"</td>"+ 
+						"<td >"+ rslt[i].memo +"</td>"+ 
+					"</tr>"
+					);
+				}
+			}
+ 			
+			$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
+
+//  			$('#calendarTableOption').children('thead').css('width','calc(100% - 1em)'); //테이블 스크롤때문에 css 
+ 			
+//  			if(rslt == null){
+//  				$('#tbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
+//  	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+//  	 			);
+//  			}else if(rslt.success == "Y"){
+//  	 			$.each(rslt.SecondTabCalendarTableList, function(k, v) {
+// 					$('#tbody').append(
+//  	 					"<tr style='display:table;width:100%;table-layout:fixed;'>"+
+// 								"<td style='width:6%;' >"+
+// 							"<label class='fancy-checkbox-inline'>"+
+// 								"<input type='checkbox' id='chk'>"+ //checkbox
+// 								"<span></span>"+
+// 							"</label>"+
+// 						"</td>"+
+// 						"<td >"+ v.dbDate +"</td>"+ 
+// 						"<td >"+ v.event +"</td>"+ 
+// 						"<td >"+ v.memo +"</td>"+ 
+// 					"</tr>"
+// 					);
+//  	 			});
+//  			}
+//  			$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
+
+		});
+ 	}
 </script>

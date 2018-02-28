@@ -14,6 +14,14 @@ public class ScheduleDao {
 	private SqlSession sql; 
 	private String namespace = "schedule.";
 	
+	//사원정보가져오기
+	public HashMap<String, Object> empInfo(String emno){
+				
+		HashMap<String, Object> map = this.sql.selectOne(namespace+"empInfo",emno);
+			
+		return map;
+	}
+	
 	//일정등록 dao
 	public int scheduleInsert(HashMap<String, String> map) {
 		

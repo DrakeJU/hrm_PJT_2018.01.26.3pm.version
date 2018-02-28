@@ -315,15 +315,15 @@ public class HolidaySetController {
 			return string;     
 		} 
 	} 
-	//일정등록
-	@RequestMapping(value="calendarInsert.do")
-	public @ResponseBody int scheduleInsert(@RequestParam HashMap<String, String> map) {
+	//휴일정등록
+	@RequestMapping(value="calenderUpdate.do")
+	public @ResponseBody int calenderUpdate(@RequestParam HashMap<String, String> map) {
 		System.out.println("+++++++++++++++++++ 등록 컨트롤러 map : " + map);
-		int result = holidaySetService.calendarInsert(map);
+		int result = holidaySetService.calenderUpdate(map);
 		
 		return result;
 	}
-	//일정상세보기
+	//휴일정상세보기
 	@RequestMapping(value="calendarList.exc")
 	public @ResponseBody List<String> calendarList(){
 		System.out.println("일정상세보기(controller)");
@@ -338,6 +338,21 @@ public class HolidaySetController {
 		System.out.println("휴일 일정 DB 가져오기 성공 (controller)");
 		
 		HashMap<String, String> map = holidaySetService.calendarListDB(start);
+		
+		return map;
+	}
+	//휴일설정 2번째 탭 리스트 읽어오기
+	@RequestMapping(value="SecondTabCalendarTableList")
+	public @ResponseBody List<HashMap<String, String>> SecondTabCalendarTableList(@RequestParam HashMap<String, String> yearMap){
+		System.out.println("~~~~~~~~~~2nd Tab Calendar Table Listing하기 CONTROLLER");
+		List<HashMap<String, String>> map = holidaySetService.SecondTabCalendarTableList(yearMap);
+		
+//		System.out.println(yearMap);
+//		
+//		String startEndDay = yearMap.get("startEndDay");
+//		String yearEndDay = yearMap.get("yearEndDay");
+//		
+//		System.out.println(yearEndDay);
 		
 		return map;
 	}

@@ -110,16 +110,16 @@ public class HolidaySetDao {
 		
 		return list;
 	}
-	//일정등록 dao
-	public int calendarInsert(HashMap<String, String> map) {
+	//휴일 일정등록 dao
+	public int calenderUpdate(HashMap<String, String> map) {
 		
 		int result = 0;
 		
-		result = this.sqlSession.insert(nameSpaceName+"calendarInsert",map);
+		result = this.sqlSession.insert(nameSpaceName+"calenderUpdate",map);
 		
 		return result;
 	}
-	//
+	//휴일 일정 리스트 dao
 	public List<String> calendarList(){
 		
 		List<String> list = this.sqlSession.selectList(nameSpaceName+"calendarList");
@@ -132,5 +132,12 @@ public class HolidaySetDao {
 		HashMap<String, String> map = this.sqlSession.selectOne(nameSpaceName+"calendarListDB",start);
 		System.out.println("ListDB DAO ========================"+map);
 		return map;
+	}
+	//휴일설정 2번째 탭 리스트 읽어오기
+	public List<HashMap<String, String>> SecondTabCalendarTableList(HashMap<String, String> map){
+		
+		List<HashMap<String, String>> result = this.sqlSession.selectList(nameSpaceName+"SecondTabCalendarTableList", map);
+		System.out.println("SecondTabCalendarTableList DAO ======================== "+map);
+		return result;
 	}
 }

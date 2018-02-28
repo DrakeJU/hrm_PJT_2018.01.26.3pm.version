@@ -16,28 +16,6 @@
 </style>
 <script type="text/javascript">
 
-
-/*
- * 
- 
- *****
- 
- 
- 수정 중
- 
- 
- *****
- 
- */
-
-
-
-
-
-
-
-
-
 /* 실행함수 모음 */
 $(function(){
 	calender();	//달력
@@ -116,7 +94,9 @@ function progList() {
 							"<td>" + s.deptName + "</td>" +
 							"<td>" + s.rankName + "</td>" +
 							"<td>" + s.vastCrtDate + "</td>" +
-							"<td>" + s.vastType + "</td>" +
+							"<td>" + 
+								"<input type='hidden' id='vastC', name='vastC' value='"+ s.vastC +"'>" + 
+									s.vastType + "</td>" +
 							"<td>" + s.vastTerm + "</td>" +
 							"<td>" + s.vastVacUd + "</td>" +
 							"<td>" + s.vastCont + "</td>" +
@@ -140,9 +120,7 @@ function progList() {
 			}//if-table 생성
 				
 			//마우스오버
-			$('#progressTbody tr').hover(function(){
-			//	$(this).css("backgroundColor","#f2f2f2");
-				//console.log($(this).children().eq(10).text())				
+			$('#progressTbody tr').hover(function(){		
 				//승인기면 x 아이콘 생성하고
 				if($(this).children().eq(10).text() == "승인대기"){
 					$(this).append("<span class='fa fa-close right-icon' name='delBtn' onclick='vacDel(this)'></span>");
@@ -150,7 +128,6 @@ function progList() {
 				}//if
 			},	
 			function(){
-		//		$(this).css("backgroundColor","#fff");
 				if($(this).children().eq(10).text() == "승인대기"){
 					$(this).find("span:last").remove();					
 				}//if
@@ -217,8 +194,6 @@ function calender(){
 	
 	//년도의 최대값을 올해로 제한
 	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment());
-
-
 };	
 	
 
@@ -240,8 +215,7 @@ function toggleOff(){
 		if($(this).prop('checked')){
 			progTd.html('승인취소');
 		}
-	});
-	
+	});	
 }//toggleOff
 
 /* 승인완료 버튼 */
@@ -258,8 +232,7 @@ function toggleOn(){
 			console.log(progTd+"ssasss");
 		}//if
 
-	});	//name-each
-	
+	});	//name-each	
 }//toggleOn
 
 
@@ -274,15 +247,17 @@ function vacProgSave(){
 		if($(this).prop('checked')){
 			var chkTr = $(this).closest('tr');	//체크한 것과 가장 가까운 tr
 			var chkHi = chkTr.children().children("input[type=hidden][id=vastSerialNumber]").val();//체크한 것의 히든 value 값
+			var chkVc = chkTr.children().children("input[type=hidden][id=vastC]").val();	//휴가코드 value
 			var chkSi = chkTr.children().eq(10).text();	//결재상황 
-			
-			console.log("xxxxxx"+chkHi+"xxxx"+chkSi);
+			var chkUd = chkTr.children().eq(8).text(); //휴가사용일수(개수)
+
+			console.log("xxxxxx"+chkHi+"xxxx"+chkVc+"xxxx"+chkSi+"xxxx"+chkUd);
 	
 			if(progToggleResult == null){
-				progToggleResult = chkHi + "^" + chkSi;
+				progToggleResult = chkHi + "^" + chkVc + "#" + chkSi + "^" + chkUd;
 			} else{
 				//시리얼넘버 + 결재상황 을 구분자와 함께 저장			
-				progToggleResult = progToggleResult +"/"+ chkHi + "^" + chkSi;
+				progToggleResult = progToggleResult +"/"+ chkHi + "^" + chkVc + "#" + chkSi + "^" + chkUd;
 				console.log("저장::"+progToggleResult);
 			}//if	
 		}//if.prop
@@ -311,43 +286,48 @@ function vacProgSave(){
 function vacDel(){
 	var vacationDel;	//삭제되는 데이터 저장 변수
 
-	//마우스오버된 해당 행
-	var delTr = $(this).parent();
-	delTr.remove();
-	alert("삭제하시겠습니까?");
+	var delTr = $(this).parent();	//마우스오버된 해당 행
 
-	$('[name=delBtn]').each(function(){
-		if($('[name=delBtn]').prop('click')){
-			var chkTr = $(this).closest('tr');	//클릭한 것과 가장 가까운 tr
-			var chkHi = chkTr.children().children("input[type=hidden][id=vastSerialNumber]").val();//체크한 것의 히든 value 값
-			console.log("////"+chkHi+"//");
-			
-			if(vacationDel == null){
-				vacationDel = chkHi;
-			} else{
-				vacationDel = vacationDel +"/"+chkHi;
-				console.log("삭제삭제::"+vacationDel);
-			}
-		}//if
-	//input Hidden에 value로 저장
-	$('#progToggleResult').val(vacationDel);
-		console.log("삭제 후::::"+$('#progToggleResult').val());
-		
-		$('#vastSerialNumber').val($('#progToggleResult').val());
-	paging.ajaxFormSubmit("vacationDel.ajax","f2", function(rslt){
-		console.log("ajaxFormSubmit -> callback");
-		console.log("결과데이터" + JSON.stringify(rslt));
-		
-		if(rslt == null){
-			alert("삭제에 실패하였습니다. 다시 시도해주세요.")
-		} else{
-			alert("삭제되었습니다.")
-			window.location.reload();	//새로고침
-		}
-	});//paging.ajax
-	});
+	if(confirm("삭제하시겠습니까?") == true){	//확인
+		delTr.remove();	//해당 행 삭제 
 	
+		$('[name=delBtn]').each(function(){
+			if($('[name=delBtn]').prop('click')){
+				var chkTr = $(this).closest('tr');	//클릭한 것과 가장 가까운 tr
+				var chkHi = chkTr.children().children("input[type=hidden][id=vastSerialNumber]").val();//체크한 것의 히든 value 값
+				console.log("////"+chkHi+"//");
+				
+				if(vacationDel == null){
+					vacationDel = chkHi;
+				} else{
+					vacationDel = vacationDel +"/"+chkHi;
+					console.log("삭제삭제::"+vacationDel);
+				}
+			}//if
+		//input Hidden에 value로 저장
+		$('#progToggleResult').val(vacationDel);
+			console.log("삭제 후::::"+$('#progToggleResult').val());
+			
+			$('#vastSerialNumber').val($('#progToggleResult').val());
+		paging.ajaxFormSubmit("vacationDel.ajax","f2", function(rslt){
+			console.log("ajaxFormSubmit -> callback");
+			console.log("결과데이터" + JSON.stringify(rslt));
+			
+			if(rslt == null){
+				alert("삭제에 실패하였습니다. 다시 시도해주세요.")
+			} else{
+				alert("삭제되었습니다.")
+				window.location.reload();	//새로고침
+			}
+		});//paging.ajax
+		});
+
+	} else{	//취소
+		return false;
+	}	
+		
 }//vacDel
+
 
 
 </script>

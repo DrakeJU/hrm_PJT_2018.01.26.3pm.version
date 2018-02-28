@@ -93,9 +93,9 @@ public class CertificateService {
 	}//certificateRequestInfo
 	
 	//증명서 신청내역 목록
-	public List<HashMap<String,Object>> certificateRequestList(String empEmno){
+	public List<HashMap<String,Object>> certificateRequestList(HashMap<String,Object> paramMap){
 		
-		List<HashMap<String,Object>> list = certificateDao.certificateRequestList(empEmno);
+		List<HashMap<String,Object>> list = certificateDao.certificateRequestList(paramMap);
 		
 		return list;
 		

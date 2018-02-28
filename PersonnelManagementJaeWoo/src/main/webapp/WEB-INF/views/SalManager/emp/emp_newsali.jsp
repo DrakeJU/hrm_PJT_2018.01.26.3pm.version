@@ -86,19 +86,20 @@
 				if ($("#chk" + i).prop("checked") == false) {
 					
 					$("#chk" + i).prop("checked",true);
-					$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="5" onkeydown="onlyMoneyNumber(this)">');
-					$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');		
-					$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
-					$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
-					$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
-					$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
-					$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" onkeydown="onlyMoneyNumber(this)">');
+					//$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');		
+					//$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
+					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=tami'+ i+ 'value=0)>');
+					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=fdei'+ i+ 'value=0>');
+					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=cmci'+ i+ 'value=0>');
+					//$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
 					$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 					
 					
-					$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					
+					/* $("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 					$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
-					$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+					$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">'); */
 				 	
 					/* $("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 					$("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
@@ -143,13 +144,13 @@
 			$("#chk" + i).prop("checked",true)
 			$("[id=checkPoint"+i+"]").addClass('success');
 			//alert(list);
-			$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="5" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=tamtext"+ i+ "]").append('<input type="text" name=tami'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=fdetext"+ i+ "]").append('<input type="text" name=fdei'+ i+ ' value="0" style="visibility:hidden" size="5" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=cmctext"+ i+ "]").append('<input type="text" name=cmci'+ i+ ' value="0" style="visibility:hidden"  size="5" onkeydown="onlyMoneyNumber(this)">');
-			$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" onkeydown="onlyMoneyNumber(this)">');
+			//$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
+			//$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
+			$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=tami'+ i+ ' value="0">');
+			$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=fdei'+ i+ ' value="0">');
+			$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=cmci'+ i+ ' value="0">');
+			//$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }"  size="5" onkeydown="onlyMoneyNumber(this)">');
 			$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 			
 		
@@ -159,9 +160,9 @@
 			
 		
 			
-			$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+		/* 	$("td[name=tamtext"+ i+ "]").append('<input type="checkbox" name=tamiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 			$("td[name=fdetext"+ i+ "]").append('<input type="checkbox" name=fdeiCk'+ i+ ' onchange="checkChange(this,'+i+')">');
-			$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
+			$("td[name=cmctext"+ i+ "]").append('<input type="checkbox" name=cmciCk'+ i+ ' onchange="checkChange(this,'+i+')">'); */
 			
 			/* $("td[name=snctext"+ i+ "]").append('<input type="checkbox" name=snciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
 		 	$("td[name=sbctext"+ i+ "]").append('<input type="checkbox" name=sbciCk'+ i+ ' onchange="checkChange(this,'+i+')">');
@@ -177,7 +178,7 @@
 			$('[name=cmci'+i+']').val("0"); 
 			$('[name=slci'+i+']').val("0"); */
 			$("input[name=sali"+ i + "]").remove();
-			$("input[name=sbci"+ i + "]").remove();
+		/* 	$("input[name=sbci"+ i + "]").remove();
 			$("input[name=sbciCk"+ i + "]").remove();
 			$("input[name=snci"+ i + "]").remove();
 			$("input[name=snciCk"+ i + "]").remove();
@@ -188,14 +189,14 @@
 			$("input[name=cmci"+ i + "]").remove();
 			$("input[name=cmciCk"+ i + "]").remove();
 			$("input[name=slci"+ i + "]").remove();
-			$("input[name=slciCk"+ i + "]").remove();
+			$("input[name=slciCk"+ i + "]").remove(); */
 			$("input[name=code"+ i + "]").remove();
 			
 		}
 	}
 	
 	/// 체크 시 인풋 박스 추가삭제
-	function checkChange( obj,i ){
+	/* function checkChange( obj,i ){
 		//alert( obj.name );
 		var inputName = obj.name.replace("Ck","");
 		
@@ -219,7 +220,7 @@
 			
 			$('[name="'+inputName+'"]').css('visibility','hidden');
 		}
-	}
+	} */
 	
 	/// td 더블클릭시 체크 인풋 박스 추가삭제
 /* 	function checkboxChange( obj ){
@@ -414,12 +415,12 @@
 							</div>
 						</form>
 						
-							<input type="hidden" name="sbc" value="${aList.get(0).scomHhCst }">
+						<%-- 	<input type="hidden" name="sbc" value="${aList.get(0).scomHhCst }">
 							<input type="hidden" name="snc" value="${aList.get(0).scomNhCst }">
 							<input type="hidden" name="tam" value="교통비">
 							<input type="hidden" name="fde" value="${aList.get(0).scomElhCst }">
 							<input type="hidden" name="cmc" value="${aList.get(0).sempCmc }">
-							<input type="hidden" name="slc" value="${aList.get(0).scomLhCst }">
+							<input type="hidden" name="slc" value="${aList.get(0).scomLhCst }"> --%>
 									
 					</div>
 				</div>

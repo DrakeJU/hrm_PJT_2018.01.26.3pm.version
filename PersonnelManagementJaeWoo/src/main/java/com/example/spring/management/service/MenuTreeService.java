@@ -79,8 +79,8 @@ public class MenuTreeService {
 		return result;
 	}//menuUpdate
 	
-	public int menuDelete(int mnNo) {
-		int result  = (int)menuTreeDao.menuDelete(mnNo); 
+	public int menuDelete(List<String> mnList) {
+		int result  = (int)menuTreeDao.menuDelete(mnList); 
 		return result;
 	}//menuDelete
 

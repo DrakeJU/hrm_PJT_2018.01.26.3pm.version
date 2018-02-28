@@ -1,8 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <script>
-	var emno = "1111111111";
-	var deptCode = 1;
+	var emno = $("#empEmno").val();
+	var deptCode = ${empInfo.deptCode};
+	
+	console.log("emno : " + emno);
+	console.log("deptCode : " + deptCode);
 	
 	paging.ajaxSubmit("individuaSchedule.do",{"emno":emno},function(rslt){
 		console.log("결과데이터(개인) : " + JSON.stringify(rslt));

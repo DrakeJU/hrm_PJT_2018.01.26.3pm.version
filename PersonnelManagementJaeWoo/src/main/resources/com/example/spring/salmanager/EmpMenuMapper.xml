@@ -71,7 +71,7 @@
 	
 	<insert id="new_empcode_insert">
 
-		INSERT INTO SAL_EMPLOYEE(EMP_EMNO, SEMP_SAL, SEMP_BW_CST, SEMP_NW_CST, SEMP_TAMT, SEMP_FDEX, SEMP_CMC, SEMP_L_CST)
+		INSERT INTO SAL_EMPLOYEE(EMP_EMNO, SEMP_SAL, SEMP_TAMT, SEMP_FDEX, SEMP_CMC)
 		VALUES(
 		<foreach collection="list" item="item" index="index" separator= ",">
 			replace(#{item},",","")

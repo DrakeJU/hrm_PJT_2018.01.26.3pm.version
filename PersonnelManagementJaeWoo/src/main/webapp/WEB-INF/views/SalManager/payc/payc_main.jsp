@@ -221,9 +221,9 @@
 			
 					 $("[id=select_list]").append(color
 							 						+"<td id=sempcode"+i+">"+data.list[i].EMP_EMNO+"</td>"
-													+"<td>"+data.list[i].SCAL_BW_CST+"</td>"
-													+"<td>"+data.list[i].SCAL_NW_CST+"</td>"
-													+"<td>"+data.list[i].SCAL_L_CST+"</td>"
+													+"<td></td>"
+													+"<td></td>"
+													+"<td></td>"
 													+"<td>"+data.list[i].SCAL_TAMT+"</td>"
 													+"<td></td>"
 													+"<td>"+ data.list[i].SCAL_EFEE +"</td>"
@@ -325,7 +325,7 @@
 				},
 					
 				error:function(jqXHR, textStatus, errorThrown){
-						//alert("중복된 급여대장이 있습니다. \n" + textStatus + " : " + errorThrown);
+						alert("에러 \n" + textStatus + " : " + errorThrown);
 					            
 				}
 			});
@@ -406,7 +406,7 @@
 											<td align="center"></td>
 											<td align="center">근무기록확정</td>
 											<td align="center" rowspan="2"></td>
-											<td align="center" rowspan="2"><a href="#" onclick="acalPayc('${status.index}'); return false;" >전체계산</a>
+											<td align="center" rowspan="2"><a href="#" onclick="acalPayc('${status.index}'); return false" >전체계산</a>
 												<p>수정
 											</td>
 

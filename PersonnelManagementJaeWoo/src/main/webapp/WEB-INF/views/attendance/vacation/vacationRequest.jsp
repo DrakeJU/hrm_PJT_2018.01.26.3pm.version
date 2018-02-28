@@ -52,12 +52,13 @@ function check_onclick(url, formId){
 //		insert 성공여부에 따른 alert창 띄우기
 			if(rslt.success == "Y"){
 				
-				if(rslt.empEmno == null || rslt.empName == null || rslt.deptName == null || rslt.rankName == null){
-					alert("빈 칸을 채워주세요.");
-					return false;				
-				} else {
-					alert("휴가가 신청되었습니다.");					
-				}
+// 				if(rslt.empEmno == null || rslt.empName == null || rslt.deptName == null || rslt.rankName == null){
+// 					alert("빈 칸을 채워주세요.");
+// 					return false;				
+// 				} else {
+					alert("휴가가 신청되었습니다.");	
+					location.reload();
+// 				}
 								
 			}else{
 				alert("휴가 신청실패");
@@ -72,24 +73,24 @@ function check_onclick(url, formId){
 function calender() {
 	
 	//오늘 날짜로 보여주기
-	$('#vastCrtDate').val(moment().format('YYYY-MM-DD'));	//휴가 신청일
-	$('#vastStartDate').val(moment().format('YYYY-MM-DD'));		//휴가 시작일
-	$('#vastEndDate').val(moment().format('YYYY-MM-DD'));		//휴가 종료일
+	$('#vastCrtDate').val(moment().format('YYYY.MM.DD'));	//휴가 신청일
+	$('#vastStartDate').val(moment().format('YYYY.MM.DD'));		//휴가 시작일
+	$('#vastEndDate').val(moment().format('YYYY.MM.DD'));		//휴가 종료일
 	$('#vastVacUd').val(moment().format('1'));
 	
 	$('#crtDate').datetimepicker({ //휴가신청일 달력
 		viewMode : 'days',
-		format : 'YYYY-MM-DD'
+		format : 'YYYY.MM.DD'
 	});
 	
 	$('#startDate').datetimepicker({ //휴가시작일 달력
 		viewMode : 'days',
-		format : 'YYYY-MM-DD'
+		format : 'YYYY.MM.DD'
 	});
 
 	$('#endDate').datetimepicker({ //휴가종료일 달력
 		viewMode : 'days',
-		format : 'YYYY-MM-DD'
+		format : 'YYYY.MM.DD'
 	});
 
 	//휴가종료날짜가 시작날짜 이전인 날짜는 선택 불가능하도록 제한
@@ -116,8 +117,6 @@ function calender() {
 	});
 };//달력
 
-
-	
 function vacSelect(){
  	$("#vacationTypeList").click(function(){
 	
@@ -242,7 +241,7 @@ function vacSelect(){
 					<div class="panel-body">
 						<form class="form-inline" id="vacReqFrm" name="vacReqFrm" method="post">
 							<input type="hidden" name=""><!-- 권한 -->
-<!-- 							<input type="hidden" name="empEmno" value="575657036">사원번호 -->
+							<input type="hidden" name="empEmno" value="<%=(String)session.getAttribute("userEmno")%>">사원번호
 							
 							<table class="table table-bordered">
 								<tr>
@@ -268,7 +267,7 @@ function vacSelect(){
 										<input type="hidden" id="vacationTypeHidden"><!-- 휴가타입 히든 -->
 									</td>
 									<td>전자결재상태</td>
-									<td><input type="text" class="form-control" name="vastProgressSituation" id="vastProgressSituation" value="승인대기" readonly></td>
+									<td style="padding-left:0.5em"><input type="text" class="form-control" name="vastProgressSituation" id="vastProgressSituation" value="승인대기" readonly></td>
 <!-- 									<td><i class="fa fa-asterisk-red" aria-hidden="true" ></i>전일/반일</td> -->
 <!-- 									<td> -->
 <!-- 										<label class="fancy-radio-inline"> -->
@@ -284,7 +283,7 @@ function vacSelect(){
 								
 								<tr><!-- 신청자도 관리자와 사원 기능 따로 만들기 -->
 									<td><!-- <i class="fa fa-asterisk-red" aria-hidden="true" ></i> -->신청자</td>
-									<td colspan="5">
+									<td colspan="5" style="padding-left:0.5em">
 										<div class="input-group">	
 											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번">
 											<span class="input-group-addon" data-toggle="modal" data-target="#empEmnoModal" style="cursor:pointer" onclick="vacationReqEmpList()">
@@ -300,7 +299,7 @@ function vacSelect(){
 								
 								<tr>
 									<td>휴가기간</td>
-									<td colspan="5">
+									<td colspan="5" style="padding-left:0.5em">
 										<!-- 달력 start-->
 										<div class="input-group date" id="startDate">
 									  		<input type="text" class="form-control" id="vastStartDate" name="vastStartDate"/>
@@ -322,7 +321,7 @@ function vacSelect(){
 								</tr>
 								<tr>
 									<td>휴가사유</td>
-									<td colspan="7"><input type="text" class="form-control" name="vastCont" id="vastCont"></td>
+									<td colspan="7" style="padding-left:0.5em"><input type="text" class="form-control" name="vastCont" id="vastCont"></td>
 								</tr>
 							</table>
 							<div class="text-right">

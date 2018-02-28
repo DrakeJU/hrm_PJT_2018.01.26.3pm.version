@@ -123,10 +123,12 @@ public class PaycMenuController {
 	public @ResponseBody HashMap<String, Object> payc_acal(
 			@RequestParam HashMap<String, Object> map) {
 
-		logger.info("paycMenuCmap : " + map);
+		//logger.info("paycMenuCmap : " + map);
 		
-
-		return paycMenuService.acalPayc(map);
+		HashMap<String, Object> m1=paycMenuService.acalPayc(map);
+		
+		logger.info("paycMenuCmap"+m1);
+		return m1;
 	}
 //-------------------------------------------------------------------------------------------------
 

@@ -64,7 +64,12 @@ public class AttendDao {
 	 * @Date   : 2018.01.??
 	 ***************************************************************************************/
 	
-	public List<HashMap<String, Object>> readMnthngAttdCrtCls(HashMap<String, String> paramMap) {
+	public int readMnthngAttdCrtClsCnt(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return ((Integer)this.sqlSession.selectOne(nameSpaceName + "readMnthngAttdCrtClsCnt", paramMap));
+	}
+	
+	public List<HashMap<String, Object>> readMnthngAttdCrtCls(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
 		List<HashMap<String, Object>> resultList 
 			= this.sqlSession.selectList(nameSpaceName + "readMnthngAttdCrtCls", paramMap);
@@ -72,12 +77,22 @@ public class AttendDao {
 		return resultList;
 	}
 	
-	public HashMap<String, Object> readMnthngAttdCrtClsStts(HashMap<String, String> paramMap) {
+	public HashMap<String, Object> readMnthngAttdCrtClsStts(HashMap<String, Object> paramMap) {
 		// TODO Auto-generated method stub
 		HashMap<String, Object> resultList 
 			= this.sqlSession.selectOne(nameSpaceName + "readMnthngAttdCrtClsStts", paramMap);
 	
 		return resultList;
+	}
+	
+	public int insertMnthngAttdCrtCls(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert(nameSpaceName +"insertMnthngAttdCrtCls", paramMap);
+	}
+	
+	public int insertAllMnthngAttdCrtCls(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert(nameSpaceName +"insertAllMnthngAttdCrtCls", paramMap);
 	}
 	
 	/***************************************************************************************
@@ -90,17 +105,17 @@ public class AttendDao {
 	public List<HashMap<String, Object>> mAttdSelectEmpList(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
 		List<HashMap<String, Object>> resultList 
-		= this.sqlSession.selectList(nameSpaceName + "mAttdSelectEmpList", map);
+			= this.sqlSession.selectList(nameSpaceName + "mAttdSelectEmpList", map);
 		
 		return resultList;
 	}
 	
-	
-	
-	
-	
-	
-	
+	public List<HashMap<String, Object>> searchMnthAttdStat(HashMap<String, String> paramMap) {
+		// TODO Auto-generated method stub
+		List<HashMap<String, Object>> resultList 
+			= this.sqlSession.selectList(nameSpaceName + "searchMnthAttdStat", paramMap);
+		return resultList;
+	}
 	
 	
 	
@@ -116,7 +131,12 @@ public class AttendDao {
 	 * @Date   : 2018.01.??
 	 ***************************************************************************************/
 	
-	public List<HashMap<String, Object>> readHdayExtnNightWorkInqr(HashMap<String, String> paramMap) {
+	public int readHdayExtnNightWorkInqrCnt(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return ((Integer)this.sqlSession.selectOne(nameSpaceName + "readHdayExtnNightWorkInqrCnt", paramMap));
+	}
+	
+	public List<HashMap<String, Object>> readHdayExtnNightWorkInqr(HashMap<String, Object> paramMap) {
 		
 		List<HashMap<String, Object>> resultList
 			= this.sqlSession.selectList(nameSpaceName + "readHdayExtnNightWorkInqr", paramMap);
@@ -129,5 +149,8 @@ public class AttendDao {
 		this.sqlSession.update(nameSpaceName+"acalUpdate", map);
 		return map;
 	}
+	
+	
+
 
 }

@@ -65,7 +65,7 @@ function vacCntCalculation(){
 // 		console.log($('#empEmnoResult').val());
 		
 		paging.ajaxFormSubmit("vacationCountAutoCalculation.ajax", "vacCntEmpFrm", function(rslt){
-// 			console.log("결과데이터:"+JSON.stringify(rslt));
+			console.log("휴가일수 자동계산:"+JSON.stringify(rslt));
 			
 			if(rslt == null || rslt.success == "N"){
 				console.log('에러');

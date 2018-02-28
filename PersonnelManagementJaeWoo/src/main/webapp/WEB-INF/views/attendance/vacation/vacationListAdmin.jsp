@@ -25,7 +25,8 @@ $(function(){
 	vacEmpList();	//사원 리스트 함수 AJAX
 	enterKey();	//검색 후 엔터키 작동
 });
-	
+
+//리스트 전 처리 후 출력 함수 호출
 var searchStart = function(choicePage){
 	vacEmpList(choicePage);
 	console.log("dddd");
@@ -34,7 +35,12 @@ var searchStart = function(choicePage){
 
 /* 휴가 조회 리스트  ajax */
 		
-function vacEmpList(choicePage){
+// function vacEmpList(choicePage){
+var vacEmpList = function(choicePage){
+
+	if(choicePage == undefined || choicePage == null){
+		choicePage = 1;
+	}//선택 페이지값이 들어오지 않은 경우 if
 	
 	paging.ajaxFormSubmit("vacationListAdmin.ajax", "vacListAdminFrm", function(rslt){
 		console.log("ajaxFormSubmit -> callback");
@@ -101,16 +107,14 @@ function vacEmpList(choicePage){
 				);
 			});//each list
 
-			if(choicePage == undefined){
-				choicePage = 1;
-			}//선택 페이지값이 들어오지 않은 경우 if
+// 			if(choicePage == undefined){
+// 				choicePage = 1;
+// 			}//선택 페이지값이 들어오지 않은 경우 if
 			
 			//페이징 생성
-			var obj = {"totalNoticeNum":rslt.totalNoticeNum, "choicePage":rslt.choicePage};
-			$(
-					
-					"nav[name='pagingNav']").pagingNav(obj,"pageClick");
-			console.log(obj);
+			var obj = {"totalNoticeNum":rslt.totalNoticeNum, "choicePage":choicePage};
+			$("nav[name='pagingNav']").pagingNav(obj,"pageClick");
+		
 			
 			//테이블 내용 가운데 정렬	
 			$('#vacListTable').children().addClass('text-center');	
@@ -121,10 +125,8 @@ function vacEmpList(choicePage){
 			$(function(){
 				$('#vacListTable').tablesorter({sortList: [[0,0], [1,0]]});
 			});
-			
 				
 		}//if-table 생성
-		
 		
 		
 		//테이블 마우스오버시 (행을 지날 때), 색 바뀜
@@ -138,9 +140,17 @@ function vacEmpList(choicePage){
 		$('table tr').mouseout(function(){ 
 			$(this).css("backgroundColor","#fff"); 
 		});
-	});//paging	
+	});//paging.ajaxFormSubmit
 	
 };	// vacationAdemin List : END
+
+/*paging 처리 */ 
+var pageClick = function(target){
+	console.log(target+"xxxxxxxxxxxxxxxx");
+	searchStart(target.attr("name"));
+	
+}//pageClick
+
 
 /*검색 버튼 */
 function searchClick(){		
@@ -157,13 +167,6 @@ function enterKey(){
 		}
 	});
 }
-
-//paging 처리 
-var pageClick = function(target){
-	console.log(target);
-	searchStart(target.attr("name"));
-	
-}//pageClick
 	
 
 

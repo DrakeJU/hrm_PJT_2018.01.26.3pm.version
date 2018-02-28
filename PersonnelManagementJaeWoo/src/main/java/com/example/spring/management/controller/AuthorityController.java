@@ -26,7 +26,7 @@ public class AuthorityController {
 	//사원 리스트 
 	@RequestMapping(value="empList.ajax")
 	public @ResponseBody HashMap<String,Object> empList(@RequestParam HashMap<String,Object> map){
-		System.out.println("들어온값"+map);
+		
 		map.put("totalNoticeNum", authorityService.empMaxNum(map));
 		map.put("empList", authorityService.empList(map));
 		
@@ -36,7 +36,6 @@ public class AuthorityController {
 	//사원에 대한 권한 상세정보
 	@RequestMapping(value="authorityDetail.do")
 	public ModelAndView authorityDetail(@RequestParam HashMap<String,Object> map) {
-		System.out.println("--------->"+map);
 		
 		ModelAndView mv= new ModelAndView();
 		
@@ -105,7 +104,7 @@ public class AuthorityController {
 	//메뉴 권한 업데이트
 	@RequestMapping(value="authorityUpdate.exc")
 	public @ResponseBody int authorityUpdate(@RequestParam HashMap<String,Object> map) {
-		System.out.println("----------------------드루와");
+		
 		int result = (int)authorityService.authorityUpdate(map);
 		return result;
 	}//authorityUpdat 

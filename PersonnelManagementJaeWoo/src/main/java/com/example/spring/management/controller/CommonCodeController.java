@@ -89,8 +89,11 @@ public class CommonCodeController {
 		HashMap<String,Object> paramMap = new HashMap<String,Object>();
 		
 		paramMap.put("selectPageNum",selectPageNum);
-		paramMap.put("commonSelect",commonSelect);
-		paramMap.put("commonSearch",commonSearch);
+		
+		if(commonSelect != null && commonSearch != null) {
+			paramMap.put("commonSelect",commonSelect);
+			paramMap.put("commonSearch",commonSearch);
+		}//if
 		
 		List<HashMap<String,Object>> list = commonCodeService.commonList(paramMap);
 		

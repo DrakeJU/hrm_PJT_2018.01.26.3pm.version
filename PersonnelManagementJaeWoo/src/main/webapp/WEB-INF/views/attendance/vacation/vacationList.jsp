@@ -15,10 +15,26 @@
 <script>
 
 	$(function() {
-	  $("input[type=hidden][name=empEmno]").val("0905000211"); //사원번호 (강병욱으로 테스트중)
-		vacationListSelect(); //사원별 휴가 개수, 휴가신청내역 ajax
+		
+		//휴가일수설정에 등록된 사원인지 체크하여 alert창 띄우기
+		paging.ajaxFormSubmit("empVacChk.ajax", "vacListFrm", function(rslt){
+			
+			$('#vacStatementTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
+	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+	 			);
+			$('#printBtn').attr("disabled", true); //인쇄버튼 막기
+			$('#excelBtn').attr("disabled", true); //엑셀버튼 막기
+			
+			if(rslt != '1'){
+				alert('휴가일수가 설정되지 않았습니다.\n관리자에게 문의하세요.');
+			}else{
+				$('.button').attr('disabled',false);
+				vacationListEmpRemindingVac(); //사원별 휴가 개수
+				vacationListSelect(); //휴가신청내역 ajax
+			}
+		});
 // 		$('.table tr').children().addClass('text-center'); //테이블 내용 가운데 정렬
-		escKey();
+// 		escKey();
 	});
 	
 	//테이블 정렬
@@ -26,20 +42,11 @@
 		$("#vacStatementTable").tablesorter();
 		$("#vacStatementTable").tablesorter({sortList: [[0,0], [1,0]]});
 	}
-
 	
-	//사원별 휴가 개수, 휴가신청내역 ajax
-	function vacationListSelect(){
-		paging.ajaxFormSubmit("vacationListSelect.ajax", "vacListFrm", function(rslt){
+	function vacationListEmpRemindingVac(){
+		paging.ajaxFormSubmit("vacationListEmpRemindingVac.ajax", "vacListFrm", function(rslt){
 			console.log("결과데이터:"+JSON.stringify(rslt));
 
-			$('#vacStatementTable').children('thead').css('width','calc(100% - 1.1em)'); //테이블 스크롤 css
-
-			if(rslt == null || rslt.success == "N"){
-				$('#vacStatementTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
-	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
-	 			);
-			}else if(rslt.success == "Y"){
 	 			$.each(rslt.empRemindingVacList, function(k, v) {
 	 				$('#empEmno').text($("input[type=hidden][name=empEmno]").val());
 	 				$('#empName').text(v.empName);
@@ -48,7 +55,21 @@
 	 				$('#emrePvacUd').text(v.emrePvacUd);
 	 				$('#remndrDate').text(v.remndrDate);
 	 			});
-	 			
+		});
+	}
+	
+	//사원별 휴가 개수, 휴가신청내역 ajax
+	function vacationListSelect(){
+		paging.ajaxFormSubmit("vacationListSelect.ajax", "vacListFrm", function(rslt){
+// 			console.log("결과데이터:"+JSON.stringify(rslt));
+
+			$('#vacStatementTable').children('thead').css('width','calc(100% - 1.1em)'); //테이블 스크롤 css
+
+			if(rslt == null || rslt.success == "N"){
+				$('#vacStatementTbody').append( //리스트가 없을 경우 : 조회된 데이터가 없습니다
+	 				"<div class='text-center'><br><br><br><br>조회할 데이터가 없습니다.</div>"
+	 			);
+			}else if(rslt.success == "Y"){
 	 			var i = 1;
 	 			$.each(rslt.vacationProgressList, function(k, v) {
 					$('#vacStatementTbody').append(
@@ -81,8 +102,8 @@
 		$('input[name=vastSerialNumber]').val(vastSerialNumber);
 		
 		paging.ajaxFormSubmit("empVacListDetail.ajax", "vacListFrm", function(rslt){
-			console.log("ajaxFormSubmit -> callback");
-			console.log("결과데이터:"+JSON.stringify(rslt));
+// 			console.log("ajaxFormSubmit -> callback");
+// 			console.log("결과데이터:"+JSON.stringify(rslt));
 			
 			//리스트가 없을 경우
 	 		if(rslt == null || rslt.success == "N"){
@@ -100,9 +121,21 @@
 	 				$('#vastVacUd').val(v.vastVacUd); //일수
 	 				$('#vastCont').val(v.vastCont); //휴가사유
 	 				
-	 				if(v.vastProgressSituation == '승인완료'){
+	 				if(v.vastProgressSituation == '승인완료' || v.vastProgressSituation == '승인취소'){
+	 					$('#vastCrtDate').attr("readonly",true); //휴가신청일
+		 				$('#vastC').attr("readonly",true); //휴가구분
+		 				$('#vastStartDate').attr("readonly",true); //휴가시작일
+		 				$('#vastEndDate').attr("readonly",true); //휴가종료일
+		 				$('#vastCont').attr("readonly",true); //휴가사유
+		 				
 	 					$('#footer').children().hide(); //승인완료면 수정,삭제 불가능하게 버튼 제거
 	 				}else{
+	 					$('#vastCrtDate').attr("readonly",false); //휴가신청일
+		 				$('#vastC').attr("readonly",false); //휴가구분
+		 				$('#vastStartDate').attr("readonly",false); //휴가시작일
+		 				$('#vastEndDate').attr("readonly",false); //휴가종료일
+		 				$('#vastCont').attr("readonly",false); //휴가사유
+		 				
 	 					$('#footer').children().show();
 	 				}
 	 			});
@@ -120,7 +153,7 @@
 			paging.ajaxFormSubmit("vacationListDelete.ajax", "vacListFrm", function(rslt){
 //	 			console.log("ajaxFormSubmit -> callback");
 //	 			console.log("결과데이터:"+JSON.stringify(rslt));
-				
+
 				//리스트가 없을 경우
 		 		if(rslt == null || rslt.success == "N"){
 //		 			$('#empVacListTbody').append(
@@ -132,11 +165,21 @@
 					window.location.reload();
 		 		}
 			});
-		}else{ //취소
-			
 		}
 	}
 	
+	//인쇄
+	function vacListPrint(){
+		$('#mainDiv').printElement();
+	}
+	
+	//엑셀 다운
+	function vacListExcelExport(){
+		$("#vacStatementTable").excelexportjs({
+			containerid: 'vacStatementTable',
+			datatype: 'table'
+		});
+	}
 
 	//모달 esc 눌러서 끄게
 // 	function escKey(){
@@ -161,14 +204,14 @@
 </script>
 </head>
 <body>
-	<div class="main" style="min-height: 867px;">
+	<div class="main" style="min-height: 867px;" id="mainDiv">
 		<div class="main-content">
 			<div class="container-fluid">
 			<h3 class="page-title">휴가조회(사원)</h3>
 				<div class="panel">
 					<div class="panel-body">
 						<form id="vacListFrm">
-							<input type="hidden" name="empEmno"> <!-- 사원번호 -->
+							<input type="hidden" name="empEmno" value="<%=(String)session.getAttribute("userEmno")%>"> <!-- 사원번호 -->
 							<input type="hidden" name="vastSerialNumber"> <!-- 휴가내역일련번호 -->
 						</form>
 						<table class="table table-bordered" id="empInfo">	
@@ -193,13 +236,8 @@
 				</div>
 				
 				<div class="panel panel-headline"> 
-<!-- 					<div class="panel-heading">  -->
-<!-- 						<h5 class="panel-title">휴가내역</h4> -->
-<!-- 							<p class="subtitle">설명이 필요할 경우 추가 예정</p> -->
-<!-- 					</div> -->
 					<div class="panel-body">
-						<!-- list table 영역 -->
-						<div class="list_wrapper">
+						<div class="list_wrapper"><!-- list table 영역 -->
 							<table class="table tablesorter" id="vacStatementTable">
 								<thead style="display:table;width:100%;table-layout:fixed;">
 									<tr>
@@ -209,23 +247,18 @@
 										<th>휴가기간</th>
 										<th>일수</th>
 										<th>진행상태</th>
-<!-- 										<th>휴가사유</th> -->
 									</tr>
 								</thead>
 								<tbody id="vacStatementTbody" style="display:block;height:350px;overflow:auto;">
 								<!-- ajax 내용 불러오기 -->
 								</tbody>
 							</table>
-						</div>
-						<!-- END list table 영역 -->
+						</div><!-- END list table 영역 -->
 						
-						
-						<!-- Modal -->
-						<div id="myModal" class="modal fade" role="dialog">
+		
+						<div id="myModal" class="modal fade" role="dialog"><!-- Modal -->
 						  <div class="modal-dialog modal-lg">
-						
-						    <!-- Modal content-->
-						    <div class="modal-content">
+						    <div class="modal-content"><!-- Modal content-->
 						      <div class="modal-header">
 						        <button type="button" class="close" data-dismiss="modal">&times;</button>
 						        <p class="modal-title">휴가조회</p>
@@ -264,32 +297,18 @@
 													</td>
 													<td>진행상태</td>
 													<td><input type="text" class="form-control" name="vastProgressSituation" id="vastProgressSituation" value="승인대기" readonly></td>
-				<!-- 									<td><i class="fa fa-asterisk-red" aria-hidden="true" ></i>전일/반일</td> -->
-				<!-- 									<td> -->
-				<!-- 										<label class="fancy-radio-inline"> -->
-				<!-- 											<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> -->
-				<!-- 											<span><i></i>전일</span> -->
-				<!-- 										</label> -->
-				<!-- 	 									<label class="fancy-radio-inline"> -->
-				<!-- 	 										<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> -->
-				<!-- 	 										<span><i></i>반일</span> -->
-				<!-- 										</label> -->
-				<!-- 									</td> -->
 												</tr>
-												
 												<tr>
 													<td>휴가기간</td>
 													<td colspan="5">
 													<div>
-														<!-- 달력 start-->
-														<div class="input-group date" id="startDate">
+														<div class="input-group date" id="startDate"><!-- 달력-->
 													  		<input type="text" class="form-control" id="vastStartDate" name="vastStartDate"/>
 														    <span class="input-group-addon">
 															    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 														    </span>
 														</div>
 														~
-														<!-- 달력 end-->
 														<div class="input-group date" id="endDate">
 													  		<input type="text" class="form-control" id="vastEndDate" name="vastEndDate"/>
 														    <span class="input-group-addon">
@@ -299,7 +318,6 @@
 														(일수: <input type="text" class="form-control" id="vastVacUd" name="vastVacUd" readonly>)
 													</div>
 													</td>
-				
 												</tr>
 												<tr>
 													<td>휴가사유</td>
@@ -313,24 +331,17 @@
 										<button type="button" class="btn btn-primary" onClick="modalDelete()">삭제</button>
 						      </div>
 						    </div>
-						
 						  </div>
 						</div>
-						    
-						<!-- 버튼영역 -->
-						<div class="text-center"> <!-- 필수 -->
-							<button type="button" class="btn btn-primary">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<button type="button" class="btn btn-primary">엑셀다운</button>
-						</div>
-						<!-- END 버튼영역 -->
-								
+						<div class="text-center"><!-- 버튼영역 -->
+							<button type="button" class="btn btn-primary" id="printBtn" onClick="vacListPrint()">인쇄하기</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-primary" id="excelBtn" onClick="vacListExcelExport()">엑셀다운</button>
+						</div><!-- END 버튼영역 -->
 					</div>
 				</div>
-			</div>
-		<!-- END MAIN CONTENT -->
+			</div><!-- END MAIN CONTENT -->
 		</div>
-	</div>
-	<!-- END MAIN -->
+	</div><!-- END MAIN -->
 
 </body>
 </html>

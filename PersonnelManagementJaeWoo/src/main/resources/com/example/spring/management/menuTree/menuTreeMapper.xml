@@ -64,7 +64,7 @@
 		WHERE MN_NO=#{mnNo}		
 	</update>
 	
-	<update id="menuDelete" parameterType="int">
+	<update id="menuDelete" parameterType="String">
 		UPDATE MENU SET MN_DEL_YN='Y', /*메뉴사용여부*/
 			MN_UPDT=DATE_FORMAT(NOW(),"%x%m%d%h%k%s") /*메뉴업데이트날짜*/
 		WHERE MN_NO=#{mnNo}	

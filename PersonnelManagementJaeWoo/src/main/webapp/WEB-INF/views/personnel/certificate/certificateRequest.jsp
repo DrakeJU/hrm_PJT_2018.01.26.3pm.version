@@ -81,27 +81,20 @@
 							</div>
 							<div class="panel-body">
 								<div class="col-md-2">
-									<select name="crtfSearchSelectLg" class="form-control" onChange="crtfSearchFunc()">
+									<select name="crtfSearchSelectLg" class="form-control" onChange="crtfSearchSelectChangeFunc()">
 										<option value="default">선택</option>
 										<option value="certificate">증명서</option>
 										<option value="crtfProgressSituation">전자결제상태</option>
 									</select>
 								</div>
-								<div class="col-md-2">
+								<div class="col-md-2" id="crtfSearchSelectDiv2">
 									<select name="crtfSearchSelectMd" class="form-control">
 										<option value="default">선택</option>
 									</select>
-									<select name="crtfSearchSelectCRTF" class="form-control">
-										<option value="default">선택</option>
-										<option value="재직증명서">재직증명서</option>
-										<option value="경력증명서">경력증명서</option>
-										<option value="퇴직증명서">퇴직증명서</option>
-									</select>
-									<select name="crtfSearchSelectCPS">
-										<option value="default">선택</option>
-										<option value="Y">승인완료</option>
-										<option value="N">승인대기</option>
-									</select>
+									
+								</div>
+								<div class="col-md-2">
+									<button type="button" class="btn btn-primary" id="crtfSearchBtn">검색</button>
 								</div>
 							</div>
 						</div>

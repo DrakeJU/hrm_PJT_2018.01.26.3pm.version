@@ -51,8 +51,18 @@ public class MenuTreeDao {
 	}//menuUpdate
 	
 	//메뉴 삭제
-	public int menuDelete(int mnNo) {
-		int result = (int)this.sql.update(namespace+"menuDelete",mnNo);
+	public int menuDelete(List<String> mnList) {
+		
+		int result=1;
+		int tempResult=1;
+		
+		for(String item : mnList) {
+			tempResult = (int)this.sql.update(namespace+"menuDelete",item);
+			if(tempResult>0) {
+				result=tempResult;
+			}
+		}
+		
 		return result;	
 	}//menuDelete
 	

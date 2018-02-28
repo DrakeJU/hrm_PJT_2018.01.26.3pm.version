@@ -475,6 +475,8 @@ public class PaycMenuService {
 				deduction.get(i).put("hfee", strhfee);
 
 			}
+			
+			System.out.println("deductioni"+deduction);
 
 		}
 		// ------------------------------------ 고용보험

@@ -27,7 +27,7 @@
 	</select>
     
     <select id ="sal_calList" parameterType="HashMap" resultType="HashMap"> 
-    
+    	
     	
     </select>
 
@@ -107,7 +107,7 @@
 		INSERT INTO SAL_CALCULATION(
 		
 					SCAL_EMYM, EMP_EMNO, SCAL_SAL, SCAL_TAMT, SCAL_FDEX, SCAL_CMC,
-					SCAL_NW_CST, SCAL_BW_CST, SCAL_L_CST, SCAL_NPEN, SCAL_HFEE,
+					SCAL_NPEN, SCAL_HFEE,
 					SCAL_ITAX, SCAL_LTAX, SCAL_EFEE, SCAL_AAMT, SCAL_DAMT, SCAL_FAMT, SCAL_YYMM)
      	VALUES (	
      		
@@ -118,9 +118,6 @@
      	 #{fdex},
      	 #{cmc},
      	 
-     	 #{snc},
-     	 #{sbc},
-     	 #{slc},
      	 #{npen},
      	 #{hfee},
      	 

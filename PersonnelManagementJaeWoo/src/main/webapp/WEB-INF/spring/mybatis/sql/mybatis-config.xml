@@ -21,6 +21,8 @@
 	
 	<mappers>
 		<!-- [인사관리] START -->
+		<!-- [인사관리]-[사원정보등록] -->
+		<mapper resource="com/example/spring/personnel/infoMapper.xml"/>
 		<!-- [인사관리]-[일정관리] -->
 		<mapper resource="com/example/spring/personnel/scheduleMapper.xml"/>
 		<!-- [인사관리]-[증명서관리]-[증명서발급] -->
@@ -50,6 +52,7 @@
 		<!-- [권한관리] END -->
 
 		<mapper resource="com/example/spring/common/commonMapper.xml"/>	
+		<mapper resource="com/example/spring/common/dashboardMapper.xml"/>	
 
 		<!-- [급여관리] START  -->
 		<mapper resource="com/example/spring/salmanager/EmpMenuMapper.xml"/>

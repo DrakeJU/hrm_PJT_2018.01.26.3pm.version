@@ -86,4 +86,19 @@
 		FROM calendar
 		WHERE db_date = #{start}
 	</select>
+	
+	<select id="calenderUpdate" parameterType="HashMap" resultType="HashMap">
+		UPDATE calendar
+		SET memo = #{viewmemo} ,event = #{selectBox}
+		WHERE db_date = #{startDate}
+	</select>
+	
+	<select id="SecondTabCalendarTableList" parameterType="HashMap" resultType="HashMap">
+		SELECT 
+		   memo
+		   ,DATE_FORMAT(db_date,"%Y-%m-%d") as dbDate
+		   ,event
+		FROM calendar as c
+		WHERE c.db_date BETWEEN #{startEndDay} AND #{yearEndDay}
+	</select>
 </mapper>

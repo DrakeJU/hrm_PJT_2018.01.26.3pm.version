@@ -17,10 +17,12 @@
 			mn_idx mnIdx, /*메뉴순번*/
 			mn_url mnUrl /*메뉴URL*/
 		from menu
+		where menu.MN_DEL_YN='N' /*메뉴삭제여부*/
+		AND menu.MN_USE_YN='Y' /*메뉴사용여부*/
 		<if test="list!=null">
-		where
-			<foreach collection="list" item="item" index="idex" separator="||">
-			 	mn_no = #{item}
+		AND mn_no in
+			<foreach collection="list" item="item" index="idex" open="(" close=")" separator=",">
+			 	#{item}
 			</foreach>
 		</if>
 		order by mnPrntNo ASC, mnIdx ASC	

@@ -3,91 +3,6 @@
 
 <!-- 휴가 sql -->
 <mapper namespace="vacation">
-	
-	<!-- 대시보드 - 사원휴가정보 -->
-	<select id="empVacInfo" parameterType="HashMap" resultType="HashMap">
-	SELECT
-		E.EMP_NAME AS empName, #사원명
-		CONCAT(LEFT(E.EMP_INCO_DATE,4),'.',
-		SUBSTRING(E.EMP_INCO_DATE,5,2),'.',
-		RIGHT(E.EMP_INCO_DATE,2)) AS empIncoDate, #입사일
-		D.DEPT_NAME AS deptName, #부서명
-		R.RANK_NAME AS rankName, #직위명
-		CONCAT(LEFT(E.EMP_BDAY,4),'.',
-		SUBSTRING(E.EMP_BDAY,5,2),'.',
-		RIGHT(E.EMP_BDAY,2)) AS empBday, #생년월일
-		CONCAT(LEFT(E.EMP_TNO,3),'-',
-		SUBSTRING(E.EMP_TNO,4,4),'-',
-		RIGHT(E.EMP_TNO,4)) AS empTno, #전화번호
-		E.EMP_EMAIL AS empEmail, #이메일주소
-		V.EMRE_VAC_UD AS emreVacUd, #연차일수
-		V.EMRE_PVAC_UD AS emrePvacUd, #유급휴가사용일수
-		V.EMRE_REMNDR_UD AS emreRemndrUd, #잔여일수
-		V.EMRE_UPVAC_UD AS emreUpvacUd #기타휴가사용일수
-	FROM EMPLOYEE_REMINDING_VAC V
-	INNER JOIN EMPLOYEE E
-	ON E.EMP_EMNO = V.EMP_EMNO
-	INNER JOIN DEPARTMENT D
-	ON E.DEPT_CODE = D.DEPT_CODE
-	INNER JOIN RANK R
-	ON R.RANK_CODE = E.RANK_CODE
-	WHERE V.EMP_EMNO = #{empEmno} AND V.BASE_YEAR = LEFT(#{baseMonth},4)
-	</select>
-	
-	<!-- 대시보드 - 월별 유급휴가 사용일수 (사원) -->
-	<select id="monthlyVacUserChart" parameterType="HashMap" resultType="java.lang.Float">
-	SELECT
-		IFNULL(SUM(
-			IF(
-			SUBSTRING(VAST_START_DATE,5,2)=SUBSTRING(VAST_END_DATE,5,2),
-			VAST_VAC_UD,
-			(TO_DAYS(LAST_DAY(VAST_START_DATE))-TO_DAYS(VAST_START_DATE))+1
-			)
-		),0) AS cnt
-	FROM VAC_STATEMENT
-	WHERE
-		EMP_EMNO = #{empEmno} AND VAST_START_DATE LIKE CONCAT(#{baseMonth},'%')
-		AND (VAST_C = 'V1' OR VAST_C = 'V2') AND VAST_PROGRESS_SITUATION='승인완료'
-	</select>
-	
-	<!-- 대시보드 - 월별 유급휴가 사용일수 (전체) -->
-	<select id="monthlyVacAllChart" parameterType="HashMap" resultType="java.lang.Float">
-	SELECT
-		IFNULL(AVG(X.CNT),0) AS avgCnt
-	FROM 	
-	(
-	SELECT
-		SUM(
-			IF(
-			SUBSTRING(VAST_START_DATE,5,2)=SUBSTRING(VAST_END_DATE,5,2),
-			VAST_VAC_UD,
-			(TO_DAYS(LAST_DAY(VAST_START_DATE))-TO_DAYS(VAST_START_DATE))+1
-			)
-		)AS CNT
-	FROM VAC_STATEMENT
-	WHERE
-		EMP_EMNO != #{empEmno} AND VAST_START_DATE LIKE CONCAT(#{baseMonth},'%')
-		AND (VAST_C = 'V1' OR VAST_C = 'V2') AND VAST_PROGRESS_SITUATION='승인완료'
-	GROUP BY EMP_EMNO
-	)X
-	</select>
-	
-	<!-- 대시보드 - 오늘의 휴가자  -->
-	<select id="vacTodayEmpList" resultType="HashMap">
-	SELECT
-		V.EMP_EMNO AS empEmno,
-		E.EMP_NAME AS empName,
-		D.DEPT_NAME AS deptName,
-		IF(V.VAST_START_DATE = V.VAST_END_DATE, CONCAT(LEFT(V.VAST_START_DATE,4),'.', SUBSTRING(V.VAST_START_DATE,5,2),'.', RIGHT(V.VAST_START_DATE,2)), 
-					CONCAT(LEFT(V.VAST_START_DATE,4),'.', SUBSTRING(V.VAST_START_DATE,5,2),'.', RIGHT(V.VAST_START_DATE,2),'~', 
-					LEFT(V.VAST_END_DATE,4),'.', SUBSTRING(V.VAST_END_DATE,5,2),'.', RIGHT(V.VAST_END_DATE,2))) AS vastTerm,
-		IF(V.VAST_C='V1','연차',IF(V.VAST_C='V2','반차','기타휴가')) AS vastC
-	FROM VAC_STATEMENT V
-	INNER JOIN EMPLOYEE E ON V.EMP_EMNO = E.EMP_EMNO
-	INNER JOIN DEPARTMENT D ON D.DEPT_CODE = E.DEPT_CODE
-	WHERE V.VAST_PROGRESS_SITUATION = '승인완료'
-	AND (REPLACE(LEFT(NOW(),10),'-','') <![CDATA[ >= ]]> V.VAST_START_DATE AND REPLACE(LEFT(NOW(),10),'-','') <![CDATA[ <= ]]> V.VAST_END_DATE)
-	</select>
 
 	<!-- 내가 이번달에 사용한 항목별 휴가 -->
 	<select id="thisMonthVacChart" parameterType="HashMap" resultType="HashMap">
@@ -183,7 +98,7 @@
 		(IF((
 		(SELECT	COUNT(EVENT)
 		FROM CALENDAR
-		WHERE EVENT='정상근무' AND ID LIKE CONCAT('%',#{cowyMonthCnt},'%'))
+		WHERE EVENT='regualWork' AND ID LIKE CONCAT('%',#{cowyMonthCnt},'%'))
 		<![CDATA[ >= ]]>
 		(SELECT MODA_WEEKDAY_WORK_DATE
 		FROM MONTH_DEADLINE_ATTENDANCE
@@ -216,10 +131,10 @@
 	
 	<!-- 사원별 잔여 휴가 테이블 근속연수 +1 업데이트  --> <!-- 저장하기 눌렀을 때 -->
  	<update id="cowyUpdate" parameterType="HashMap">
-<!-- 	/* cowyUpdate : 근속연수+1 */ -->
-<!-- 	UPDATE EMPLOYEE_REMINDING_VAC -->
-<!-- 	SET COWY_SERIAL_NUMBER = IF(COWY_SERIAL_NUMBER=#{cowyCnt}, CONVERT(#{cowyCnt}+1, UNSIGNED), #{cowyCnt}) -->
-<!-- 	WHERE EMP_EMNO = #{empEmno} -->
+	/* cowyUpdate : 근속연수+1 */
+	UPDATE EMPLOYEE_REMINDING_VAC
+	SET COWY_SERIAL_NUMBER = IF(COWY_SERIAL_NUMBER=#{cowyCnt}, CONVERT(#{cowyCnt}+1, UNSIGNED), #{cowyCnt})
+	WHERE EMP_EMNO = #{empEmno}
 	</update>
 	
 	<!-- 전년도 근속일 수가 80% 넘는지 -->
@@ -228,7 +143,7 @@
 		IF(
 		(SELECT COUNT(EVENT)*0.8 
 		FROM CALENDAR 
-		WHERE EVENT='정상근무' AND ID LIKE CONCAT('%',(CONVERT(LEFT(NOW(),4)-1,UNSIGNED)),'%')
+		WHERE EVENT='regualWork' AND ID LIKE CONCAT('%',(CONVERT(LEFT(NOW(),4)-1,UNSIGNED)),'%')
 		<![CDATA[ <= ]]>
 		(SELECT SUM(MODA_WEEKDAY_WORK_DATE)
 		FROM MONTH_DEADLINE_ATTENDANCE
@@ -334,6 +249,14 @@
 <!-- 	) -->
 	</insert>
 	
+	<!-- 휴가일수설정에 등록된 사원인지 체크 -->
+	<select id="empVacChk" parameterType="HashMap" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM EMPLOYEE_REMINDING_VAC
+	WHERE EMP_EMNO = #{empEmno}
+	</select>
+	
 	<!-- 휴가 신청하기- 휴가 종류 셀렉 -->
 	<select id="vacationTypeList" parameterType="HashMap" resultType="HashMap">
 		SELECT
@@ -420,6 +343,48 @@
 		VAST_DEL_YN = 'Y'
 	WHERE VAST_SERIAL_NUMBER = #{vastSerialNumber}
 	</update>
+	
+	<!-- 휴가 조회하기  - 관리자 전체 게시글 수 -->
+<!-- 	<select id="vacListMaxNum" parameterType="HashMap" resultType="java.lang.Integer"> -->
+<!-- 		SELECT -->
+<!-- 			IFNULL(count(*),0) vacListMaxNum -->
+<!-- 		FROM( -->
+<!-- 			SELECT distinct -->
+<!-- 				(SELECT CASE WHEN RET.RETR_DEL_YN='N' THEN '재직' ELSE '퇴직' END) AS retrDelYn, -->
+<!-- 				E.EMP_EMNO as empEmno,		#사원 번호 -->
+<!-- 				E.EMP_NAME as empName,		#사원 이름 -->
+<!-- 				V.EMRE_PVAC_UD as emrePvacUd	#휴가 사용 일수 -->
+<!-- 			FROM  -->
+<!-- 				EMPLOYEE_REMINDING_VAC V -->
+<!-- 			RIGHT OUTER JOIN -->
+<!-- 				EMPLOYEE E -->
+<!-- 			ON V.EMP_EMNO = E.EMP_EMNO -->
+<!-- 			INNER JOIN -->
+<!-- 				RETIREMENT RET -->
+<!-- 			ON RET.EMP_EMNO = E.EMP_EMNO -->
+<!-- 			WHERE /* 재직자이거나, BASEYEAR에 퇴직한 사람*/ -->
+<!-- 				(SELECT V.EMP_EMNO WHERE BASE_YEAR=#{baseYear}) IS NOT null -->
+<!-- 		)x -->
+<!-- 		<if test="keyword != null and !keyword.equals('')">	검색어 입력 -->
+<!-- 			AND E.EMP_EMNO LIKE CONCAT('%', #{keyword}, '%')  -->
+<!-- 			OR E.EMP_NAME LIKE CONCAT('%', #{keyword}, '%') -->
+<!-- 			OR D.DEPT_NAME LIKE CONCAT('%', #{keyword}, '%') -->
+<!-- 			OR R.RANK_NAME LIKE CONCAT('%', #{keyword}, '%') -->
+<!-- 			OR V.EMRE_VAC_UD LIKE CONCAT('%', #{keyword}, '%') -->
+<!-- 			OR V.EMRE_PVAC_UD LIKE CONCAT('%', #{keyword}, '%') -->
+<!-- 			OR (V.EMRE_VAC_UD - V.EMRE_PVAC_UD) LIKE CONCAT('%', #{keyword}, '%') -->
+<!-- 		</if> -->
+<!-- 		<if test="retTypeList != null and !retTypeList.equals('')"> -->
+<!-- 			AND RET.RETR_DEL_YN = #{retTypeList}	#재직(N) 여부  -->
+<!-- 		</if>	 -->
+<!-- 		<if test="deptNameList != null and !deptNameList.equals('')"> -->
+<!-- 			AND D.DEPT_CODE = #{deptNameList}	#부서명 셀렉트 -->
+<!-- 		</if> -->
+<!-- 		<if test="rankNameList != null and !rankNameList.equals('')"> -->
+<!-- 			AND R.RANK_CODE = #{rankNameList}	#직급명 셀렉트 -->
+<!-- 		</if>	 -->
+<!-- 	</select> -->
+	
 	
 	
 	<!-- 휴가 조회하기 - 관리자 -->
@@ -538,6 +503,7 @@
 			VACATION VC
 		ON VS.VAST_C =VC.VAST_C
 		WHERE E.EMP_EMNO = #{empEmno}
+<!-- 		AND VS.VAST_PROGRESS_SITUATION = '승인완료' -->
 	</select>
 
 
@@ -566,12 +532,13 @@
 		WHERE VAST_PROGRESS_SITUATION = '승인대기';
 	</select>
 	
-	<!-- 휴가 신청현황 - 승인 결재 현황 리스트 -->
+	<!-- 휴가 신청현황 - 승인 결재 현황 셀렉박스 -->
 	<select id="situationList" parameterType="HashMap" resultType="HashMap">
 		SELECT
 			VAST_PROGRESS_SITUATION as vastProgressSituation	#승인대기 상황
 		FROM VAC_STATEMENT
 	</select>
+		
 	
 	
 	<!-- 휴가 신청현황 - 승인대기 리스트 -->
@@ -583,6 +550,7 @@
 			D.DEPT_NAME AS deptName,	#부서명
 			R.RANK_NAME AS rankName,	#직급
 			CONCAT(LEFT(VS.VAST_CRT_DATE,4),'.',SUBSTRING(VS.VAST_CRT_DATE,5,2),'.',RIGHT(VS.VAST_CRT_DATE,2)) AS vastCrtDate,	#휴가신청날짜
+			VC.VAST_C AS vastC,					#휴가코드
 			VC.VAST_TYPE AS vastType,			#휴가명
 			IF(VS.VAST_START_DATE = VS.VAST_END_DATE, CONCAT(LEFT(VS.VAST_START_DATE,4),'.', SUBSTRING(VS.VAST_START_DATE,5,2),'.', RIGHT(VS.VAST_START_DATE,2)), 
 				CONCAT(LEFT(VS.VAST_START_DATE,4),'.', SUBSTRING(VS.VAST_START_DATE,5,2),'.', RIGHT(VS.VAST_START_DATE,2),'~', 
@@ -638,12 +606,34 @@
 	</select>
 	
 	
-	<!-- 휴가  '승인대기' -> '승인완료' -->
+	<!-- 휴가  '승인대기' -> '승인완료'or'승인취소' -->
 	<update id="vacationProgToggle" parameterType="HashMap">
 		UPDATE VAC_STATEMENT 
 		SET VAST_PROGRESS_SITUATION=#{vastProgressSituation}
 		WHERE VAST_SERIAL_NUMBER = #{vastSerialNumber}
 	</update>
+	
+	<!-- 휴가 '승인완료'일 때, 휴가 개수 카운트 -->
+	<update id="vacationUdCnt" parameterType="HashMap">
+		UPDATE 
+			EMPLOYEE_REMINDING_VAC RE 	#사원별 잔여휴가
+		INNER JOIN 
+			VAC_STATEMENT VS		#휴가 신청현황	
+		ON 
+			RE.EMP_EMNO = VS.EMP_EMNO	
+		INNER JOIN 
+			VACATION V		#휴가 종류
+		ON 
+			VS.VAST_C = V.VAST_C	#휴가코드
+		SET 
+			VS.VAST_PROGRESS_SITUATION = IF(VS.VAST_PROGRESS_SITUATION = '승인완료', '승인완료', '승인취소'),	/*승인현황*/
+			RE.EMRE_PVAC_UD = IF(VS.VAST_C='V1'OR VS.VAST_C='V2' OR VS.VAST_C='V4', RE.EMRE_PVAC_UD + #{vastVacUd}, RE.EMRE_PVAC_UD),	/*사용일수*/
+			RE.EMRE_REMNDR_UD =IF(VS.VAST_C='V1'OR VS.VAST_C='V2', RE.EMRE_REMNDR_UD - #{vastVacUd}, RE.EMRE_REMNDR_UD),	/*잔여일수*/
+			RE.EMRE_UPVAC_UD = IF(VS.VAST_C='V3'OR VS.VAST_C='V6', RE.EMRE_UPVAC_UD + #{vastVacUd}, RE.EMRE_UPVAC_UD)	/*무급 휴가 사용일수*/
+		WHERE VS.VAST_SERIAL_NUMBER = #{vastSerialNumber}
+	</update>
+	
+	
 	
 	<!-- 휴가 삭제 'N' -> 'Y' -->
 	<update id="vacationDelete" parameterType="HashMap">

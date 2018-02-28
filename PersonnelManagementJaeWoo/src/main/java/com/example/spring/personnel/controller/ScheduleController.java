@@ -3,11 +3,15 @@ package com.example.spring.personnel.controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.spring.personnel.service.ScheduleService;
 
@@ -21,9 +25,17 @@ public class ScheduleController {
 	
 	//일정보기(메인)
 	@RequestMapping(value="scheduleView.do")
-	public String scheduleView() {
+	public ModelAndView scheduleView(HttpServletRequest request) {
 		
-		return "scheduleView";
+		HttpSession session = request.getSession();
+		
+		String emno = String.valueOf(session.getAttribute("userEmno"));
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("empInfo",scheduleService.empInfo(emno));
+		mv.setViewName("scheduleView");
+		
+		return mv;
 		
 	}
 	

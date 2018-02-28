@@ -2,6 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="schedule">
+	<!-- 사원정보가져오기 -->
+	<select id="empInfo" parameterType="String" resultType="HashMap">
+		/* /personnel/schedule/scheduleMapper.xml - empInfo(사원정보가져오기) */
+		SELECT
+			XX.EMP_EMNO AS empEmno 		/*사원번호*/
+			,XX.EMP_NAME AS empName 	/*성명*/
+			,XX.RANK_NAME AS rankName 	/*직위/직급명*/
+			,XX.DEPT_CODE AS deptCode	/*부서코드*/
+			,DEPT_NAME AS deptName 		/*부서명*/
+		FROM(
+				SELECT
+					X.*, RANK_NAME
+				FROM(
+					SELECT
+						*
+					FROM EMPLOYEE
+					WHERE EMP_EMNO = #{emno}					
+					)X, RANK R
+				WHERE X.RANK_CODE = R.RANK_CODE
+			)XX, DEPARTMENT D
+		WHERE XX.DEPT_CODE = D.DEPT_CODE
+	</select>
+
 	<!-- 개인일정등록 -->
 	<insert id="individualInsert" parameterType="HashMap">
 		/* /personnel/schedule/scheduleMapper.xml - individualInsert(개인일정 등록 ) */

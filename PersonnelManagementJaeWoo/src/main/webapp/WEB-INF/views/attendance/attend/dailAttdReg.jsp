@@ -73,7 +73,7 @@
 													<span class="fa fa-calendar" />
 												</span>
 										</div>
-										<input type="submit" class="btn btn-danger btn-xs" style="float:right;"name="search" onClick="date()" value="검색">
+										<input type="submit" class="btn btn-danger btn-xs" style="float:right;"name="search" onClick="" value="검색">
 									</td>
 								</tr>							
 							</table>

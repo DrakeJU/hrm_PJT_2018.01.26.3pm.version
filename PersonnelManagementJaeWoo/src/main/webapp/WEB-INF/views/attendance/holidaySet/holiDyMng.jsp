@@ -30,12 +30,13 @@
 								<ul class="nav nav-tabs" role="tablist"
 									id='fullcalrendar_vacMng'>
 									<li role="presentation" class="active">
-										<a href="#firstTab" aria-controls="home" role="tab" data-toggle="tab">달력</a>
+										<a class="calendar" href="#firstTab" aria-controls="home" role="tab" data-toggle="tab"> 달력</a>
 									</li>
 									<li role="presentation">
-										<a href="#secondTab" aria-controls="profile" role="tab" data-toggle="tab">표</a>
+										<a class="tableCalendar" href="#secondTab" aria-controls="profile" role="tab" data-toggle="tab" >표</a>
 									</li>
 								</ul>
+
 
 								<!-- Tab panes 탭 컨텐츠 -->
 								<div class="tab-content">
@@ -73,7 +74,7 @@
 																	<tr>
 																		<td class="text-right" width="10%">일자 구분 :</td>
 																		<td>
-																		<select class="form-control">
+																		<select class="form-control" name="selectBox">
 																			<option value="regualWork">정상근무</option>
 																			<option value="unpaidDayoff">무급휴무일</option>
 																			<option value="unpaidHoli">무급휴무</option>
@@ -93,8 +94,11 @@
 																	</tr>
 																	<tr>
 																		<td class="text-right" width="10%">휴일 내용 :</td>
-																		<td>
-																			<input type="text" class="form-control w_100" value="">
+																		<td >
+																			<div class="input-group">
+						                                                         <input type="text" class="form-control w_100" name = "holiMemo" value="" size="15">
+						                                                         <span class="input-group-addon"><i class="lnr lnr-cross" id="xbnt"></i></span>
+						                                                      </div>
 																		</td>
 																	</tr>
 																	</table>
@@ -167,7 +171,10 @@
 																	<tr>
 																		<td style="text-align: right"width="30%">휴일 내용 :</td>
 																		<td>
-																			<input type="text" id="holiMemo" class="form-control w_100" value="">
+																			<div class="input-group">
+						                                                         <input type="text" class="form-control w_100" name = "holiMemo" value="" size="15">
+						                                                         <span class="input-group-addon"><i class="lnr lnr-cross" name="xbtn"></i></span>
+						                                                      </div>
 																		</td>
 																	</tr>
 																	</table>
@@ -188,7 +195,6 @@
 													</div>
 													<div class="modal-footer">
 														<button type="button" id="updateBtn" class="btn btn-default" data-dismiss="modal">수정</button>
-														<button type="button" id="deleteBtn" class="btn btn-default" data-dismiss="modal">삭제</button>
 														<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 													</div>
 												</div>
@@ -196,7 +202,30 @@
 										</div>
 									</div>
 									<!-- 두번째 탭 시작 -->
-									<div role="tabpanel" class="tab-pane" id="secondTab">get ready for second tap.<br> <h1>Dead Line is Feb 27th.</h1></div>
+									<div role="tabpanel" class="tab-pane" id="secondTab">
+										<div class="boxArea text-center"></div>
+										<div class="panel-body mgu_15">
+											<form class="form-inline" name="calendarTable" id="calendarTable">
+												<table class="table table-bordered" name="calendarTableOption" id="calendarTableOption" >
+													<!--  <thead> -->
+													<thead id="thead" style="display:table;width:100%;table-layout:fixed;">
+														<tr>
+															<th style="width:6%;">
+																<label class="fancy-checkbox-inline">
+																	<input type="checkbox" id="CalendarTableSelectAll_chk" onClick="CalendarTableSelectAll()"><span></span>
+																</label>
+															</th>
+															<th >날짜</th>
+															<th >휴가 구분</th>
+															<th >휴일 내용</th>
+														</tr>
+													</thead>
+													<tbody  id="tbody" style="display:block;height:400px;overflow:auto;">
+													</tbody>
+												</table>
+											</form>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

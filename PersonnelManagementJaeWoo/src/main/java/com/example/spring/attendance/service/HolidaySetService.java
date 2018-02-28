@@ -80,21 +80,19 @@ public class HolidaySetService {
 
 		return list;
 	}
-	//calendar 일정등록 service
-	public int calendarInsert(HashMap<String, String> map) {
+	//휴일 일정 등록(update) service
+	public int calenderUpdate(HashMap<String, String> map) {
 		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdfToday = new SimpleDateFormat("yyyyMMddHHmmss");
 		
 		String today = sdfToday.format(cal.getTime());
 		String startDate = map.get("startDate").replaceAll("-", ""); //2018-01-24 -> 20180124
-		
+				
 		map.put("id", startDate );
 		map.put("createDate", today);
-		map.put("updateDate", "");
-		map.put("delYN", "N");
 		
-		int result = holidaySetDao.calendarInsert(map);
+		int result = holidaySetDao.calenderUpdate(map);
 		
 		return result;
 	}
@@ -111,5 +109,13 @@ public class HolidaySetService {
 		HashMap<String, String> map = holidaySetDao.calendarListDB(start);
 		
 		return map;
+	}
+	//휴일설정 2번째 탭 리스트 읽어오기
+	public List<HashMap<String, String>> SecondTabCalendarTableList(HashMap<String, String> map){
+		
+		System.out.println("2번째 탭리스트 서비스 까지 옴 ");
+		List<HashMap<String, String>> result = holidaySetDao.SecondTabCalendarTableList(map);
+		
+		return result;
 	}
 }

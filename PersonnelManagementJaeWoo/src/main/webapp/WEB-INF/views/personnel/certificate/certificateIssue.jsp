@@ -20,6 +20,7 @@
 						<div class="panel panel-headline">
 							<div class="panel-heading">
 								<form id="formId">
+									<input type="hidden" id="empEmno" value="<%=session.getAttribute("userEmno")%>">
 								<div class="form-group col-md-3">
 										<label for="selectBox1" class="col-form-label col-sm-4">증명서구분</label>
 										<div class="col-sm-8">
@@ -151,8 +152,8 @@
 										</form>
 									</table>
 										<div class="modal-footer">
-											<button type="button" id="viewBtn" class="btn btn-default" data-dismiss="modal">보기</button>
-											<button type="button" id="deleteBtn" class="btn btn-default" data-dismiss="modal">삭제</button>
+											<button type="button" id="viewBtn" class="btn btn-default">미리보기</button>
+											<button type="button" id="deleteBtn" class="btn btn-default">삭제</button>
 											<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 										</div>
 									</div>

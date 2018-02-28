@@ -38,15 +38,21 @@
    <!-- main page-->
    <definition name="main" extends="base-definition">  
        <put-attribute name="title" value="main" />
-       <put-attribute name="body" value="/WEB-INF/views/main.jsp" />
+       <put-attribute name="body" value="/WEB-INF/views/dashboard.jsp" />
    </definition>
 
    <!-- START [인사관리] -->
+   
+   <!-- [인사관리]-[사원정보검색] -->
+    <definition name="default" extends="base-definition">  
+       <put-attribute name="title" value="사원정보검색" />
+       <put-attribute name="body" value="/WEB-INF/views/personnel/employeeinfo/default.jsp" />
+   </definition>
    <!-- [인사관리]-[일정관리]-[일정보기] -->
    <definition name="scheduleView" extends="base-definition">  
        <put-attribute name="title" value="일정보기" />
        <put-attribute name="body" value="/WEB-INF/views/personnel/schedule/scheduleView.jsp" />
-       <put-attribute name="scripts" value="/WEB-INF/views/personnel/schedule/script/schedule.jsp"/>
+       <put-attribute name="scripts" value="/WEB-INF/views/personnel/schedule/script/scheduleScript.jsp"/>
    </definition>
    
    <!-- [인사관리]-[증명서관리]-[증명서신청] -->
