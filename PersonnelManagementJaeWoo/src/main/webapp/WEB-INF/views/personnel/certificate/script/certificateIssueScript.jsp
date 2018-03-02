@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <script src="/spring/resources/common/js/pagingNav.js"></script>
+<link rel="stylesheet" href="/spring/resources/common/css/bootstrap-toggle.min.css" />
+<script src="/spring/resources/common/js/bootstrap-toggle.min.js"></script>
 <script>
 	var emno = $("#empEmno").val();
 	var deptCode = ${empInfo.deptCode};
@@ -12,6 +14,20 @@
 		certificateList();
 	});//페이지 로딩시 증명서 전체정보를 가져온다
 	
+	/* 
+	$("#viewForm").find("button[name='progressSituation']").on("click",function(){
+		
+		if($("#viewForm").find("button[name='progressSituation']").text() == "승인완료"){
+			$("#viewForm").find("button[name='progressSituation']").button('reset');
+		}else{
+			$("#viewForm").find("button[name='progressSituation']").button('complete');
+			$("#viewForm").find("button[name='progressSituation']").attr(".btn-primary");
+		}
+		
+	}); */
+	
+	console.log("dddd: " + $("#viewForm table tbody").find("tr:last").find("input[name='toggleSwitch']").attr("type"));
+
 	//증명서 리스트
 	var certificateList = function(choicePage){
 		
@@ -127,8 +143,24 @@
 			formId.find("[name='use']").val(crtfUse);								//용도
 			formId.find("[name='requestDate']").val(crtfRequestDate);				//신청일
 			formId.find("[name='issueDate']").val(crtfIssueDate);					//발행일
-			formId.find("[name='progressSituation']").val(crtfProgressSituation);	//결제상태
 			
+			formId.find("tr:last > td").append('<input type="checkbox" id="toggle-two">');	//결제상태
+			 $('#toggle-two').bootstrapToggle({
+			      on: 'Enabled',
+			      off: 'Disabled'
+			    });
+			//$("#swichhhhhhh").bootstrapToggle();
+			
+// 			$("#swichhhhhhh").on("click",function(){
+// 				alert("rrr");
+// 				if($("input[name='toggleSwitch']").prop("checked")){
+// 					$("input[name='toggleSwitch']").prop("checked",true).change();
+// 				}else{
+					
+// 				}
+// 			});
+			
+		
 			//상세보기, 미리보기 버튼 클릭시
 			$("#viewBtn").click(function(){
 				var url = "";
@@ -144,6 +176,8 @@
 				window.open(url, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");		
 			});
 		});
+		
+			
 		
 		//사원정보가져오기
 		obj.emno = data.find("td[name='empEmno']").text();

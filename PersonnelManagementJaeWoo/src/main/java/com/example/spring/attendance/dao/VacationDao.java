@@ -275,6 +275,17 @@ public class VacationDao {
 		return list;
 	}
 	
+	/* 휴가조회(사원)- 휴가내역 수정  */
+	public int vacationListUpdate(HashMap<String,Object> map) {
+//		logger.debug("dao >>> "+map);
+		
+		int list = this.sqlSession.update(nameSpaceName + "vacationListUpdate", map);
+		
+		logger.debug("dao List: "+list);
+		
+		return list;
+	}
+	
 	/* 휴가조회(사원)- 휴가내역 삭제  */
 	public int vacationListDelete(HashMap<String,Object> map) {
 //		logger.debug("dao >>> "+map);

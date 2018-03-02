@@ -41,7 +41,7 @@
 			x.MN_IDX mnIdx, /*메뉴순번*/
 			x.MN_URL mnUrl, /*메뉴url*/
 			x.MN_PRNT_NO mnPrntNo, /*상위메뉴코드*/
-			ifnull('',xx.MN_NAME) mnPrntName,
+			IFNULL(xx.MN_NAME,'') mnPrntName,
 			x.MN_USE_YN mnUseYn, /*메뉴사용여부*/
 			x.MN_CRT mnCrt, /*메뉴생성날짜*/
 			x.MN_UPDT mnUpdt, /*메뉴업데이트날짜*/

@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -53,8 +54,11 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
 				}//if
 			}//for
 	
-            //해당 url에 권한이 없을시 종료
-			response.sendRedirect("/spring/urlCheck.do");
+            //해당 url에 권한이 없을시 url check 컨트롤러
+			request.setAttribute("path", request.getServletPath());
+			RequestDispatcher rd = request.getRequestDispatcher("/urlCheck.exc");
+			rd.forward(request, response);
+			
 			return false;
 		}//if else
 	}//preHandle

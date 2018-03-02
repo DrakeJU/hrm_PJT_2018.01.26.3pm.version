@@ -64,22 +64,23 @@
 						</div>
 					</div><!-- END box1 -->
 			
-				<div class="col-md-5"><!-- START box2 -->
-					<div class="panel">
-						<div class="panel-heading">
-							<h3 class="panel-title">부서 일정</h3>
-						</div>
-						<div class="some-content-related-div" style="position: relative; overflow: hidden; width: auto; height: 310px; margin-top:-25px">
-							<div class="panel-body" id="scrollPanel" style="overflow: hidden; width: auto; height: 310px;">
-								<ul class="list-unstyled todo-list" id="scheduleList">
-								</ul>
-								<button type="button" class="btn btn-primary btn-bottom center-block" onclick="goScheduleView()">달력 보기</button>
+					<div class="col-md-5"><!-- START box2 -->
+						<div class="panel">
+							<div class="panel-heading">
+								<h3 class="panel-title">부서 일정</h3>
 							</div>
-							<div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 337.409px;"></div>
-							<div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+							<div class="some-content-related-div" style="position: relative; overflow: hidden; width: auto; height: 310px; margin-top:-25px">
+								<div class="panel-body" id="scrollPanel" style="overflow: hidden; width: auto; height: 310px;">
+									<ul class="list-unstyled todo-list" id="scheduleList">
+									</ul>
+									<button type="button" class="btn btn-primary btn-bottom center-block" onclick="goScheduleView()">달력 보기</button>
+								</div>
+								<div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 337.409px;"></div>
+								<div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+							</div>
 						</div>
-					</div>
-				</div><!-- END box2 -->
+					</div><!-- END box2 -->
+				</div><!-- END row(box1,box2) -->
 
 				<div class="row">
 					<div class="col-md-6"><!-- START box3 -->

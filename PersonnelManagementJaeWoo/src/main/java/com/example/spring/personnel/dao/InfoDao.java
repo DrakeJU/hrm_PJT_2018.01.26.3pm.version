@@ -40,4 +40,19 @@ public class InfoDao {
 		
 
 	}
+	
+	public List<HashMap<String,Object>> infoSelect(){		
+			
+		List<HashMap<String, Object>> list = this.sqlSeesson.selectList(nameSpaceName+"infoSelect");
+			
+			
+		
+		return list; //lsit에 담아서 넘기기 
+	}
+	public List<HashMap<String,Object>> getEmnoSelect(HashMap<String,Object> map){
+		System.out.println("dao ajaxselect : "+map);
+		List<HashMap<String, Object>> list = this.sqlSeesson.selectList(nameSpaceName+"getEmno",map);
+		System.out.println("daolist값: "+list);
+		return list;
+	}
 }	

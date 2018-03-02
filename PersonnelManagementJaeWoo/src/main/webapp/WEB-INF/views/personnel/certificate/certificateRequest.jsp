@@ -5,6 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/css/bootstrap2/bootstrap-switch.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
 </head>
 <body>
 	<!-- Main -->
@@ -95,6 +97,7 @@
 								</div>
 								<div class="col-md-2">
 									<button type="button" class="btn btn-primary" id="crtfSearchBtn">검색</button>
+									<input type="checkbox" id="chk" data-toggle="toggle" data-on="승인완료" data-off="승인대기" data-size="small">
 								</div>
 							</div>
 						</div>

@@ -46,11 +46,11 @@
 							<form class="form-auth-small" id="loginForm">
 								<div class="form-group">
 									<label for="signin-id" class="control-label sr-only">id</label>
-									<input type="text" class="form-control" id="signin-id" placeholder="id" name="empId">
+									<input type="text" class="form-control" id="signin-id" placeholder="id" name="empId" required>
 								</div>
 								<div class="form-group">
 									<label for="signin-password" class="control-label sr-only">Password</label>
-									<input type="password" class="form-control" id="signin-password" placeholder="Password" name="empPswd">
+									<input type="password" class="form-control" id="signin-password" placeholder="Password" name="empPswd" required>
 								</div>
 								<button type="button" id="loginBtn" class="btn btn-primary btn-lg btn-block">LOGIN</button>
 							</form>
@@ -88,19 +88,23 @@
 			}//if
 		});
 	
-	});//doc
-	 
+	});//document
+	
+
+	
 	function loginAjax(){
-		
-		paging.ajaxFormSubmit("loginProcess","loginForm",function(result){
-			if(result==null){
-				alert("아이디와 비밀번호가 틀립니다. 다시 입력해주세요");
-			}else{
-				alert("로그인 되었습니다.");
-				location.href="/spring/main.do";
-			}//if eles
-		});//paging.ajaxFormSubmit
-		
+		if(document.getElementById("loginForm").checkValidity()){		
+			paging.ajaxFormSubmit("loginProcess","loginForm",function(result){
+				if(result==null){
+					alert("아이디와 비밀번호가 틀립니다. 다시 입력해주세요");
+				}else{
+					alert("로그인 되었습니다.");
+					location.href="/spring/main.do";
+				}//if eles
+			});//paging.ajaxFormSubmit
+		}else{
+			alert("입력하지 않은 값이 있습니다.");
+		}	
 	}//loginAjax
 	
 	</script>

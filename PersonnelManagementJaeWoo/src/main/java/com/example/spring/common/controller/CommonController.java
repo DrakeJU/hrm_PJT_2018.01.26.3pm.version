@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -83,9 +85,28 @@ public class CommonController {
 		return "login";
 	}//logout
 	
+	//메인 가기
 	@RequestMapping(value="main.do")
 	public String main() {
 		return "main"; 
 	}//main
+	
+	@RequestMapping(value="urlCheck.exc")
+	public void urlCheck(HttpServletResponse response,HttpServletRequest request) {
+		
+		String mnUrl = ((String)request.getAttribute("path")).substring(1);
+		
+		HashMap<String,String> map = commonService.urlCheck(mnUrl);
+		
+		try {
+			if(map.get("mnUseYn")!=null && map.get("mnUseYn").equals("Y")) {
+				logger.info("---------->>>>>>>>>>>>>>>>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!map.get(\"mnUseYn\"):"+map.get("mnUseYn"));
+				response.sendRedirect("main.do");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}//try catch
+		
+	}
 
 }//CommonController

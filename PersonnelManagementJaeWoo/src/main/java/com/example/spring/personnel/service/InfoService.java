@@ -37,5 +37,20 @@ public class InfoService {
 		
 	}
 	
+	public List<HashMap<String,Object>> infoSelect(){
+		
+		List<HashMap<String, Object>> list = infoDao.infoSelect();
+		
+		return list;
+	}
+	
+	public List<HashMap<String,Object>> getEmnoSelect(HashMap<String,Object> map){
+		System.out.println("service ajaxselect : "+map);
+		List<HashMap<String, Object>> list = infoDao.getEmnoSelect(map);
+		
+		return list;
+	}
+	
+	
 	
 }

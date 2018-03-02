@@ -39,14 +39,12 @@ public class CommonDao {
 			for(int j=0; j<navList.size(); j++) {
 				//중복 제거를 위해 HashSet에 추가
 				set.add(navList.get(j).get("mnNo"));
-				System.out.println("-------------->>>>>>>>>>!!!!!!!!!!!!!!mnList : "+set);
 			}
 		}//for
 		
 		//최상위 부모를 포함하는 중복지 제거된 권한 코드 list
 		List<Object> mnList = new ArrayList<Object>(set);
 		
-		System.out.println("-------------->>>>>>>>>>!!!!!!!!!!!!!!mnList : "+mnList);
 		//권한 사이드 메뉴 navlist
 		list = this.sql.selectList(namespace+"navList",mnList);
 		

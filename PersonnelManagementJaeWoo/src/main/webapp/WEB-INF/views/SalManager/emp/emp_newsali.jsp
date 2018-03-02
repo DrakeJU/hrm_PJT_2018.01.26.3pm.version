@@ -89,9 +89,9 @@
 					$("td[name=saltext"+ i+ "]").append('<input type="text" name=sali'+ i+ ' style="width=100%; text-align:right;" size="10" onkeydown="onlyMoneyNumber(this)">');
 					//$("td[name=sbctext"+ i+ "]").append('<input type="text" name=sbci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomHhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');		
 					//$("td[name=snctext"+ i+ "]").append('<input type="text" name=snci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomNhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
-					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=tami'+ i+ 'value=0)>');
-					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=fdei'+ i+ 'value=0>');
-					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=cmci'+ i+ 'value=0>');
+					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=tami'+ i+ ' value=0)>');
+					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=fdei'+ i+ ' value=0>');
+					$("[id=checkPoint"+ i+ "]").append('<input type="hidden" name=cmci'+ i+ ' value=0>');
 					//$("td[name=slctext"+ i+ "]").append('<input type="text" name=slci'+ i+ ' value="${ empty aList ? "0": aList.get(0).scomLhCst }" size="5" onkeydown="onlyMoneyNumber(this)">');
 					$("td[name=empcode"+ i+ "]").append('<input type="hidden" name=code'+i+'  value='+$('[name=empcode'+i+']').attr('id')+' >');
 					
@@ -178,18 +178,18 @@
 			$('[name=cmci'+i+']').val("0"); 
 			$('[name=slci'+i+']').val("0"); */
 			$("input[name=sali"+ i + "]").remove();
-		/* 	$("input[name=sbci"+ i + "]").remove();
+			/* $("input[name=sbci"+ i + "]").remove();
 			$("input[name=sbciCk"+ i + "]").remove();
 			$("input[name=snci"+ i + "]").remove();
-			$("input[name=snciCk"+ i + "]").remove();
+			$("input[name=snciCk"+ i + "]").remove(); */
 			$("input[name=tami"+ i + "]").remove();
-			$("input[name=tamiCk"+ i + "]").remove();
+			//$("input[name=tamiCk"+ i + "]").remove();
 			$("input[name=fdei"+ i + "]").remove();
-			$("input[name=fdeiCk"+ i + "]").remove();
+			//$("input[name=fdeiCk"+ i + "]").remove();
 			$("input[name=cmci"+ i + "]").remove();
-			$("input[name=cmciCk"+ i + "]").remove();
-			$("input[name=slci"+ i + "]").remove();
-			$("input[name=slciCk"+ i + "]").remove(); */
+			//$("input[name=cmciCk"+ i + "]").remove();
+			//$("input[name=slci"+ i + "]").remove();
+			//$("input[name=slciCk"+ i + "]").remove(); 
 			$("input[name=code"+ i + "]").remove();
 			
 		}

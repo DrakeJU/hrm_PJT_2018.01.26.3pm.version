@@ -24,10 +24,10 @@ $(function(){
 	situationSelect();	//승인현황 셀렉
 	progList();	//승인현황 리스트 ajax
 	enterKey();	//검색 후 엔터키
+	$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
 });
 
 /* ajax - list */
-
 function progList() {
 			
 		paging.ajaxFormSubmit("vacationProgressList.exc", "f1", function(rslt){
@@ -56,7 +56,6 @@ function progList() {
 				$('#deptNameList').val($('#deptHidden').val()).prop("selected", true); //input hidden값 value를 선택
 			}//if
 
-			
 			//직급명 셀렉박스
 			if(rslt.rankNameList == null){
 				$('#rankNameList').append("<option value=''>"+ 없음  +"</option>");
@@ -72,11 +71,12 @@ function progList() {
 				
 			}//if
 			
-			
 			//사원 리스트
-			if(rslt.vacationProgressList == null){
+			if(JSON.stringify(rslt.vacationProgressList) == '[]'){
 				$('#progressTbody').append(
-					"<div class='text-center'><br><br><br><br>조회할 자료가 없습니다.</div>"	
+					"<tr>"+
+						"<td colspan='11'>조회할 자료가 없습니다.</td>"+
+					"</tr>"
 				);
 			}else{
 				$.each(rslt.vacationProgressList, function(index, s){
@@ -93,7 +93,7 @@ function progList() {
 							"<td>" + s.empName + "</td>" +
 							"<td>" + s.deptName + "</td>" +
 							"<td>" + s.rankName + "</td>" +
-							"<td>" + s.vastCrtDate + "</td>" +
+							"<td>" + s.vastReqDate + "</td>" +
 							"<td>" + 
 								"<input type='hidden' id='vastC', name='vastC' value='"+ s.vastC +"'>" + 
 									s.vastType + "</td>" +
@@ -125,7 +125,7 @@ function progList() {
 			$('#progressTbody tr').hover(function(){		
 				//승인대기면 x 아이콘 생성하고
 				if($(this).children().eq(10).text() == "승인대기"){
-					$(this).append("<span class='fa fa-close right-icon' name='delBtn' onclick='vacDel(this)'></span>");
+					$(this).append("<span class='fa fa-close right-icon' name='delBtn' onclick='vacDel(this)' style='margin-top:12px'></span>");
 					
 				}//if
 			},	
@@ -179,26 +179,17 @@ function situationSelect(){
 	});
 }
 
-/* month 달력 */
+/* 달력 */
 function calender(){
-// 	$('#baseMonth').val(moment().format('YYYY-MM'));	//현재 월로 보여줌
-// 	$('#monthDateTimePicker').datetimepicker({
-// 		viewMode: 'months',
-// 		format: 'YYYY-MM'
-// 	});
-// 	//month의 최대값을 현재 월로 제한
-// 	$('#monthDateTimePicker').data("DateTimePicker").maxDate(moment());
 	$('#baseYear').val(moment().format('YYYY'));	//올해 년도 보여줌
 	$('#yearDateTimePicker').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY'
 	});
 	
-	//년도의 최대값을 올해로 제한
-	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment());
+	$('#yearDateTimePicker').data("DateTimePicker").maxDate(moment()); //년도의 최대값을 올해로 제한
 };	
 	
-
 /* 체크박스 전체선택 */
 function checkAllFunc(obj){ //최상단 체크박스를 click하면
 	$("input[type='checkbox'][name=chk]").each(function() {
@@ -342,21 +333,15 @@ function vacDel(){
 				<div class="panel panel-headline">
 					<div class="panel-body">
 						<form class="form-inline" name="f1" id="f1">
-<!-- 							<i class="fa fa-asterisk-red" aria-hidden="true" ></i>							 -->
 							신청월
-							<!-- 달력 -->
-<!-- 							<div class="input-group date" id="monthDateTimePicker">
-									<input type="text" class="form-control" id="baseMonth" name="baseMonth"/> -->
 							<div class="input-group date" id="yearDateTimePicker">
 								<input type="text" class="form-control" id="baseYear" name="baseYear"/>
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 								</span>
-							</div>
-						  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="text" class="form-control" name="keyword" id="keyword" placeholder="검색어 입력"> 
-							<input type="button" class="btn btn-primary" name="search" value="검색" onclick="searchClick()">
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="button" class="btn btn-primary" name="search" value="검색" onclick="searchClick()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<select name="deptNameList" id="deptNameList" value="부서별" class="form-control"><!-- 부서 -->
 							</select> 
 							<select name="rankNameList" id="rankNameList" value="직급별" class="form-control"><!-- 직급 -->
@@ -366,13 +351,10 @@ function vacDel(){
 								<option value="승인대기">승인대기</option>
 								<option value="승인완료">승인완료</option>
 								<option value="승인취소">승인취소</option>
-<!-- 								<option value="cat">반려</option> -->
 							</select>
 							<input type="hidden" id="deptHidden"><!-- 네임으로 하면 파라미터 값이 넘어감 -->
 							<input type="hidden" id="rankHidden">
 							<input type="hidden" id="situationHidden"><!-- 결재상태 -->
-							<!-- 새로고침 -->
-<!-- 							<input type="button" class="btn btn-primary" name="reStart" value="전체보기" onclick="window.location.reload()"> -->
 						</form>
 					</div>
 				</div>
@@ -400,16 +382,15 @@ function vacDel(){
 											<th>휴가기간</th>
 											<th>일수</th>
 											<th>휴가사유</th>
-											<th>결재상태</th>
+											<th style="padding-left:0.5em">결재상태</th>
 										</tr>
 									</thead>
 									<tbody id="progressTbody">
 									</tbody>
 								</table>
 							</form>
-						</div>
-						<!-- END list table 영역 -->
-						    
+						</div><!-- END list table 영역 -->
+						
 						<!-- 버튼영역 -->
 						<div class="text-center"> 
 							<button type="button" id="butOff" class="btn btn-info" onclick="toggleOff()">승인취소</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -421,12 +402,7 @@ function vacDel(){
 				</div>
 			</div>
 			
-
-		</div>
-		<!-- END MAIN CONTENT -->
-	</div>
-	<!-- END MAIN -->
-	
-	
+		</div><!-- END MAIN CONTENT -->
+	</div><!-- END MAIN -->
 </body>
 </html>

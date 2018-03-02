@@ -16,18 +16,26 @@
 	//검색 이벤트 발생 시 유효성 검사 후 검색 리스트 출력 함수 호출
 	var searchEvent = function(){
 		$("button[name='searchBtn']").on('click',function(){
-			
-			if(!$("[name='searchCnd']>option").index($("[name='searchCnd']>option:selected"))){
-				alert("option을 선택해주세요"); 
-			}else if($("[name='searchWd']").val()==""){
-				alert("검색내용이 없습니다");
-			}else{
-				searching = true;
-				searchStart();
-			}//유효성 검사 후 리스트 출력 함수 호출if else
-			
+			valiChk();
 		});//onclick
+		$("input[name='searchWd']").on('keydown',function(e){
+			if(e.keyCode==13){
+				valiChk();
+			}
+		});//keydown
 	}//searchEvent
+	
+	//option 텍스트 빈값 유효성 검사
+	var valiChk = function(){
+		if(!$("[name='searchCnd']>option").index($("[name='searchCnd']>option:selected"))){
+			alert("option을 선택해주세요"); 
+		}else if($("[name='searchWd']").val()==""){
+			alert("검색내용이 없습니다");
+		}else{
+			searching = true;
+			searchStart();
+		}//유효성 검사 후 리스트 출력 함수 호출if else
+	}//valiChk
 	
 	//리스트 전 처리 후 출력 함수 호출 
 	var searchStart =function(choicePage){

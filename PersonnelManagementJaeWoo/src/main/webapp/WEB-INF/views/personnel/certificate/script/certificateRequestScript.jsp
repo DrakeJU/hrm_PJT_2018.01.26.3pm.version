@@ -10,8 +10,9 @@
 	//hidden('#reqUserEmno')는 스크립트 영역 밑의 <body>영역에 있음
 	String userEmno = (String)request.getAttribute("userEmno");
 %>
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<link rel="stylesheet" href="/spring/resources/common/css/bootstrap-toggle.min.css" />
+<script src="/spring/resources/common/js/bootstrap-toggle.min.js"></script>
 <script language="javascript">
 
 	$(document).ready(function(){
@@ -76,7 +77,7 @@
 				$.each(result,function(idx){
 				
 					thisBody.append(
-							"<tr data-toggle='modal' data-target='#viewModal' onClick='certificateRequestInfoFunc($(this))'>" + 
+							"<tr name='crtfListTr' data-toggle='modal' data-target='#viewModal' onClick='certificateRequestInfoFunc($(this))'>" + 
 								"<td name='crtfSeq'>" + result[idx].crtfSeq + "</td>" + 
 								"<td name='empEmno'>" + result[idx].empEmno + "</td>" + 
 								"<td name='empName'>" + result[idx].empName + "</td>" + 
@@ -85,9 +86,15 @@
 								"<td name='crtfRequestDate'>" + result[idx].crtfRequestDate + "</td>" + 
 								"<td name='crtfIssueDate'>" + result[idx].crtfIssueDate + "</td>" + 
 								//"<td name='crtfProgressSituation'>" + result[idx].crtfProgressSituation + "</td>" + 
-								"<td name='crtfProgressSituation'><input type='checkbox' id='toggleSwitch' data-toggle='toggle' data-size='small' data-on='승인완료' data-off='승인대기'></td>" +
+								"<td name='crtfProgressSituation' onclick='event.cancelBubble=true'><input type='checkbox' name='toggleSwitch' data-toggle='toggle' data-size='small' data-on='승인완료' data-off='승인대기'></td>" +
 							"</tr>"
 					);
+					
+					$("input[type='checkbox'][name=toggleSwitch]").bootstrapToggle();
+					
+					if(result[idx].crtfProgressSituation == '승인완료'){
+						$("tr[name='crtfListTr']:eq("+idx+")").find("input[name='toggleSwitch']").prop("checked", true).change();
+					}//if
 					
 				});
 			

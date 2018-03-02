@@ -43,18 +43,21 @@
 			
 	</insert>
 	
- 	<select id="infoSearch" resultType="HashMap" parameterType="HashMap">
+ 	<select id="infoSelect" resultType="HashMap" parameterType="HashMap">
 		
-		SELECT
+	
 
-			emp_name,
-			emp_ename
-		FROM EMPLOYEE
-		WHERE emp_name= #{empName}
+			select * from employee
 
 		
 	
 	</select> 
+	
+	<select id="getEmno" resultType="HashMap" parameterType="HashMap" >
+		
+		select * from employee where emp_emno = #{emno}
+		
+	</select>
 </mapper>
 
 		

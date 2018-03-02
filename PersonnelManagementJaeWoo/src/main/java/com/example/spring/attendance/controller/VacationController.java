@@ -309,6 +309,30 @@ public class VacationController {
 		return map;
 	}
 	
+	/* 휴가조회(사원)- 휴가내역 수정  */
+	@RequestMapping(value="/vacationListUpdate.exc")
+	public @ResponseBody HashMap<String, Object> vacationListUpdate(
+			@RequestParam HashMap<String,Object> map) {
+		
+		logger.info("휴가조회(사원): " + map);
+		
+		int vacationListUpdate = vacationService.vacationListUpdate(map); //사원별 휴가개수
+
+		if(vacationListUpdate == 0) {
+			map.put("success", "N");
+		}else {
+			map.put("vacationListUpdate", vacationListUpdate);
+			
+			if(!(map.get("vacationListUpdate").toString()).equals("0")) {
+				map.put("success", "Y");
+			}else {
+				map.put("success", "N");
+			}
+		}
+
+		return map;
+	}
+	
 	/* 휴가조회(사원)- 휴가내역 삭제  */
 	@RequestMapping(value="/vacationListDelete.exc")
 	public @ResponseBody HashMap<String, Object> vacationListDelete(
