@@ -83,6 +83,17 @@ public class CertificateController {
 		return map;
 	}
 	
+	//증명서 결제상태
+	@RequestMapping(value="crtfProgressSituation.exc")
+	public @ResponseBody int crtfProgressSituation(@RequestParam HashMap<String,Object> map) {
+		
+		logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% + " + map);
+		
+		int result = certificateService.crtfProgressSituation(map);
+		
+		return result;
+	}
+	
 	//재직증명서
 	@RequestMapping(value="workCertificate.exc")
 	public ModelAndView workCertificate(@RequestParam HashMap<String, Object> map) {

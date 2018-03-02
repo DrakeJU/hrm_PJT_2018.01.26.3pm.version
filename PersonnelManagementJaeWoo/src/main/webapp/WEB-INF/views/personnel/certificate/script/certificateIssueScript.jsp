@@ -1,12 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <script src="/spring/resources/common/js/pagingNav.js"></script>
-<link rel="stylesheet" href="/spring/resources/common/css/bootstrap-toggle.min.css" />
-<script src="/spring/resources/common/js/bootstrap-toggle.min.js"></script>
 <script>
 	var emno = $("#empEmno").val();
 	var deptCode = ${empInfo.deptCode};
-
+ 
 	console.log("emno : " + emno);
 	console.log("deptCode : " + deptCode);
 	
@@ -14,17 +12,33 @@
 		certificateList();
 	});//페이지 로딩시 증명서 전체정보를 가져온다
 	
-	/* 
-	$("#viewForm").find("button[name='progressSituation']").on("click",function(){
+	
+	$("#viewForm").find("#toggleBtn").on("click",function(){
 		
-		if($("#viewForm").find("button[name='progressSituation']").text() == "승인완료"){
-			$("#viewForm").find("button[name='progressSituation']").button('reset');
+		if($("#viewForm").find("#toggleBtn").text() == "승인대기"){
+			if(confirm("결제 승인을 완료하시겠습니까?")){
+				$("#viewForm").find("#toggleBtn").button('complete');
+				
+				var url = "/spring/crtfProgressSituation.exc";
+				var data = {"crtfSeq":$("#viewForm input[name='crtfSeq']").val(),"crtfProgressSituation":$("#viewForm #toggleBtn").attr("data-complete-text")};
+				paging.ajaxSubmit(url,data,function(result){
+					if(result > 0){
+						alert("결제가 완료되었습니다.");
+						location.href="/spring/certificateIssue.do";
+					}else{
+						alert("결제를 다시 시도하여 주십시오.");
+						return false;
+					}
+				});
+				
+			}else{
+				return false;
+			}
 		}else{
-			$("#viewForm").find("button[name='progressSituation']").button('complete');
-			$("#viewForm").find("button[name='progressSituation']").attr(".btn-primary");
+			$("#viewForm").find("#toggleBtn").attr("disabled");
 		}
 		
-	}); */
+	});
 	
 	console.log("dddd: " + $("#viewForm table tbody").find("tr:last").find("input[name='toggleSwitch']").attr("type"));
 
@@ -57,8 +71,10 @@
 			 					"<td name='commName'>"+rslt.crtfList[index].commName+"</td>" +							//증명서종류
 			 					"<td name='crtfRequestDate'>"+rslt.crtfList[index].crtfRequestDate+"</td>" +			//신청일
 			 					"<td name='crtfIssueDate'>"+rslt.crtfList[index].crtfIssueDate+"</td>"	+				//발행일
-			 					"<td name='crtfProgressSituation'>"+rslt.crtfList[index].crtfProgressSituation+"</td>" +//결제상태
-				 			  "</tr>");
+			 					"<td name='crtfProgressSituation'>"+rslt.crtfList[index].crtfProgressSituation+"</td>" +
+							"</tr>"
+							);
+						
 			 });//each
 			
 			//페이징
@@ -90,8 +106,10 @@
 			 					"<td name='commName'>"+rslt.crtfList[index].commName+"</td>" +							//증명서종류
 			 					"<td name='crtfRequestDate'>"+rslt.crtfList[index].crtfRequestDate+"</td>" +			//신청일
 			 					"<td name='crtfIssueDate'>"+rslt.crtfList[index].crtfIssueDate+"</td>"	+				//발행일
-			 					"<td name='crtfProgressSituation'>"+rslt.crtfList[index].crtfProgressSituation+"</td>" +//결제상태
-				 			  "</tr>");
+			 					"<td name='crtfProgressSituation'>"+rslt.crtfList[index].crtfProgressSituation+"</td>" +
+							"</tr>"
+							);
+							
 			 });//each
 			
 			//페이징
@@ -136,44 +154,44 @@
 			
 			var formId = $("#viewForm");
 			//viewForm에 데이터를 넣는다
-			formId.find("[name='crtfSeq']").val(crtfSeq);							//발행번호
-			formId.find("[name='empEmno']").val(empEmno);							//사원번호
-			formId.find("[name='empName']").val(empName);							//성명
+			formId.find("[name='crtfSeq']").val(crtfSeq);								//발행번호
+			formId.find("[name='empEmno']").val(empEmno);								//사원번호
+			formId.find("[name='empName']").val(empName);								//성명
 			formId.find("[name='crtfSelect']").val(commName).prop("selected",true);		//증명서종류
-			formId.find("[name='use']").val(crtfUse);								//용도
-			formId.find("[name='requestDate']").val(crtfRequestDate);				//신청일
-			formId.find("[name='issueDate']").val(crtfIssueDate);					//발행일
+			formId.find("[name='use']").val(crtfUse);									//용도
+			formId.find("[name='requestDate']").val(crtfRequestDate);					//신청일
+			formId.find("[name='issueDate']").val(crtfIssueDate);						//발행일
+			formId.find("tr:last > td").find("#toggleBtn").text(crtfProgressSituation);	//결제상태
 			
-			formId.find("tr:last > td").append('<input type="checkbox" id="toggle-two">');	//결제상태
-			 $('#toggle-two').bootstrapToggle({
-			      on: 'Enabled',
-			      off: 'Disabled'
-			    });
-			//$("#swichhhhhhh").bootstrapToggle();
-			
-// 			$("#swichhhhhhh").on("click",function(){
-// 				alert("rrr");
-// 				if($("input[name='toggleSwitch']").prop("checked")){
-// 					$("input[name='toggleSwitch']").prop("checked",true).change();
-// 				}else{
-					
-// 				}
-// 			});
-			
+			if(crtfProgressSituation == '승인완료'){
+				formId.find("#toggleBtn").addClass("btn-primary active");
+				formId.find("#toggleBtn").attr("disabled",true);
+			}else{
+				formId.find("#toggleBtn").removeClass("btn-primary active");
+				formId.find("#toggleBtn").attr("disabled",false);
+			}
 		
 			//상세보기, 미리보기 버튼 클릭시
-			$("#viewBtn").click(function(){
-				var url = "";
+			$("#viewBtn").on("click",function(){
 				
-				if(formId.find("[name='crtfSelect']").val() == "재직증명서"){
-					url = "workCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
-				}else if(formId.find("[name='crtfSelect']").val() == "경력증명서"){
-					url = "carriereCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
-				}else if(formId.find("[name='crtfSelect']").val() == "퇴직증명서"){
-					url = "rtirementCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
-				}
+				if($("#viewForm").find("#toggleBtn").text() == '승인완료'){
+					var url = "";
+					
+					if(formId.find("[name='crtfSelect']").val() == "재직증명서"){
+						url = "workCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
+					}else if(formId.find("[name='crtfSelect']").val() == "경력증명서"){
+						url = "carriereCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
+					}else if(formId.find("[name='crtfSelect']").val() == "퇴직증명서"){
+						url = "rtirementCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
+					}
 			
-				window.open(url, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");		
+					window.open(url, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");		
+					
+				}else{
+					alert("결제상태를 확인하여 주십시오.");
+					return false;
+				}
+				
 			});
 		});
 		
@@ -190,15 +208,14 @@
 	}
 	
 	//증명서 삭제
-	var certificateDelete = $("#deleteBtn").click(function(){
+	var certificateDelete = $("#deleteBtn").on("click",function(){
 		
 		//각 tr의 정보(발행번호)를 가져온다
 		var obj = {};
 		obj.crtfSeq = $("#viewModal").find("#viewForm").find("input[name='crtfSeq']").val();	//발행번호
 		
 		if(confirm("삭제하시겠습니까?") == true){
-			paging.ajaxSubmit("certificateDelete.exc",obj,function(rslt){
-				console.log("result : " + result);
+			paging.ajaxSubmit("certificateDelete.exc",obj,function(result){
 				if(result > 0){
 					alert("삭제되었습니다");
 					location.href="/spring/certificateIssue.do";

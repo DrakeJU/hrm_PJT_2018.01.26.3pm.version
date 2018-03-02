@@ -64,12 +64,20 @@ public class CertificateService {
 		return map;
 	}
 	
+	//증명서 결제상태
+	public int crtfProgressSituation(HashMap<String,Object> map) {
+		
+		int result = certificateDao.crtfProgressSituation(map);
+		
+		return result;
+	}
+	
 	//증명서 신청
 	public int certificateInsert(HashMap<String, Object> map) {
 		
 		map.put("commCode",certificateDao.certificateCommCode(map)); //증명서코드
 		map.put("crtfProgressSituation", "승인대기");	//전자결제상태
-		map.put("crtfIssueDate", "");	//발행일
+		//map.put("crtfIssueDate", "");	//발행일
 		map.put("crtfDelYn", "N"); //삭제유무
 		
 		int result = certificateDao.certificateInsert(map);

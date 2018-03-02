@@ -171,15 +171,43 @@ public class VacationController {
 
 		return map;
 	}
+	
+
+	/* 관리자 or 사원 어떤 버전으로 로그인 했는지 체크(권한부여 때문) */
+	@RequestMapping(value="adminChk.exc") 
+	public @ResponseBody int adminChk(@RequestParam HashMap<String,Object> map) {
+		int adminChk = vacationService.adminChk(map);
+		logger.info("adminCHk 컨트롤로----"+adminChk);
+		return adminChk;
+	}
+	
 
 	/* 휴가일수설정에 등록된 사원인지 체크 */
 	@RequestMapping(value="empVacChk.exc")
 	public @ResponseBody int empVacChk(@RequestParam HashMap<String,Object> map){
 				
 		int empVacChk = vacationService.empVacChk(map);
-
+		logger.info("empVacCHk컨트롤ㄹ로--------"+empVacChk);
 		return empVacChk;
 	}
+	
+	/* 휴가신청: 사원일 경우 사원 정보 나타내기 */
+	@RequestMapping(value="empVacInfomation.exc")
+	public @ResponseBody List<HashMap<String,Object>> empVacInfomation(
+			@RequestParam HashMap<String,Object> map){
+		
+		List<HashMap<String,Object>> list = vacationService.empVacInfomation(map);
+		logger.info("휴가신청하기 사원정보 controller::"+list);
+		if(list == null) {
+			map.put("success", "N");
+		}else {
+			map.put("success", "Y");
+//			map.put("empVacInfomation",list);
+		}
+
+		return list;		
+	}
+	
 	
 	/* 휴가 신청하기 */
 	@RequestMapping(value="vacationRequest")

@@ -28,6 +28,8 @@
 		<mapper resource="com/example/spring/personnel/scheduleMapper.xml"/>
 		<!-- [인사관리]-[증명서관리]-[증명서발급] -->
 		<mapper resource="com/example/spring/personnel/certificateMapper.xml"/>
+		<!-- [인사관리]-[인사발령] -->
+		<mapper resource="com/example/spring/personnel/hrapntMapper.xml"/>
 		<!-- [인사관리] END -->
 		
 		

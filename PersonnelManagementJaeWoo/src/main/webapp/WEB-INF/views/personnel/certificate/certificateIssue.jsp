@@ -66,8 +66,6 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 </style>
-<link rel="stylesheet" href="/spring/resources/common/css/bootstrap-toggle.min.css" />
-<script src="/spring/resources/common/js/bootstrap-toggle.min.js"></script>
 </head>
 <body>
 	<!-- MAIN -->
@@ -209,7 +207,7 @@ input:checked + .slider:before {
 												<tr>
 													<th>결제상태</th>
 													<td>
-														
+														<button type="button" class="btn" data-toggle="button" id="toggleBtn" data-complete-text="승인완료">승인대기</button>
 													</td>
 												</tr>
 											</tbody>

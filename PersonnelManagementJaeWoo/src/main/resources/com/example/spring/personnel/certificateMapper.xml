@@ -39,7 +39,7 @@
 			,XX.CRTF_USE AS crtfUse 														/*용도*/
 			,XX.CRTF_PROGRESS_SITUATION	AS crtfProgressSituation							/*결제여부*/
 			,DATE_FORMAT(XX.CRTF_REQUEST_DATE,"%Y-%m-%d") AS crtfRequestDate 				/*신청일*/
-			,IFNULL("",DATE_FORMAT(XX.CRTF_ISSUE_DATE,"%Y-%m-%d")) AS crtfIssueDate 		/*발행일*/
+			,IFNULL(DATE_FORMAT(XX.CRTF_ISSUE_DATE,"%Y-%m-%d"),"") AS crtfIssueDate 		/*발행일*/
 		FROM (
 			SELECT X.*,EMP_NAME
 			FROM (
@@ -97,7 +97,7 @@
 			,XX.CRTF_USE AS crtfUse 														/*용도*/
 			,XX.CRTF_PROGRESS_SITUATION	AS crtfProgressSituation							/*결제여부*/
 			,DATE_FORMAT(XX.CRTF_REQUEST_DATE,"%Y-%m-%d") AS crtfRequestDate 				/*신청일*/
-			,IFNULL("",DATE_FORMAT(XX.CRTF_ISSUE_DATE,"%Y-%m-%d")) AS crtfIssueDate 		/*발행일*/
+			,IFNULL(DATE_FORMAT(XX.CRTF_ISSUE_DATE,"%Y-%m-%d"),"") AS crtfIssueDate 		/*발행일*/
 		FROM (
 			SELECT X.*,EMP_NAME
 			FROM (
@@ -110,6 +110,16 @@
 		WHERE XX.COMM_CODE = C.COMM_CODE
 		ORDER BY XX.CRTF_SEQ DESC
 	</select>
+	
+	<!-- 증명서 결제상태 -->
+	<update id="crtfProgressSituation" parameterType="HashMap">
+		/* /personnel/certificate/certificateMapper.xml - crtfProgressSituation(증명서 결제상태) */
+		UPDATE CERTIFICATE
+		SET 
+			CRTF_PROGRESS_SITUATION = #{crtfProgressSituation}
+			,CRTF_ISSUE_DATE = DATE_FORMAT(now(),"%Y%m%d%H%i%s")
+		WHERE CRTF_SEQ = #{crtfSeq}
+	</update>
 	
 	<!-- 증명서신청 -->
 	<insert id="certificateInsert" parameterType="HashMap">
@@ -145,15 +155,15 @@
 		FROM
 		(
 			SELECT
-				XX.CRTF_SEQ AS crtfSeq,												/*일련번호*/
-			    XX.EMP_EMNO AS empEmno,												/*사원번호*/
-			    XX.EMP_NAME AS empName,												/*사원이름*/
-			    C.COMM_NAME AS commName,											/*신청서구분*/
-			    XX.CRTF_USE AS crtfUse,												/*용도*/
-			    DATE_FORMAT(XX.CRTF_REQUEST_DATE, "%Y-%m-%d") AS crtfRequestDate,	/*신청일*/
-			    XX.CRTF_ISSUE_DATE AS crtfIssueDate,								/*발행일*/
-			    XX.CRTF_PROGRESS_SITUATION AS crtfProgressSituation,				/*전자결재상태*/
-			    XX.CRTF_DEL_YN AS crtfDelYn											/*삭제여부*/
+				XX.CRTF_SEQ AS crtfSeq,													/*일련번호*/
+			    XX.EMP_EMNO AS empEmno,													/*사원번호*/
+			    XX.EMP_NAME AS empName,													/*사원이름*/
+			    C.COMM_NAME AS commName,												/*신청서구분*/
+			    XX.CRTF_USE AS crtfUse,													/*용도*/
+			    DATE_FORMAT(XX.CRTF_REQUEST_DATE, "%Y-%m-%d") AS crtfRequestDate,		/*신청일*/
+			    IFNULL(DATE_FORMAT(XX.CRTF_ISSUE_DATE,"%Y-%m-%d"),"") AS crtfIssueDate,	/*발행일*/
+			    XX.CRTF_PROGRESS_SITUATION AS crtfProgressSituation,					/*전자결재상태*/
+			    XX.CRTF_DEL_YN AS crtfDelYn												/*삭제여부*/
 			FROM
 				(
 			    SELECT

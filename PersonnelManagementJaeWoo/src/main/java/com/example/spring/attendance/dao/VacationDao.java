@@ -224,6 +224,14 @@ public class VacationDao {
 		return list;
 	}
 	
+	/* 관리자 or 사원 어떤 버전으로 로그인 했는지 체크(권한부여 때문) */
+	public int adminChk(HashMap<String,Object> map) {
+		int adminChk = this.sqlSession.selectOne(nameSpaceName + "adminChk", map);
+		logger.info("dao ADMIN CHK::"+adminChk);
+		return adminChk;
+	}
+	
+	
 	/*  휴가일수설정에 등록된 사원인지 체크   */
 	public int empVacChk(HashMap<String,Object> map) {
 		
@@ -234,6 +242,12 @@ public class VacationDao {
 		return empVacChk;
 	}
 	
+	/* 휴가신청: 사원일 경우 사원 정보 나타내기 */
+	public List<HashMap<String,Object>> empVacInfomation(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = this.sqlSession.selectList(nameSpaceName + "empVacInfomation", map);
+		logger.info("휴가신청하기 사원정보 Dao::"+list);
+		return list;
+	}
 	
 	/* 휴가 신청하기 - 휴가명 셀렉 */
 	public List<HashMap<String,Object>> vacationTypeList(HashMap<String,Object> map){

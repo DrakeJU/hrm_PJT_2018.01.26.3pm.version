@@ -333,7 +333,7 @@ function vacDel(){
 				<div class="panel panel-headline">
 					<div class="panel-body">
 						<form class="form-inline" name="f1" id="f1">
-							신청월
+							신청년도
 							<div class="input-group date" id="yearDateTimePicker">
 								<input type="text" class="form-control" id="baseYear" name="baseYear"/>
 								<span class="input-group-addon">

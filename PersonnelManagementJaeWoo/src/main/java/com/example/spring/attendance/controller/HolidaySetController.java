@@ -125,6 +125,7 @@ public class HolidaySetController {
 			
 			DayMinPerson tmp = new DayMinPerson();
 			
+//			System.out.println("last : " + last);
 			
 			if(last.equals("D")) {
 				tmp.setMinPerson(String.valueOf(stringToInt(value)));
@@ -142,6 +143,8 @@ public class HolidaySetController {
 				String result = "C" + yearMonth + last;
 				tmp.setCode(result);
 			}
+			
+			System.out.println("Code : " + tmp.getCode());
 			
 			minPersonMap.put(mapKey, tmp);
 			
@@ -193,22 +196,6 @@ public class HolidaySetController {
 		return result;
 	}
 	
-//	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
-//	@RequestMapping(value = "/holidayRosterWorkerNumberDBInsert")
-//	public ModelAndView holidayRosterWorkerNumberDBInsert(@RequestParam HashMap<String,Object> infoMap) {
-//		//HashMap<String, String> empNameMap = new HashMap<String, String>();
-//				
-//		System.out.println("---------------------infoMap" + infoMap);
-//				
-//		ModelAndView mv = new ModelAndView();
-//		mv.setViewName("holidayRoster");
-//		mv.addObject("infoMap", infoMap);
-//				
-//		holidaySetService.holidayRoster(infoMap);
-//		
-//		return mv;
-//	}
-	
 	//관리자 - 근무인원, 근무 날짜 db에 입력하는 컨트롤러
 	@RequestMapping(value = "/individualRoster")
 	public String individualRoster() {
@@ -226,6 +213,19 @@ public class HolidaySetController {
 		
 		System.out.println("------------- holidayRosterEventsList : "+map);
 		
+		return map;
+	}
+	
+	@RequestMapping(value = "/rosterTime.ajax")
+	public @ResponseBody List<HashMap<String, String>> rosterTime(@RequestParam HashMap<String,String> standardTime) {
+		System.out.println("standardTime : " + standardTime);
+		
+		List<HashMap<String, String>> map = new ArrayList<HashMap<String, String>>();
+			
+		map = holidaySetService.rosterTime(standardTime);
+			
+		System.out.println("------------- holidayRosterEventsList : "+map);
+			
 		return map;
 	}
 	
@@ -293,8 +293,11 @@ public class HolidaySetController {
 	
 	//관리자 - 근무표조회
 	@RequestMapping(value = "/holidayRosterCheck")
-	public String holidayRosterCheck() {
-		return "holidayRosterCheck";
+	public ModelAndView holidayRosterCheck() {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("holidayRosterCheck");
+		
+		return mv;
 	}
 	
 	//관리자 - 근무표생성설정
@@ -320,7 +323,7 @@ public class HolidaySetController {
 	//관리자 - 근무표 db 입력
 	@RequestMapping(value = "/holidayRosterDBInsert.ajax")
 	public @ResponseBody HashMap<String, String> holidayRosterDBInsert(@RequestParam HashMap<String,Object> eventsMap) {
-		System.out.println("---------------------" + eventsMap);
+		System.out.println("---------------------2222222" + eventsMap);
 		
 		//success 다시 되돌려줄 맵
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -331,8 +334,8 @@ public class HolidaySetController {
 		String result = (String) eventsMap.get("eventsArray");
 		
 		//지금 string result 속에 jsp에서 넘어온 데이터가 앞뒤로 "가 있어서 이것을 제외해주는 작업 
-		result = result.replaceFirst("\"", "");
-		result = replaceLast(result, "\"", "");
+//		result = result.replaceFirst("\"", "");
+//		result = replaceLast(result, "\"", "");
 		
 		//gson.fromJson : Json 형식으로된 String을 ArrayList로 바꿔주는 역할을 함.
 		//지금 result에는 json형식으로 되어있음.

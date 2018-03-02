@@ -261,13 +261,40 @@
 <!-- 	) -->
 	</insert>
 	
+	
+	<!-- 관리자 or 사원 어떤 버전으로 로그인 했는지 체크(권한부여 때문) -->
+	<select id="adminChk" parameterType="HashMap" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(*)
+		FROM EMPLOYEE
+		WHERE EMP_EMNO = #{empEmno} 
+		AND EMP_ADMIN_YN = 'Y'
+	</select>
+	
+	
 	<!-- 휴가일수설정에 등록된 사원인지 체크 -->
 	<select id="empVacChk" parameterType="HashMap" resultType="java.lang.Integer">
-	SELECT
-		COUNT(*)
-	FROM EMPLOYEE_REMINDING_VAC
-	WHERE EMP_EMNO = #{empEmno}
+		SELECT
+			COUNT(*)
+		FROM EMPLOYEE_REMINDING_VAC
+		WHERE EMP_EMNO = #{empEmno}
 	</select>
+	
+	<!-- 휴가신청: 사원일 경우 사원 정보 나타내기 -->
+	<select id="empVacInfomation" parameterType="HashMap" resultType="HashMap">
+		SELECT
+			EMP_EMNO as reqEmpEmno,
+			EMP_NAME as empName,
+			DEPT_NAME as deptName,
+			RANK_NAME as rankName
+		FROM EMPLOYEE E
+		INNER JOIN DEPARTMENT D
+		ON E.DEPT_CODE = D.DEPT_CODE
+		INNER JOIN RANK R
+		ON E.RANK_CODE = R.RANK_CODE
+		WHERE E.EMP_EMNO = #{empEmno}
+	</select>
+	
 	
 	<!-- 휴가 신청하기- 휴가 종류 셀렉 -->
 	<select id="vacationTypeList" parameterType="HashMap" resultType="HashMap">
@@ -284,7 +311,9 @@
 	
 	INSERT INTO VAC_STATEMENT
 	(
-		EMP_EMNO,					#사원번호
+		CRT_EMP_EMNO,				#등록 사원번호
+		REQ_EMP_EMNO,				#신청 사원번호
+		UPDT_EMP_EMNO,				#수정 사원번호
 		ATTENDANCE_C,				#근태코드
 		VAST_C,						#휴가코드
 		VAST_REQ_DATE,				#휴가신청일자
@@ -293,17 +322,23 @@
 		VAST_VAC_UD,				#휴가일수
 		VAST_CONT,					#휴가사유
 		VAST_PROGRESS_SITUATION, 		#전자결재상태
+		VAST_CRT_DATE,				#등록일자
+		VAST_UPDT_DATE,				#수정일자
 		VAST_DEL_YN					#삭제여부
 	) VALUES (
-		#{empEmno},					#사원번호
+		#{crtEmpEmno},				#등록 사원번호
+		#{reqEmpEmno},				#신청 사원번호
+		'null',				#수정 사원번호
 		'W6',						#근태코드
 		#{vacationTypeList},					#휴가코드
-		(SELECT REPLACE(#{vastCrtDate},'-',	'')),		#휴가신청일자(날짜표기문자열,바꿀문자,바껴서보여줄문자)
-		(SELECT REPLACE(#{vastStartDate},'-','')),		#휴가시작날짜
-		(SELECT REPLACE(#{vastEndDate},'-','')),		#휴가종료날짜
+		(SELECT REPLACE(#{vastReqDate},'.',	'')),		#휴가신청일자(날짜표기문자열,바꿀문자,바껴서보여줄문자)
+		(SELECT REPLACE(#{vastStartDate},'.','')),		#휴가시작날짜
+		(SELECT REPLACE(#{vastEndDate},'.','')),		#휴가종료날짜
 		#{vastVacUd},									#휴가일수
 		#{vastCont},									#휴가사유
-		#{vastProgressSituation},
+		#{vastProgressSituation},						#승인현황
+		(SELECT REPLACE(#{vastCrtDate},'.','')),		#등록일자
+		#{vastUpdtDate},		#수정일자	
 		'N'												#삭제여부
 	)
 	</insert>
@@ -320,7 +355,7 @@
 		) AS baseDate, #연차기간
 		V.EMRE_VAC_UD AS emreVacUd, #전체일수
 		V.EMRE_PVAC_UD AS emrePvacUd, #사용일수
-		CONVERT(V.EMRE_VAC_UD-V.EMRE_PVAC_UD, UNSIGNED) AS remndrDate #잔여일수
+		V.EMRE_VAC_UD-V.EMRE_PVAC_UD AS remndrDate #잔여일수
 	FROM EMPLOYEE E
 	INNER JOIN
 		EMPLOYEE_REMINDING_VAC V
@@ -355,7 +390,8 @@
 		VAST_START_DATE = REPLACE(#{vastStartDate},'.',''),
 		VAST_END_DATE = REPLACE(#{vastEndDate},'.',''),
 		VAST_VAC_UD = #{vastVacUd},
-		VAST_CONT = #{vastCont}
+		VAST_CONT = #{vastCont},
+		VAST_UPDT_DATE = REPLACE(#{vastReqDate},'.','')
 	WHERE VAST_SERIAL_NUMBER = #{vastSerialNumber}
 	</update>
 	

@@ -10,6 +10,7 @@
 <!-- VENDOR CSS -->
 <link rel="stylesheet"
 	href="/spring/resources/common/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/spring/resources/common/bootstrap-toggle-master/css/bootstrap-toggle.min.css" />
 <link rel="stylesheet"
 	href="/spring/resources/common/vendor/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet"
@@ -64,6 +65,7 @@
 
 	<!-- Javascript -->
 	<script src="/spring/resources/common/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/spring/resources/common/bootstrap-toggle-master/js/bootstrap-toggle.min.js"></script>
 	<script src="/spring/resources/common/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 	<script src="/spring/resources/common/scripts/klorofil-common.js"></script>
 	<script src="/spring/resources/common/js/moment.js"></script> <!-- ※datetimepicker보다 먼저 import 되어야함 -->

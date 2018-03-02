@@ -10,11 +10,56 @@
 <link type="text/css" rel="stylesheet" href="/spring/resources/common/css/vacation.css" />
 <script>
 
-$(function(){
+/* $(function(){
 	vacTypeList();//휴가 셀렉박스 ajax
 	calender(); //달력
 	vacSelect();	//휴가 셀렉박스 
 	//check_onclick();	//휴가 신청하기
+}); */
+
+
+
+$(function(){
+	vacTypeList();//휴가 셀렉박스 ajax	
+	
+	//관리자인지 아닌지 체크
+	paging.ajaxFormSubmit("adminChk.exc","vacReqFrm", function(obj){
+		if(obj == 1){	//관리자일 경우
+			console.log("ffffffffff");
+			calender(); //달력
+			vacSelect();	//휴가 셀렉박스 
+		} else {//사원일 경우
+			console.log("dddddd");
+			//휴가일수 설정에 등록된 사원인지 체크하여 alert창 띄우기
+			paging.ajaxFormSubmit("empVacChk.exc", "vacReqFrm", function(rslt){
+				if(rslt != '1'){
+					alert('휴가일수가 설정되지 않았습니다.\n관리자에게 문의하세요.');
+				}else{
+					$('#vastReqDate').attr('readonly',true);
+					paging.ajaxFormSubmit("empVacInfomation.exc","vacReqFrm", function(str){
+						console.log("결과데이타 empVacInfomation" + JSON.stringify(str));
+// 						$.each(str.empVacInfomation,function(k,v){
+// 							console.log("test : " + v.empName);
+// 							$('#reqEmpEmno').val($('[type=hidden][name=empEmno]').val()).attr('readonly',true);
+// 							$('#empName').html(v.empName);
+// 							$('#deptName').val(v.deptName);
+// 							$('#rankName').val(v.rankName).attr(readonly,true);
+// 						});//each.empVacInfomation
+						$('#reqEmpEmno').val(str[0].reqEmpEmno).attr('readonly',true);
+						$('#empName').val(str[0].empName).attr('readonly',true);
+						$('#deptName').val(str[0].deptName).attr('readonly',true);
+						$('#rankName').val(str[0].rankName).attr('readonly',true);
+						$('#calenderInp').remove();
+						$('#search').remove();
+					});//ajax-empVacInfomation.exc
+					
+					calender(); //달력
+					vacSelect();	//휴가 셀렉박스 
+					//check_onclick();	//휴가 신청하기
+				}//if
+			});//ajax.empVacChk
+		}//if else
+	});//ajax.adminChk.exc
 });
 
 
@@ -50,19 +95,40 @@ function check_onclick(url, formId){
 		console.log("결과데이타" + JSON.stringify(rslt));
 			
 //		insert 성공여부에 따른 alert창 띄우기
-			if(rslt.success == "Y"){
-				
-// 				if(rslt.empEmno == null || rslt.empName == null || rslt.deptName == null || rslt.rankName == null){
-// 					alert("빈 칸을 채워주세요.");
-// 					return false;				
-// 				} else {
-					alert("휴가가 신청되었습니다.");	
-					location.reload();
+// 			if($('#vacationTypeList').val() ==null || $('#vastCont').val() == null){
+// 				console.log("ssssss");
+// 				alert("빈 칸을 채워주세요.");
+// 				return false;				
+// 			} else {
+// 				console.log("aaaaa");
+// 				if(rslt.success == "Y"){
+// 					alert("휴가가 신청되었습니다.");	
+// 					location.reload();
+// 				}else{
+// 					alert("휴가 신청실패");
 // 				}
+// 			}
+
+		if(rslt.success == "Y"){
+// 			if($('#vacationTypeList').val() ==null || $('#vastCont').val() == null){
+// 				console.log("ssssss");
+// 				alert("빈 칸을 채워주세요.");
+// 				return false;				
+// 			} else {
+// 				console.log("aaaaa");
+				alert("휴가가 신청되었습니다.");	
+				location.reload();
+// 			}
+			
+		}else{
+			alert("휴가 신청실패");
+		}
+
+		
+
+
+				
 								
-			}else{
-				alert("휴가 신청실패");
-			}
 		
 	});//paging
 }//check_onclick
@@ -73,10 +139,11 @@ function check_onclick(url, formId){
 function calender() {
 	
 	//오늘 날짜로 보여주기
-	$('#vastCrtDate').val(moment().format('YYYY.MM.DD'));	//휴가 신청일
+	$('#vastReqDate').val(moment().format('YYYY.MM.DD'));	//휴가 신청일
 	$('#vastStartDate').val(moment().format('YYYY.MM.DD'));		//휴가 시작일
 	$('#vastEndDate').val(moment().format('YYYY.MM.DD'));		//휴가 종료일
 	$('#vastVacUd').val(moment().format('1'));
+	$('#vastCrtDate').val(moment().format('YYYY.MM.DD'));	//휴가 등록일자
 	
 	$('#crtDate').datetimepicker({ //휴가신청일 달력
 		viewMode : 'days',
@@ -221,7 +288,7 @@ function vacSelect(){
  		var rankNameVal = chkTr.children().eq(5).text(); //tr 하부 5번째 td의 텍스트(직급)
 //  		console.log(empEmnoVal, nameVal, departmentVal, positionVal);	
  		
- 		$('#empEmno').val(empEmnoVal);
+ 		$('#reqEmpEmno').val(empEmnoVal);
  		$('#empName').val(empNameVal);
  		$('#deptName').val(deptNameVal);
  		$('#rankName').val(rankNameVal);
@@ -241,7 +308,8 @@ function vacSelect(){
 					<div class="panel-body">
 						<form class="form-inline" id="vacReqFrm" name="vacReqFrm" method="post">
 							<input type="hidden" name=""><!-- 권한 -->
-							<input type="hidden" name="empEmno" value="<%=(String)session.getAttribute("0905000311")%>">사원번호
+							<input type="hidden" name="empEmno" value="<%=(String)session.getAttribute("userEmno")%>"><!-- 등록자 -->
+							<input type="hidden" name="crtEmpEmno" value="<%=(String)session.getAttribute("userEmno")%>"><!-- 등록자 -->
 							
 							<table class="table table-bordered">
 								<tr>
@@ -252,8 +320,9 @@ function vacSelect(){
 										
 										<!-- 관리자 권한: 달력 -->
 										<div class="input-group date" id="crtDate">
-									  	<input type="text" class="form-control" id="vastCrtDate" name="vastCrtDate"/>
-									    <span class="input-group-addon">
+									  	<input type="text" class="form-control" id="vastReqDate" name="vastReqDate"/>
+									  	<input type="hidden" class="form-control" id="vastCrtDate" name="vastCrtDate"/>
+									    <span class="input-group-addon" id="calenderInp">
 										    <span class="glyphicon glyphicon-calendar"></span> <!-- 달력 아이콘 -->
 									    </span>
 									  </div>
@@ -285,8 +354,8 @@ function vacSelect(){
 									<td><!-- <i class="fa fa-asterisk-red" aria-hidden="true" ></i> -->신청자</td>
 									<td colspan="5" style="padding-left:0.5em">
 										<div class="input-group">	
-											<input type="text" class="form-control" id="empEmno" name="empEmno" placeholder="사번" value="">
-											<span class="input-group-addon" data-toggle="modal" data-target="#empEmnoModal" style="cursor:pointer" onclick="vacationReqEmpList()">
+											<input type="text" class="form-control" id="reqEmpEmno" name="reqEmpEmno" placeholder="사번" value="">
+											<span class="input-group-addon" data-toggle="modal" data-target="#empEmnoModal" style="cursor:pointer" id="search" onclick="vacationReqEmpList()">
 												<span class="glyphicon glyphicon-search" aria-hidden="true"></span> <!-- 검색 아이콘 -->
 											</span>
 										</div>

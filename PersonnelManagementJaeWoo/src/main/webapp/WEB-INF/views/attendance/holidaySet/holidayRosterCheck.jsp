@@ -143,31 +143,20 @@
     	
     	//관리자는 Setting 페이지로 들어오고 컨트롤러에서 @ResponseBody로 값이 전해져 온거라서 input name=empName이 생기는데 일반사원은
     	//Roster로 들어와서 input name=empName이 안생기기때문에 empName2를 사용해야함.
+    	
     	if($('input[name=empName]').val() == undefined){
     		empName = $('input[name=empName2]').val();
      		yearMonth = $('input[name=yearMonth2]').val();
-//      		console.log(yearMonth);
-			year = yearMonth.substring(0,4);
-			month = yearMonth.substring(5,7);
-			
-			$("#rosterYear").val(year);
-     		$("#rosterMonth").val(month);
-			
-     		console.log("1 : " + year);
-     		console.log("1 : " + month);
     	}else{
     		empName = $('input[name=empName]').val();
      		yearMonth = $('input[name=yearMonth]').val();
-     		year = yearMonth.substring(0,4);
-     		month = yearMonth.substring(5,7);
-     		
-     		$("#rosterYear").val(year);
-     		$("#rosterMonth").val(month);
-     		
-     		console.log("2 : " + year);
-     		console.log("2 : " + month);
-     		//$("#rosterYear").val();
     	}
+    	
+    	var year = yearMonth.substring(0,4);
+    	var month = yearMonth.substring(5,7);
+    	
+    	$("#rosterYear").val(year).attr("selected", "selected");
+    	$("#rosterMonth").val(month).attr("selected", "selected");
     	
     	console.log("yearMonth233 : " + yearMonth);
     	//console.log("yearMonth2 : " + yearMonth2);

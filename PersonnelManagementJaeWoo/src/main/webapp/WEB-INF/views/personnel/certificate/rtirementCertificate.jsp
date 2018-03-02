@@ -35,7 +35,7 @@
 									border-right-width: 1px; border-bottom-width: 1px; border-right-style: solid; border-bottom-style: solid;">성 명
 							</th>
 							<td	style="text-align: left; border-bottom-color: rgb(0, 0, 0); border-bottom-width: 1px; border-bottom-style: solid;">
-								&nbsp;이정은
+								&nbsp;
 							</td>
 						</tr>
 						<tr>
@@ -99,9 +99,9 @@
 							<td	style="text-align: center; line-height: 30px; padding-bottom: 30px; font-size: 12px;">
 								<div>
 									<p>2018년 02월 08일
-									<p>경기도 의정부시 민락동 813-1번지 파워프라자 5층
-									<p> 대 표 이 사 이윤왕
-									<p>슈퍼게이너
+									<p>회사주소
+									<p> 대 표 이 사 홍길동
+									<p>회사이름
 								</div>
 							</td>
 						</tr>

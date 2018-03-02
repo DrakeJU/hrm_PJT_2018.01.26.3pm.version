@@ -25,21 +25,21 @@ public class InfoDao {
 		this.sqlSeesson.insert(nameSpaceName+"infoInsert",map);
 	}
 	
-	public List<HashMap<String,Object>> infoSearch(HashMap<String,Object> map) {
-		
-	
-		System.out.println("다오진입 + map값" + map.get("empName"));
-		
-		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
-		
-		
-		list=this.sqlSeesson.selectList(nameSpaceName + "infoSearch",map);
-		
-		
-		return list;
-		
-
-	}
+//	public List<HashMap<String,Object>> infoSearch(HashMap<String,Object> map) {
+//		
+//	
+//		System.out.println("다오진입 + map값" + map.get("empName"));
+//		
+//		List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+//		
+//		
+//		list=this.sqlSeesson.selectList(nameSpaceName + "infoSearch",map);
+//		
+//		
+//		return list;
+//		
+//
+//	}
 	
 	public List<HashMap<String,Object>> infoSelect(){		
 			
@@ -55,4 +55,23 @@ public class InfoDao {
 		System.out.println("daolist값: "+list);
 		return list;
 	}
+	
+	
+	public void infoUpdate(HashMap<String,String> map){
+		
+		System.out.println("dao 맵 확인 :" +map);
+		
+		this.sqlSeesson.update(nameSpaceName+"infoUpdate",map);
+	}
+	
+
+	
+	public void infoDelete(HashMap<String,String> map){
+		
+		System.out.println("dao delete 맵 확인 :" +map);
+		
+		this.sqlSeesson.delete(nameSpaceName+"infoDelete",map);
+	}
+	
+	
 }	

@@ -14,7 +14,7 @@
 			viewMode: 'days',
 			format: 'YYYYMMDD'
 		});
-	// 	$alert('#baseDay').val(moment().format('YYYY-MM-DD'));
+	$('#workingDateId').val(moment().format('YYYY-MM-DD'));//페이지 시작시 날짜 자동입력
 	});
 	
 	/*INSERT 출근*/
@@ -68,7 +68,7 @@
 									<td>
 										<!-- 달력 : 근무일자 -->										
 										<div class="input-group date" id="workingDate">
-											<input type="text" class="form-control" name="attendedDate"/>
+											<input type="text" class="form-control" id="workingDateId" name="attendedDate"/>
 												<span class="input-group-addon">
 													<span class="fa fa-calendar" />
 												</span>

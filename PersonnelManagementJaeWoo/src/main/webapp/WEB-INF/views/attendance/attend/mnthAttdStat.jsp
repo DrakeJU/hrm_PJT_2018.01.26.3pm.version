@@ -15,7 +15,7 @@
 			viewMode: 'days',
 			format: 'YYYY-MM'
 		});
-		//$('#mnthAttdIpt').val(moment().format('YYYY-MM'));
+		$('#mnthAttdIpt').val(moment().format('YYYY-MM'));//페이지 시작시 날짜 자동입력
 	});
 
 	/* 사원번호 선택  Modal 함수 ==========================================================*/
@@ -100,7 +100,7 @@
  		$(".modal-body input[name=keyword]").val(""); //키워드 내용 지우기
  	}
 	
-	/* 사원번호 검색버튼 ajax
+	/* 검색버튼 사원번호 / 성명 / 부서 / 직급 자동채우기  ajax
 	<modal empEmnoChk hidden값으로 근태현황 입력창 내용 입력> ======================================*/
 	function searchForm(){
 		$('#empInfo tbody tr td:eq(0)').text($('#hiddenEmpEmno').val());
@@ -109,7 +109,7 @@
 		$('#empInfo tbody tr td:eq(3)').text($('#hiddenRankName').val());
 	}//searchForm
 	
-	/* 근태현황 달력 함수 ======================================================================*/
+	/* 검색버튼 달력 출력 함수 ======================================================================*/
 	function mnthAttdCal(url, formId){
 		searchForm();// fucntion searchForm 근태현황 입력창 내용 입력
 		
@@ -120,6 +120,53 @@
 			for(i=0; i<rslt.resultList.length; i++){ //url, formId에 따른 결과값(rslt) resultList의 전체 길이를 1부터 length 만큼 출력 
 				$('#mnthAttdCalInfo tbody tr td:eq(' + i + ')').text(rslt.resultList[i].day);
 			}//for
+			
+			//근태
+			for(i=32; i<rslt.resultList.length+32; i++){ //url, formId에 따른 결과값(rslt) resultList의 전체 길이를 1부터 length 만큼 출력
+				
+				var findIdx = -1;
+				
+				for(var j=0; j<rslt.resultWorkList.length; j++){ //그달에 근무한날의 list(1, 2, 5, 6, 13, 28일)가 
+					if(rslt.resultWorkList[j].workDay == rslt.resultList[i-32].day){ //달력의 출력일과 같을때
+						findIdx = j; //j값은 findIdx가 되어서
+						break;//-1과 다르면 나옴
+					}
+				}//for
+					
+				if(findIdx >= 0){ // break 나온 수가  0 이상이면 
+					$('#mnthAttdCalInfo tbody tr td:eq(' + i + ')').text(rslt.resultWorkList[findIdx].attendanceCd); // attendanceCd 를 그 칸에 출력
+					
+					$("#attdNumID td").each(function(){			// ID: attdNumID td	 두줄만 각각 입력 
+						if($(this).text() == 'W1'){				//W1이면 ■로 바꿔
+								$(this).text($(this).text().replace('W1','■'));
+								$(this).css("color","red");
+							
+						}else if($(this).text() == 'W2'){		//W2이면 ■로 바꿔
+								$(this).text($(this).text().replace('W2','■'));
+								$(this).css("color","green");
+								
+						}else if($(this).text() == 'W3'){		//W3이면 ■로 바꿔
+								$(this).text($(this).text().replace('W3','■'));
+								$(this).css("color","blue");
+								
+						}else if($(this).text() == 'W4'){		//W4이면 ■로 바꿔
+								$(this).text($(this).text().replace('W4','■'));
+								$(this).css("color","darkgray");
+							
+						}else if($(this).text() == 'W5'){		//W5이면 ■로 바꿔
+								$(this).text($(this).text().replace('W5','■'));
+								$(this).css("color","magenta");
+						}
+					
+					});
+					
+				}else{
+					$('#mnthAttdCalInfo tbody tr td:eq(' + i + ')').text(''); //-1이고 0보다 작으면 빈칸 출력
+				}
+			}//for
+			
+			
+			
 		});//ajaxFormSubmit
 	}//mnthAttdCal
 	
@@ -171,8 +218,19 @@
 						</form>
 					</div>
 					<div class="panel-body">
-						<h4>◈ 근태현황<h4>
-						<table border="1" class="table table-bordered" id="empInfo">
+					<div class="subtitle">
+						<h4 class="fleft">◈ 근태현황 <h4>
+							<div align="right">
+								<h5>
+									<font color="red">■</font> : 출근&nbsp;&nbsp;&nbsp;&nbsp;
+									<font color="blue">■</font> : 지각&nbsp;&nbsp;&nbsp;&nbsp;
+									<font color="darkgray">■</font> : 조퇴&nbsp;&nbsp;&nbsp;&nbsp;
+									<font color="magenta">■</font> : 휴가&nbsp;&nbsp;&nbsp;&nbsp;
+									<font color="green">■</font> : 출장
+								</h5>
+							</div>	
+					</div>
+						<table border="1" style="table-layout:fixed" class="table table-bordered" id="empInfo">
 							<thead>
 								<tr align="center">
 									<td>사원번호</td>
@@ -187,7 +245,7 @@
 									<td> 　　　　 </td>
 									<td> 　　　　 </td>
 									<td> 　　　　 </td>
-								</tr>
+								</tr>	
 							</tbody>
 						</table>
 						<table border="1" width="100" style="table-layout:fixed" class="table table-bordered" id="mnthAttdCalInfo">
@@ -228,6 +286,42 @@
 									<td> 　　　　 </td>
 									<td> 　　　　 </td>
 								</tr>
+								<tr align="center" id="attdNumID">
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+								</tr>
+								<tr align="center" id="attdNumID">
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+									<td> 　　　　 </td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
@@ -239,14 +333,12 @@
 	<!-- 사원번호 선택 Modal View -->
 	<div id="empModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
-		
 			<!-- Modal 내용 -->
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button><!-- 닫기버튼 -->
 					<div class="modal-title" align="center"><h2> 사원 정보 조회 </h2></div>
 				</div>
-				
 				<!-- 검색 -->
 				<div class="modal-body">
 					<div class="search_wrap" style="padding: 0px 10px 20px 15px; ">
@@ -293,8 +385,6 @@
 		</div>
 	</div>
 	<p>
-	
-	
 </body>
 </html>
 

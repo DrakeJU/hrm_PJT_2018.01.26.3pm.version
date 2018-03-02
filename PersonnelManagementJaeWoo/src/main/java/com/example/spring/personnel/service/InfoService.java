@@ -26,15 +26,23 @@ public class InfoService {
 	
 	}
 	
-	public List<HashMap<String,Object>> infoSearch (HashMap<String,Object> map) {
+/*	public List<HashMap<String,Object>> infoSearch (HashMap<String,Object> map) {
 		System.out.println("서비스진입");
 		List<HashMap<String,Object>> list=new ArrayList<HashMap<String,Object>> ();
 		
 		list =infoDao.infoSearch(map);
 		
 		return list;
+		infoUpdate
 		
-		
+	}
+	*/
+	
+	public void infoUpdate(HashMap<String,String> map){
+		System.out.println("service map확인 : " +map);
+	
+		infoDao.infoUpdate(map);
+	
 	}
 	
 	public List<HashMap<String,Object>> infoSelect(){
@@ -51,6 +59,11 @@ public class InfoService {
 		return list;
 	}
 	
+	public void infoDelete(HashMap<String,String> map){
+		System.out.println("service delete map확인 : " +map);
 	
+		infoDao.infoDelete(map);
+	
+	}
 	
 }

@@ -855,8 +855,8 @@
 		
 	</select>
 
-	<!-- 검색버튼 -->
-	<!-- SELECT ==============================================================-->
+	<!-- 검색 버튼 -->
+	<!-- SELECT 달력 출력==============================================================-->
 	<select id="searchMnthAttdStat" parameterType="HashMap"  resultType="HashMap">
 		SELECT 
 			DAY  AS day
@@ -865,10 +865,20 @@
 	     AND SUBSTRING(id, 1, 6) = REPLACE(#{workYyMm}, '-', '')
 	   ORDER BY CAST(DAY AS UNSIGNED)
 
-
 	</select>
 
-
+	<!-- SELECT 근태 출력 ==============================================================-->
+	<select id="searchWorkMnthAttdStat" parameterType="HashMap"  resultType="HashMap">
+	SELECT EMP_EMNO
+	       ,COST_WRK_IN
+	       ,CAST(SUBSTRING(COST_WRK_IN, 7, 2) AS UNSIGNED) AS workDay     /*COST_WRK_IN에서 필요한 DAY 두자리만 가져올것*/
+	       ,ATTENDANCE_C AS attendanceCd
+	   FROM COMM_STM
+	  WHERE 1=1
+	    AND EMP_EMNO = '0905000211'
+	    AND SUBSTRING(COST_WRK_IN, 1, 6) = REPLACE(#{workYyMm}, '-', '')
+	
+	</select>
 
 	<!-- ************************************************************************************
 	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]

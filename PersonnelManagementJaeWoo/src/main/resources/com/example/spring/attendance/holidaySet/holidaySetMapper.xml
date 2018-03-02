@@ -62,6 +62,13 @@
 <!-- 		END END #{endFirstDay} AND #{endLastDay} -->
 	</select>
 	
+	<select id="rosterTime" resultType="HashMap" parameterType="HashMap">
+		SELECT SHWK_SHF_C, SHWK_SHF_TYPE, SHWK_SHF_OUT_TIME, SHWK_SHF_IN_TIME, DATE_FORMAT(SHWK_START_DATE,'%Y-%m-%d') AS SHWK_START_DATE, SHWK_END_DATE  FROM SHF_WORK
+		WHERE DATE_FORMAT(SHWK_START_DATE,'%Y-%m-%d') <![CDATA[<=]]> #{standardTime}
+		ORDER BY SHWK_START_DATE DESC
+		LIMIT 0, 3
+	</select>
+	
 	<insert id = "holidayRosterDBInsert" parameterType="eventsData" >
 		INSERT INTO WORKROSTER(ID, START, END, RESOURCE, TEXT)
 		VALUES(#{id}, #{start}, #{end}, #{resource}, #{text})

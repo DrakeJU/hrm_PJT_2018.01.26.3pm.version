@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.spring.attendance.entity.DayMinPerson;
 import com.example.spring.attendance.entity.DeleteEventsData;
@@ -69,6 +70,11 @@ public class HolidaySetDao {
 		
 	}
 	
+	public List<HashMap<String,String>> rosterTime(@RequestParam HashMap<String,String> standardTime){
+		List<HashMap<String,String>> list = this.sqlSession.selectList(nameSpaceName + "rosterTime", standardTime);
+		
+		return list;
+	}
 	
 	public List<HashMap<String,String>> holidayRosterEventsList2(HashMap<String,Object> eventsList){
 		List<HashMap<String,String>> list = this.sqlSession.selectList(nameSpaceName + "holidayRosterEventsList2", eventsList);

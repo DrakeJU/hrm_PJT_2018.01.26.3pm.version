@@ -11,8 +11,6 @@
 	String userEmno = (String)request.getAttribute("userEmno");
 %>
 
-<link rel="stylesheet" href="/spring/resources/common/css/bootstrap-toggle.min.css" />
-<script src="/spring/resources/common/js/bootstrap-toggle.min.js"></script>
 <script language="javascript">
 
 	$(document).ready(function(){
@@ -85,7 +83,6 @@
 								"<td name='crtfUse'>" + result[idx].crtfUse + "</td>" + 
 								"<td name='crtfRequestDate'>" + result[idx].crtfRequestDate + "</td>" + 
 								"<td name='crtfIssueDate'>" + result[idx].crtfIssueDate + "</td>" + 
-								//"<td name='crtfProgressSituation'>" + result[idx].crtfProgressSituation + "</td>" + 
 								"<td name='crtfProgressSituation' onclick='event.cancelBubble=true'><input type='checkbox' name='toggleSwitch' data-toggle='toggle' data-size='small' data-on='승인완료' data-off='승인대기'></td>" +
 							"</tr>"
 					);
@@ -180,6 +177,29 @@
 			 $("#viewModal #viewForm input[name='rankName']").val(rslt.rankName); //직위/직급명
 		});
 		
+		//상세보기, 미리보기 버튼 클릭시
+		$("#viewBtn").on("click",function(){
+			
+			if($("#viewForm").find("#toggleBtn").text() == '승인완료'){
+				var url = "";
+				
+				if(formId.find("[name='crtfSelect']").val() == "재직증명서"){
+					url = "workCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
+				}else if(formId.find("[name='crtfSelect']").val() == "경력증명서"){
+					url = "carriereCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
+				}else if(formId.find("[name='crtfSelect']").val() == "퇴직증명서"){
+					url = "rtirementCertificate.exc?emno="+empEmno+"&crtfSeq="+crtfSeq;
+				}
+		
+				window.open(url, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");		
+				
+			}else{
+				alert("결제상태를 확인하여 주십시오.");
+				return false;
+			}
+			
+		});
+		
 	}
 	
 	//증명서 신청내역 검색조건에 따른 하위 select 변환/증명서 신청내역 검색
@@ -227,7 +247,7 @@
 		var data = {"empEmno":empEmno,"crtfSearchSelect":crtfSearchSelect,"crtfSelect":crtfSearchSelectVal};
 		
 		paging.ajaxSubmit(url,data,function(result){
-			console.log("dataaaa: " + JSON.stringify(result));
+			console.log("result: " + JSON.stringify(result));
 			var thisBody = $("#crtfRequestList table tbody");
 			
 			if(result.length <= 0 || result == null){	//증명서 신청내역이 없을경우
@@ -253,7 +273,7 @@
 				$.each(result,function(idx){
 				
 					thisBody.append(
-							"<tr data-toggle='modal' data-target='#viewModal' onClick='certificateRequestInfoFunc($(this))'>" + 
+							"<tr name='crtfListTr' data-toggle='modal' data-target='#viewModal' onClick='certificateRequestInfoFunc($(this))'>" + 
 								"<td name='crtfSeq'>" + result[idx].crtfSeq + "</td>" + 
 								"<td name='empEmno'>" + result[idx].empEmno + "</td>" + 
 								"<td name='empName'>" + result[idx].empName + "</td>" + 
@@ -261,9 +281,16 @@
 								"<td name='crtfUse'>" + result[idx].crtfUse + "</td>" + 
 								"<td name='crtfRequestDate'>" + result[idx].crtfRequestDate + "</td>" + 
 								"<td name='crtfIssueDate'>" + result[idx].crtfIssueDate + "</td>" + 
-								"<td name='crtfProgressSituation'>" + result[idx].crtfProgressSituation + "</td>" + 
+								"<td name='crtfProgressSituation' onclick='event.cancelBubble=true'><input type='checkbox' name='toggleSwitch' data-toggle='toggle' data-size='small' data-on='승인완료' data-off='승인대기'></td>" +
 							"</tr>"
-					);
+							);
+						
+						$("input[type='checkbox'][name=toggleSwitch]").bootstrapToggle();
+						
+						if(result[idx].crtfProgressSituation == '승인완료'){
+							$("tr[name='crtfListTr']:eq("+idx+")").find("input[name='toggleSwitch']").prop("checked", true).change();
+						}//if
+						
 				});
 			
 			}//if
@@ -271,24 +298,6 @@
 	
 	});
 	
-	//상세보기, 미리보기 버튼 클릭시
-	$("#viewBtn").click(function(){
-	   
-		var formId = $("#viewForm");
-		var crtfSeq = formId.find("input [name='crtfSeq']").val();
-		var userEmno = $("#reqUserEmno").val();
-		var url = "";
-		alert(userEmno);
-		if(formId.find("[name='crtfSelect']").val() == "재직증명서"){
-		   url = "workCertificate.exc?emno="+userEmno+"&crtfSeq="+crtfSeq;
-		}else if(formId.find("[name='crtfSelect']").val() == "경력증명서"){
-		   url = "carriereCertificate.exc?emno="+userEmno+"&crtfSeq="+crtfSeq;
-		}else if(formId.find("[name='crtfSelect']").val() == "퇴직증명서"){
-		   url = "rtirementCertificate.exc?emno="+userEmno;
-		}
-			
-		window.open(url, "_blank", "width=800, height=700, toolbar=no, menubar=no, scrollbars=no, resizable=yes");      
-	});
 	
 	//증명서 삭제
 	var certificateDelete = $("#deleteBtn").on("click",function(){
@@ -300,7 +309,6 @@
 		if(confirm("삭제하시겠습니까?") == true){
 			
 			paging.ajaxSubmit("certificateDelete.exc",obj,function(result){
-				console.log("result : " + result);
 				if(result > 0){
 					alert("삭제되었습니다");
 					location.href="/spring/certificateRequest.do";

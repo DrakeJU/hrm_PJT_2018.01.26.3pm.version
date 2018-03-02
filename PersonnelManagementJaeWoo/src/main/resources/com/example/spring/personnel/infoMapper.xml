@@ -58,6 +58,51 @@
 		select * from employee where emp_emno = #{emno}
 		
 	</select>
+	
+	<!--#{empEmno}, 
+			#{empId},  
+			#{empPw},
+			#{empName},
+			#{empEname},
+			#{empBday},
+			#{empTno},
+			#{empIncodate},
+			#{ictyCode},
+			#{deptCode},
+			#{rankCode},
+			#{armyYN},
+			#{empRegDate}, 
+	
+	 -->
+	
+	<update id="infoUpdate" parameterType="HashMap">
+		
+		UPDATE employee 
+		SET
+		emp_emno= #{empEmno},
+		emp_id=#{empId},
+		emp_pswd =#{empPw},
+		emp_name =#{empName},
+		emp_ename=#{empEname},
+		emp_bday = #{empBday},
+		emp_tno=#{empTno},
+		emp_inco_date =#{empIncodate},
+		icty_code = #{ictyCode},
+		dept_code  =#{deptCode},
+		rank_code =#{rankCode},
+		emp_mits_yn=#{armyYN},
+		emp_reg_date =#{empRegDate}
+		where 
+		emp_emno = #{empEmno}
+	</update>
+	
+	<delete id="infoDelete" parameterType="HashMap">
+		
+		delete 
+		from employee 
+		where emp_emno = #{emno}
+		
+	</delete>
 </mapper>
 
 		

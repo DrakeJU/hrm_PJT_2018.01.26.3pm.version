@@ -44,6 +44,59 @@
 
 <body>
 
+<!-- INSERT MODAL -->
+<div id="insertModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" onClick="hideModal()">&times;</button>
+				<h4 class="modal-title">근무 순서</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-11" style="padding-top:20px;">
+						<form action="/spring/commonInsert.do" id="insertForm">
+							<table class="table" align="center">
+								<tr>
+									<td style="width:120px"> &nbsp;근무순서</td>
+									<td>
+										<div class="col-md-5">
+											<label for="inputRoster"></label><i class="fa fa-minus-circle" onClick = "removeArray()"></i>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td> &nbsp;근무정보</td>
+									<td>
+										<div class="col-md-5">
+											<input type="radio" name="rosterRadioButton" value="day" id="day">주간 <label for="day"></label>
+											<br><input type="radio" name="rosterRadioButton" value="night" id="night">야간<label for="night"></label>
+											<br><input type="radio" name="rosterRadioButton" value="evening" id="evening">심야<label for="evening"></label>
+										</div>
+									</td>
+								</tr>
+<!-- 								<tr> -->
+<!-- 									<td> &nbsp;dsd</td> -->
+<!-- 									<td> -->
+<!-- 										<div class="col-md-5" id = "rosterTime"> -->
+										
+<!-- 										</div> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="applyBtn" class="btn btn-default" onClick="addBtn()">추가</button>
+				<button type="button" id="insertBtn" class="btn btn-default" onClick = "applyBtn()">적용</button>
+				<button type="button" class="btn btn-default" onClick = "hideModal()">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="main">
 	<div class="main-content">
 		<div class="container-fluid">
@@ -59,16 +112,55 @@
 				</c:choose>
 			</c:forEach>
 			<input type="hidden" name="events"> 
-			<div style="padding-top:110px"></div>
+			<input type="hidden" name="days">
+			
+			<div class="panel panel-headline">
+				<div class="panel-heading">
+					<h4 class="panel-title" style="font-size:20px; padding-left:15px;">근무표 생성 연도와 달을 선택하세요.</h4>
+				</div>
+			
+				<div class="panel-body">
+				<select id="rosterYear" name="rosterYear" onchange="changeList()">
+							<option value="2016">2016</option>
+							<option value="2017">2017</option>
+							<option value="2018">2018</option>
+							<option value="2019">2019</option>
+						</select>년
+						
+						<select id="rosterMonth" name="rosterMonth" class="w_40 mgb_5" onchange="changeList()">
+							<option value="01">1</option>
+							<option value="02">2</option>
+							<option value="03">3</option>
+							<option value="04">4</option>
+							<option value="05">5</option>
+							<option value="06">6</option>
+							<option value="07">7</option>
+							<option value="08">8</option>
+							<option value="09">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+						</select>월
+				</div>
+			</div>
+			
+			<div style="padding-top:40px"></div>
 			<div id="dp"></div>
 			
+			<input type="hidden" name="rosterMakeFlag" value="">
+			<input type="hidden" name="selectNumber" value="">
+			<input type="hidden" name="hiddenNotChangeRosterOrder" value="">
+			<input type="hidden" name="hiddenRosterOrder" value="">
+			<input type="hidden" name="dbRosterInsert" value="">
 			<input type="hidden" name="empName2" value="">
 			<input type="hidden" name="yearMonth2" value="">
 			<input type="button" name="saveBtn" class="btn btn-primary" value="저장하기" onClick="saveRosterBtn()">
-			<input type="button" id="selectRosterMake" name="selectRosterMake" class="btn btn-primary" value="선택 인원 근무 생성">
+			<input type="button" id="selectRosterMake" onClick="insertModalOpen()" name="selectRosterMake" class="btn btn-primary" value="선택 인원 근무 생성">
 		</div>
 	</div>
 </div>
+
+<!-- data-toggle="modal" data-backdrop="static" data-target="#insertModal" -->
 
 <script type="text/javascript">
     var dp;
@@ -80,7 +172,173 @@
     var yearMonth;
     var empName;					//input hidden(emppName1,2)에 값을 넣어주기 위해 만들어준 변수
 	var yearMonth;					//input hidden(yearMonth1,2)에 값을 넣어주기 위해 만들어준 변수
+	var rosterResult = "";
+	var rosterOrderArray = new Array();
+	var rosterOrderNotChangeArray = new Array();
     
+	function removeArray(){
+		rosterOrderArray.splice(rosterOrderArray.length-1 ,1);
+// 		rosterOrderNotChangeArray.splice(rosterOrderNotChangeArray.length-1, 1);
+		
+		$("label[for='inputRoster']").text(rosterOrderArray);
+	}
+	
+	function hideModal(){
+// 		console.log("test222 : " + $("input[name='hiddenNotChangeRosterOrder']").val());
+		
+		rosterOrderArray = [];
+		rosterOrderNotChangeArray = [];
+		
+		$("input[name='hiddenRosterOrder']").val(rosterOrderArray);
+// 		$("input[name='hiddenNotChangeRosterOrder']").val(rosterOrderNotChangeArray);
+		
+		$("label[for='inputRoster']").text("");
+		
+		$("#insertModal").modal('hide');
+	}
+	
+	function applyBtn(){
+		console.log("rosterOrderArray길이 : " + rosterOrderArray.length);
+		
+		
+		if(rosterOrderArray.length == 0){
+			alert("최소 하나 선택하세요");
+			
+			$("input[name='rosterMakeFlag']").val("flase");
+			
+		}else{
+			$("input[name='rosterMakeFlag']").val("true");
+			$("input[name='hiddenRosterOrder']").val(rosterOrderArray);
+// 			$("input[name='hiddenNotChangeRosterOrder']").val(rosterOrderNotChangeArray);
+		
+			console.log("test : " + $("input[name='hiddenRosterOrder']").val());
+		
+			rosterOrderArray = [];
+			rosterOrderNotChangeArray = [];
+		
+			$("label[for='inputRoster']").text("");
+		
+			$("#insertModal").modal('hide');
+		}
+	}
+	
+	function addBtn(){
+		var checkedValue = $("input[type=radio][name=rosterRadioButton]:checked").val();
+		
+		if(rosterOrderArray.length < 3){
+// 			rosterOrderNotChangeArray.push(checkedValue);
+// 			if(checkedValue == "C2016-03-01D"){
+// 				checkedValue = "주";
+// 			}else if(checkedValue == "C2016-03-01N"){
+// 				checkedValue = "야";
+// 			}else if(checkedValue == "C2016-03-01E"){
+// 				checkedValue = "심";
+// 			}
+			
+			rosterOrderArray.push(checkedValue);
+		}
+		var rosterChangeLetter = new Array();
+// 		$("input[name='dbRosterInsert']").val(JSON.stringify(resultArray));
+		
+		$("input[name='hiddenRosterOrder']").val(rosterOrderArray);
+// 		$("input[name='hiddenNotChangeRosterOrder']").val(rosterOrderNotChangeArray);
+		
+		for(var i = 0 ; i < rosterOrderArray.length; i++){
+			var tmp = rosterOrderArray[i];
+			
+			if(tmp == "C2016-03-01D"){
+				tmp = "주";
+			}else if(tmp == "C2016-03-01N"){
+				tmp = "야";
+			}else if(tmp == "C2016-03-01E"){
+				tmp = "심";
+			}
+			
+			rosterChangeLetter.push(tmp);
+		}
+		
+		console.log("배열2: " + $("input[name='dbRosterInsert']").val());
+		
+		$("label[for='inputRoster']").text(rosterChangeLetter);
+		
+	}
+	
+	function timeInsert(time){
+		time = time.substring(1, time.length-1);
+		
+		console.log("시간3 : " + time);
+		
+		return time;
+	}
+	
+	function insertModalOpen(){
+		if($("input[name='selectNumber']").val() > 0){
+			$("#insertModal").modal({backdrop: 'static', keyboard: false});
+		}else{
+			alert("인원을 선택해주세요");
+		}
+		
+		var standardTime;
+		
+		console.log("hh : " + $("input[name='hiddenRosterOrder']").val());
+		
+		if($("input[name='yearMonth']").val() == undefined){
+			standardTime = $("input[name='yearMonth2']").val();
+		}else{
+			standardTime = $("input[name='yearMonth']").val();
+		}
+		
+		var dataObj = {"standardTime" : standardTime};
+		
+		paging.ajaxSubmit("/spring/rosterTime.ajax", dataObj, function(result){
+			var resultArray = new Array();
+			var resultObj = new Object;
+			$("input[name='dbRosterInsert']").val(result);
+			
+			for(var i = 0 ; i < result.length ; i++){
+				resultObj.SHWK_SHF_TYPE = result[i].SHWK_SHF_TYPE;
+				resultObj.SHWK_SHF_IN_TIME = result[i].SHWK_SHF_IN_TIME;
+				resultObj.SHWK_SHF_C = result[i].SHWK_SHF_C;
+				rosterOrderNotChangeArray.push(result[i].SHWK_SHF_C + "/" + result[i].SHWK_SHF_TYPE);
+				resultObj.SHWK_START_DATE = result[i].SHWK_START_DATE;
+				resultObj.SHWK_END_DATE = result[i].SHWK_END_DATE;
+				resultObj.SHWK_SHF_OUT_TIME = result[i].SHWK_SHF_OUT_TIME;
+				
+				resultArray.push(resultObj);
+				
+				resultObj = {};
+				
+			}
+			
+			$("input[name='hiddenNotChangeRosterOrder']").val(rosterOrderNotChangeArray);
+			$("input[name='dbRosterInsert']").val(JSON.stringify(resultArray));
+			
+			console.log("test333 : " + $("input[name='hiddenNotChangeRosterOrder']").val());
+			console.log("dbRosterInsert10 : " + $("input[name='dbRosterInsert']").val());
+			
+			var content = $("input[name='dbRosterInsert']").val();
+			content = JSON.parse(content);
+			
+			for(var i = 0 ; i < content.length ; i++){
+				var rosterStartEndTime = timeInsert(JSON.stringify(content[i].SHWK_SHF_IN_TIME)) + "-" + timeInsert(JSON.stringify(content[i].SHWK_SHF_OUT_TIME));
+				var code = content[i].SHWK_SHF_C;
+				code = code.substring(code.length-1);
+
+				if(code == "D"){
+					$("#day").val(content[i].SHWK_SHF_C);
+					$("label[for='day']").text(rosterStartEndTime);
+				}else if(code == "E"){
+					$("#evening").val(content[i].SHWK_SHF_C);
+					$("label[for='evening']").text(rosterStartEndTime);
+				}else if(code == "N"){
+					$("#night").val(content[i].SHWK_SHF_C);
+					$("label[for='night']").text(rosterStartEndTime);
+				}
+			}
+			
+    	});
+	}
+	
 	function validate(){	
 		//일반사원은 근무표만 볼수있으면 되기때문에 디비에서 값을 가지고옴. ajax로 동기화 통신을 해서 값을 가지고오는중. 
 		//비동기로 하면 값을 못 읽어들이기 때문에 동기로 처리해줌.
@@ -103,6 +361,9 @@
     	var year = yearMonth.substring(0,4);
     	var month = yearMonth.substring(5,7);
     	var day = yearMonth.substring(8,10);
+    	
+    	$("#rosterYear").val(year).attr("selected", "selected");
+    	$("#rosterMonth").val(month).attr("selected", "selected");
     	
     	var tmpYearMonth = new Date(year, month-1, day);
     	tmpYearMonth.setDate(tmpYearMonth.getDate() - 5);
@@ -482,18 +743,121 @@
 		
     });
 	
+  //바뀌면 update를 해줘서 표 안을 바꿔줌.
+	function changeList(){
+		yearMonthChange();
+		
+		if($("input[name='yearMonth']").val() == undefined){
+			dp.startDate = $("input[name='yearMonth2']").val();
+		}else{
+			dp.startDate = $("input[name='yearMonth']").val();
+		}
+		
+		console.log("dp.start222 : " + dp.startDate);
+// 		dp.startDate = $("input[name='yearMonth2']").val();
+		dp.days = $("input[name='days']").val();
+		
+		dp.update();
+	}
+	
+	//year, month가 바뀌면 바뀐 데이터를 hidden에 넣어주는 기능
+	function yearMonthChange(){
+		var year = $("select[name=rosterYear]").val();
+		var month = $("select[name=rosterMonth]").val();
+		var day = "1";
+		
+		var rosterDate = new Date(year, (month -1), "1");
+		
+		console.log("rosterDate : " + rosterDate);
+		
+		$("input[name='days']").val(daysInMonth(rosterDate.getMonth(), rosterDate.getFullYear()));
+		
+		var yearMonth = rosterDate.getFullYear() + '-' + ((rosterDate.getMonth()+1)<10 ? '0' + (rosterDate.getMonth()+1) : (rosterDate.getMonth()+1)) + '-' +
+        (rosterDate.getDate()<10 ? '0'+rosterDate.getDate() : rosterDate.getDate());
+		
+		$("input[name='yearMonth2']").val(yearMonth);
+	}
+    
+	function daysInMonth(month, year) {
+	    var days;
+	    switch (month) {
+	        case 1: // Feb, our problem child
+	            var leapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+	            days = leapYear ? 29 : 28;
+	            break;
+	        case 3: case 5: case 8: case 10: 
+	            days = 30;
+	            break;
+	        default: 
+	            days = 31;
+	        }
+	    console.log("year : " + year + " month : " + month + " days : " + days);
+	    
+	    return days;
+	}
+	
     function saveRosterBtn(){
+//     	console.log("startDate22 : " + option2.startDate);
+
+		startDateString = String(option2.startDate);
+// 		startDateString = startDateString.substring(0,10);
+		startDateString = startDateString.split('-');
+		startDate = new Date(startDateString[0], startDateString[1]-1, startDateString[2]);
+		
+		console.log("startDate22 : " + startDate);
+		
+// 		var endDateString = String((dp.rows.selection.get()[0]).start);
+// 		endDateString = endDateString.substring(0,10);
+// 		endDateString = endDateString.split('-');
+    	endDate = new Date(startDateString[0], startDateString[1]-1, startDateString[2]);
+    	
+    	endDate.setDate(parseInt(endDate.getDate()) + parseInt(option2.days));
+    	
+    	console.log("endDate.getDate() : " + endDate.getDate());
+    	console.log("options.events : " + JSON.stringify(options.events));
+    	
     	$("input[name='events']").val(JSON.stringify(options.events));
     	//$("form[name='hiddenForm']").submit();
-    	
+    	var dataArray = new Array();
     	//var dataObj = {"eventsArray":JSON.stringify($("input[name='events']").val())};
-    	var data = JSON.stringify($("input[name='events']").val());
+    	dataArray.push($("input[name='events']").val());
+    	dataArray = JSON.parse(dataArray);
+    	var standardArray = new Array();
     	
+    	console.log("dataArray55 : " + JSON.stringify(dataArray));
+//     	var data = JSON.stringify($("input[name='events']").val());
+    	var standardDate;
     	//특정문자 '\'를 제거해주는 작업
-		data = data.replace(/\\/g,'');
+// 		data = data.replace(/\\/g,'');
+//     	data = JSON.parse(data);
+    	
+		console.log("startDate33 : " + startDate);
+		console.log("endDate33s : " + endDate);
+    	
+    	for(var i = 0 ; i < dataArray.length ; i++){
+//     		console.log(data[i].start);
+
+    		standardDateString = String(dataArray[i].start);
+    		standardDateString = standardDateString.substring(0,10);
+    		standardDateString = standardDateString.split('-');
+    		standardDate = new Date(standardDateString[0], standardDateString[1]-1, standardDateString[2]);
+    		
+    		if((startDate.getTime() <= standardDate.getTime()) && (standardDate.getTime() <= endDate.getTime())){
+    			console.log("ss");
+    			dataArray[i].text = codeChange(dataArray[i].text);
+    			standardArray.push(dataArray[i]);
+    			
+    		}
+    		
+//     		console.log("standardDate : " + standardDate);
+    	}
+    	
+    	console.log("standardArray 2: " + JSON.stringify(standardArray));
+    	
+//     	console.log("data : " + data);
     	
     	//map 형식으로 만들어줌.
-    	var dataObj = {"eventsArray":data};
+    	var dataObj = {"eventsArray":JSON.stringify(standardArray)};
     	
 		paging.ajaxSubmit("/spring/holidayRosterDBInsert.ajax",dataObj,function(result){
 			console.log(result);
@@ -503,9 +867,10 @@
     }
     
     function selectRosterMake(selectArray, startDate, endDate, startDateString){
+    	
     	var tmpEvents = new Array();
     	var tmpDate = new Date();
-    	var standardDate = new Date(startDateString[0], startDateString[1], startDateString[2]);
+    	var standardDate = new Date(startDateString[0], startDateString[1]-1, startDateString[2]);
     	
     	standardDate.setDate(standardDate.getDate() + 1);
     	
@@ -514,15 +879,27 @@
     	
     	console.log("selectArrayStart  : " + JSON.stringify(selectArray));
     	
-    	var name = prompt("넣을 근무를 입력해주세요.", "주/야/심");
+//     	var name = prompt("넣을 근무를 입력해주세요.", "주/야/심");
     	
-    	name = name.split('/');
+//     	name = name.split('/');
+    	
+    	var name = $("input[name='hiddenRosterOrder']").val();
+    	
+    	console.log("name222222 : " + name);
+    	
+    	name = name.split(',');
+    	
+    	console.log("서순2 : " + name[0]);
     	
 		var diff = endDate - startDate;
 		var currDay = 24 * 60 * 60 * 1000;// 시 * 분 * 초 * 밀리세컨
 		var diffDay= parseInt(diff/currDay);
     	
+		console.log("길이 : " + selectArray.length);
+		
 // 		console.log("dp : " + JSON.stringify(dp.events));
+		
+		console.log("diffDay : " + diffDay);
 		
     	for(var i = 0 ; i < selectArray.length ; i++){
         	
@@ -536,7 +913,12 @@
     			tmpObj.start = tmpString + "T00:00:00";
     			tmpObj.end = tmpString + "T12:00:00";
     			tmpObj.resource = selectArray[i].name;
-    			tmpObj.text = name[j%3];
+    			
+//     			var nameChange = name[j%3];
+    			
+//     			if(nameChange == "")
+    			
+    			tmpObj.text = letterChange(name[j%name.length]);
     			
     			//tmpEvents.push(tmpObj);
     			dp.events.list.push(tmpObj);
@@ -545,8 +927,8 @@
     			tmpDate.setDate(tmpDate.getDate() + 1);
     		}
     		tmpDate.setYear(standardDate.getFullYear());
-    		tmpDate.setMonth(((standardDate.getMonth()+1)<10 ? '0' + (standardDate.getMonth()+1) : (standardDate.getMonth()+1)));
-    		tmpDate.setDate(standardDate.getDate()<10 ? '0'+tstandardDatempDate.getDate() : standardDate.getDate());
+    		tmpDate.setMonth(((standardDate.getMonth())<10 ? '0' + (standardDate.getMonth()) : (standardDate.getMonth())));
+    		tmpDate.setDate(standardDate.getDate()<10 ? '0'+ standardDatempDate.getDate() : standardDate.getDate());
     	}
     	
     	console.log("tmpEvents55 : " + JSON.stringify(tmpEvents));
@@ -580,13 +962,60 @@
     	
     }
     
+    function codeChange(letter){
+    	var result = "";
+    	var standardLetter = $("input[name='hiddenNotChangeRosterOrder']").val();
+    	standardLetter = standardLetter.split(",");
+    	
+    	for(var i = 0 ; i < standardLetter.length ; i++){
+    		if(standardLetter[i].indexOf(letter) != -1){
+    			console.log("찾은문자 : " + standardLetter[i]);
+    			result = standardLetter[i].substring(0, 12);
+    		}
+    	}
+    	
+    	console.log(result);
+    	
+    	return result;
+    }
+    
+    function letterChange(letter){
+    	
+    	if(letter == "" || letter == null){
+    		letter = null;
+    	}
+    	
+    	console.log("letter : " + letter);
+    	var result = "";
+    	var standardLetter = $("input[name='hiddenNotChangeRosterOrder']").val();
+    	
+    	standardLetter = standardLetter.split(",");
+    	
+    	for(var i = 0 ; i < standardLetter.length ; i++){
+
+    		if(standardLetter[i].match(letter) != null){
+    			result = standardLetter[i].substring(standardLetter[i].length-2);
+    			console.log("찾은문자333 : " + result);
+    		}
+    		
+//     		if(standardLetter[i].indexOf(letter) != -1){
+    			
+    			
+//     		}
+    	}
+    	
+    	return result;
+    }
+    
 	$(document).ready(function() { 
 // 		var url = window.location.href; 
 // 		var filename = url.substring(url.lastIndexOf('/')+1); 
 // 		if (filename === "") filename = "index.html"; 
 // 			$(".menu a[href='" + filename + "']").addClass("selected"); 
 
-
+		$("input[name='selectNumber']").val(0);
+		
+		console.log("tt : " + $("input[name='selectNumber']").val());
 		
 		var rowArray = new Array();
 		//근무표안에 들어가는 cell 높이 넓이 지정해주는 부분.
@@ -619,11 +1048,16 @@
 // 	        console.log("array : " + JSON.stringify(rowArray));
 	        dp.message(msg);
 	        window.console && console.log(dp.rows.selection.get().length);
+	        
+	        $("input[name='selectNumber']").val(dp.rows.selection.get().length);
+	        
+	        console.log("선택 된 인원" + $("input[name='selectNumber']").val());
+	        
 	        console.log("id : " + args.row.id);
 			console.log("name : " + args.row.name);
 			console.log("name33 : " + JSON.stringify((dp.rows.selection.get())[0]));
 // 			console.log("name44 : " + (dp.rows.selection.get()[0]).index);
-			console.log("end : " + ((dp.rows.selection.get()[0]).start)); 
+// 			console.log("end : " + ((dp.rows.selection.get()[0]).start)); 
 			console.log("test22 : " + JSON.stringify(dp.rows.selection.get()));
 			
 			data = dp.rows.selection.get();
@@ -650,8 +1084,10 @@
 			console.log("바뀜13 : " + endDate);
 	    };
 		
-	    $('#selectRosterMake').click(function(){
-	    	selectRosterMake(data, startDate, endDate, startDateString);
+	    $('#insertBtn').click(function(){
+	    	if($("input[name='rosterMakeFlag']").val() == "true"){
+	    		selectRosterMake(data, startDate, endDate, startDateString);
+	    	}
 	    });
 	    
 // 		dp.selectedRows = ["강병욱"];

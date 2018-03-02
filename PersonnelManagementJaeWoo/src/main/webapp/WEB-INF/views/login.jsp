@@ -82,7 +82,7 @@
 			loginAjax();
 		});//onClick	
 	 
-		$("#loginForm input").on("keydown", function(e){//keydown 중 Enter를 눌렀을 때
+		$("#signin-password").on("keydown", function(e){//keydown 중 Enter를 눌렀을 때
 			if(e.keyCode == 13){
 				loginAjax();
 			}//if

@@ -24,6 +24,7 @@ $(function(){
 	rankSelect();	//직급 셀렉
 	vacEmpList();	//사원 리스트 함수 AJAX
 	enterKey();	//검색 후 엔터키 작동
+	$('.table tr').children().addClass('text-center'); //테이블 내용 가운데정렬
 });
 
 
@@ -284,7 +285,7 @@ function empVacationList(empEmno){
 				$('#empVacListTbody').append(
 					"<tr>"+
 	 					"<td>"+ i +"</td>"+ //번호
-	 					"<td>"+ v.vastCrtDate +"</td>"+	//휴가신청날짜
+	 					"<td>"+ v.vastReqDate +"</td>"+	//휴가신청날짜
 	 					"<td>"+ v.vastType +"</td>"+	//휴가명
 	 					"<td>"+ v.vastTerm +"</td>"+	//휴가기간
 	 					"<td>"+ v.vastVacUd +"</td>"+	//사용개수
@@ -363,7 +364,7 @@ function empVacationList(empEmno){
 				<input type="hidden" id="empInfoHidden" name="empInfoHidden">
 					<div class="panel-body"> 
 						<div class="list_wrapper">
-							<table class="table tablesorter table-bordered" id="vacListTable">
+							<table class="table tablesorter" id="vacListTable">
 								<thead>
 									<tr>
 										<th>구분</th>
@@ -385,7 +386,7 @@ function empVacationList(empEmno){
 					
 						<!-- Modal -->
 						<div id="myModal" class="modal fade" role="dialog">
-						  <div class="modal-dialog">
+						  <div class="modal-dialog modal-lg">
 						
 						    <!-- Modal content-->
 						    <div class="modal-content">
@@ -406,7 +407,7 @@ function empVacationList(empEmno){
 														<th>휴가항목</th>
 														<th>휴가기간</th>
 														<th>일수</th>
-														<th>기타</th>
+														<th>휴가사유</th>
 													</tr>
 												</thead>
 												<tbody id="empVacListTbody">

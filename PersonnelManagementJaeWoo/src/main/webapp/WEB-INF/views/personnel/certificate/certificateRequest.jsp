@@ -97,7 +97,6 @@
 								</div>
 								<div class="col-md-2">
 									<button type="button" class="btn btn-primary" id="crtfSearchBtn">검색</button>
-									<input type="checkbox" id="chk" data-toggle="toggle" data-on="승인완료" data-off="승인대기" data-size="small">
 								</div>
 							</div>
 						</div>

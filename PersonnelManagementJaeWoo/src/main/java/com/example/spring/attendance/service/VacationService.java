@@ -84,13 +84,26 @@ public class VacationService {
 		return empVacChk;
 	}
 	
+	
+	/* 관리자 or 사원 어떤 버전으로 로그인 했는지 체크(권한부여 때문) */
+	public int adminChk(HashMap<String,Object> map) {
+		int list = vacationDao.adminChk(map);
+		return list;
+	}
+	
+	
 	/* 휴가일수설정에 등록된 사원인지 체크 */
 	public int empVacChk(HashMap<String,Object> map) {
-		
 		int list = vacationDao.empVacChk(map);
-		
+
 		logger.debug("service>>> " + list);
 		
+		return list;
+	}
+	
+	/* 휴가신청: 사원일 경우 사원 정보 나타내기 */
+	public List<HashMap<String,Object>> empVacInfomation(HashMap<String,Object> map){
+		List<HashMap<String,Object>> list = vacationDao.empVacInfomation(map);
 		return list;
 	}
 	

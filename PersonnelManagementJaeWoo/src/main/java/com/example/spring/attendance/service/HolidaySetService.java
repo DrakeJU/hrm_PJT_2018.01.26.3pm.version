@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.spring.attendance.dao.HolidaySetDao;
 import com.example.spring.attendance.entity.JsonData;
@@ -44,6 +45,12 @@ public class HolidaySetService {
 		int result = holidaySetDao.holidayRoster(infoMap);
 		
 		return result;
+	}
+	
+	public List<HashMap<String, String>> rosterTime(@RequestParam HashMap<String,String> standardTime){
+		List<HashMap<String,String>> list = holidaySetDao.rosterTime(standardTime);
+		
+		return list;
 	}
 	
 	public List<HashMap<String,String>> holidayRosterEventsList2(HashMap<String,Object> eventsList){

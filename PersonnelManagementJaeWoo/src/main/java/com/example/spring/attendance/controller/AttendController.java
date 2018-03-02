@@ -201,7 +201,7 @@ public class AttendController {
 		return "mnthAttdStat";
 	}
 	
-	//사원번호 검색 모달(돋보기아이콘)버튼====================================================================
+	//검색버튼 => 사원번호 검색 모달(돋보기아이콘)버튼====================================================================
 	@RequestMapping(value = "/mAttdSelectEmpList.ajax")
 	public @ResponseBody HashMap<String, Object> mAttdSelectEmpList(
 			@RequestParam HashMap<String, Object> map){
@@ -220,7 +220,7 @@ public class AttendController {
 		return map;
 	}
 	
-	//검색버튼====================================================================
+	//검색버튼 => 달력 /근태 출력====================================================================
 	@RequestMapping(value= "/searchMnthAttdStat")
 	public @ResponseBody HashMap<String, Object> searchMnthAttdStat(
 			@RequestParam HashMap<String, String> paramMap){
@@ -229,16 +229,11 @@ public class AttendController {
 		logger.debug("workYyMm : " + paramMap.get("workYyMm"));
 		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("resultList", attendService.searchMnthAttdStat(paramMap));
+		resultMap.put("resultList", attendService.searchMnthAttdStat(paramMap)); //달력출력
+		resultMap.put("resultWorkList", attendService.searchWorkMnthAttdStat(paramMap)); //달력 밑 근태 출력
 		
 		return resultMap; //
 	}
-	
-	
-	
-	
-	
-	
 	
 	/***************************************************************************************
 	 * 메뉴명 : [출결관리] - [휴일 /연장 /야간근무 조회]

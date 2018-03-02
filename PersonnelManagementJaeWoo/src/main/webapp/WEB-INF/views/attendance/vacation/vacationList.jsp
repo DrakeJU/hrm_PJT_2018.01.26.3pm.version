@@ -218,6 +218,9 @@
 		var result = confirm('수정하시겠습니까?');
 		
 		if(result){ //수정
+			
+			$('#vastReqDate').val(moment().format('YYYY.MM.DD'));	//휴가 신청일
+			
 			paging.ajaxFormSubmit("vacationListUpdate.exc", "vacReqFrm", function(rslt){
 //	 			console.log("결과데이터:"+JSON.stringify(rslt));
 

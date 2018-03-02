@@ -52,10 +52,18 @@ public class CertificateDao {
 		return map;
 	}
 	
+	//증명서 결제상태
+	public int crtfProgressSituation(HashMap<String,Object> map) {
+		
+		int result = this.sql.update(namespace+"crtfProgressSituation", map);
+		
+		return result;
+	}
+	
 	//증명서 신청
 	public int certificateInsert(HashMap<String, Object> map) {
 		
-		int result = this.sql.insert(namespace + "certificateInsert", map);
+		int result = this.sql.insert(namespace+"certificateInsert", map);
 		
 		return result;
 	}

@@ -69,6 +69,27 @@
        <put-attribute name="scripts" value="/WEB-INF/views/personnel/certificate/script/certificateIssueScript.jsp"/>
    </definition>
    
+   <!-- [인사관리]-[인사발령등록] -->
+   <definition name="hrapntView" extends="base-definition">  
+       <put-attribute name="title" value="인사발령리스트" />
+       <put-attribute name="body" value="/WEB-INF/views/personnel/hrapnt/hrapntView.jsp" />
+       <put-attribute name="scripts" value="/WEB-INF/views/personnel/hrapnt/script/hrapntViewjs.jsp"/>
+   </definition>
+   
+   <!-- <definition name="hrapntRegLayout" template="/WEB-INF/views/common/hrapntCommonjs.jsp">
+       <put-attribute name="title" value="" />  
+       <put-attribute name="header" value="" />  
+       <put-attribute name="menu" value="" />  
+       <put-attribute name="body" value="" />  
+       <put-attribute name="footer" value="" />  
+       <put-attribute name="scripts" value="" />
+   </definition>
+   <definition name="hrapntReg" extends="hrapntRegLayout">  
+       <put-attribute name="title" value="인사발령" />
+       <put-attribute name="body" value="/WEB-INF/views/personnel/hrapnt/hrapntReg.jsp" />
+       <put-attribute name="scripts" value="/WEB-INF/views/personnel/hrapnt/script/hrapntRegjs.jsp"/>
+   </definition> -->
+   
    <!-- [인사관리] END -->
   
    <!--  START [급여관리] -->
