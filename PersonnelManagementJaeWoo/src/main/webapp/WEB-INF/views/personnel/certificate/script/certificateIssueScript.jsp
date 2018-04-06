@@ -13,35 +13,6 @@
 	});//페이지 로딩시 증명서 전체정보를 가져온다
 	
 	
-	$("#viewForm").find("#toggleBtn").on("click",function(){
-		
-		if($("#viewForm").find("#toggleBtn").text() == "승인대기"){
-			if(confirm("결제 승인을 완료하시겠습니까?")){
-				$("#viewForm").find("#toggleBtn").button('complete');
-				
-				var url = "/spring/crtfProgressSituation.exc";
-				var data = {"crtfSeq":$("#viewForm input[name='crtfSeq']").val(),"crtfProgressSituation":$("#viewForm #toggleBtn").attr("data-complete-text")};
-				paging.ajaxSubmit(url,data,function(result){
-					if(result > 0){
-						alert("결제가 완료되었습니다.");
-						location.href="/spring/certificateIssue.do";
-					}else{
-						alert("결제를 다시 시도하여 주십시오.");
-						return false;
-					}
-				});
-				
-			}else{
-				return false;
-			}
-		}else{
-			$("#viewForm").find("#toggleBtn").attr("disabled");
-		}
-		
-	});
-	
-	console.log("dddd: " + $("#viewForm table tbody").find("tr:last").find("input[name='toggleSwitch']").attr("type"));
-
 	//증명서 리스트
 	var certificateList = function(choicePage){
 		
@@ -161,14 +132,18 @@
 			formId.find("[name='use']").val(crtfUse);									//용도
 			formId.find("[name='requestDate']").val(crtfRequestDate);					//신청일
 			formId.find("[name='issueDate']").val(crtfIssueDate);						//발행일
+			//결제상태에 따른 버튼생성('승인대기' or '승인완료')
 			formId.find("tr:last > td").find("#toggleBtn").text(crtfProgressSituation);	//결제상태
 			
-			if(crtfProgressSituation == '승인완료'){
-				formId.find("#toggleBtn").addClass("btn-primary active");
-				formId.find("#toggleBtn").attr("disabled",true);
-			}else{
-				formId.find("#toggleBtn").removeClass("btn-primary active");
-				formId.find("#toggleBtn").attr("disabled",false);
+			//결제상태에 따른 증명서 상세보기 시 '승인버튼' 옵션
+			if(crtfProgressSituation == '승인완료'){	//승인완료 상태
+				formId.find("#toggleBtn").removeClass("btn-danger");		//'btn-danger'(버튼색상 빨간색) 버튼 클래스 삭제
+				formId.find("#toggleBtn").addClass("btn-primary active");	//'btn-primary'(버튼색상 파란색), active(눌린상태) 버튼 클래스 추가
+				formId.find("#toggleBtn").attr("disabled",true);			//버튼 비활성화
+			}else{									//승인대기 상태
+				formId.find("#toggleBtn").addClass("btn-danger");			//'btn-danger'(버튼색상 빨간색) 버튼 클래스 추가
+				formId.find("#toggleBtn").removeClass("btn-primary active");//'btn-primary'(버튼색상 파란색), active(눌린상태) 버튼 클래스 삭제
+				formId.find("#toggleBtn").attr("disabled",false);			//버튼 비활성화 해제
 			}
 		
 			//상세보기, 미리보기 버튼 클릭시
@@ -195,7 +170,6 @@
 			});
 		});
 		
-			
 		
 		//사원정보가져오기
 		obj.emno = data.find("td[name='empEmno']").text();
@@ -206,6 +180,36 @@
 		});
 		
 	}
+	
+	//증명서 상세보기 시 승인 버튼 클릭 이벤트
+	$("#viewForm").find("#toggleBtn").on("click",function(){
+		
+		if($("#viewForm").find("#toggleBtn").text() == "승인대기"){	//승인대기 상태
+			if(confirm("결제 승인을 완료하시겠습니까?")){
+				
+				$("#viewForm").find("#toggleBtn").button('complete'); //버튼 text를 '승인완료'로 바꿈
+				
+				var url = "/spring/crtfProgressSituation.exc";
+				var data = {"crtfSeq":$("#viewForm input[name='crtfSeq']").val(),"crtfProgressSituation":$("#viewForm #toggleBtn").attr("data-complete-text")};
+				paging.ajaxSubmit(url,data,function(result){	//해당 발행번호의 결제상태를 '승인완료'로 update하는 ajax함수
+					if(result > 0){
+						alert("결제가 완료되었습니다.");
+						location.href="/spring/certificateIssue.do";
+					}else{
+						alert("결제를 다시 시도하여 주십시오.");
+						return false;
+					}
+				});
+				
+			}else{
+				return false;
+			}//if(confirm)
+				
+		}else{	//승인완료 상태
+			$("#viewForm").find("#toggleBtn").attr("disabled");	//승인 버튼 비활성화
+		}
+		
+	});
 	
 	//증명서 삭제
 	var certificateDelete = $("#deleteBtn").on("click",function(){

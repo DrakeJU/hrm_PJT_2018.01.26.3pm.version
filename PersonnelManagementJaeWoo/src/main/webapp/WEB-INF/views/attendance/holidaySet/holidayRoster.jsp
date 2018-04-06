@@ -147,6 +147,7 @@
 			<div style="padding-top:40px"></div>
 			<div id="dp"></div>
 			
+			<input type="hidden" name="rosterStartSubOne" value="">
 			<input type="hidden" name="rosterMakeFlag" value="">
 			<input type="hidden" name="selectNumber" value="">
 			<input type="hidden" name="hiddenNotChangeRosterOrder" value="">
@@ -288,6 +289,8 @@
 			standardTime = $("input[name='yearMonth']").val();
 		}
 		
+		console.log("standardTime : " + standardTime);
+		
 		var dataObj = {"standardTime" : standardTime};
 		
 		paging.ajaxSubmit("/spring/rosterTime.ajax", dataObj, function(result){
@@ -391,7 +394,7 @@
 		
 		options = {
             startDate: "",
-            days: 36,
+            days: "",
             scale: "Day",
             timeHeaders: [
                 { groupBy: "Month", format: "MMM yyyy" },
@@ -747,11 +750,13 @@
 	function changeList(){
 		yearMonthChange();
 		
-		if($("input[name='yearMonth']").val() == undefined){
-			dp.startDate = $("input[name='yearMonth2']").val();
-		}else{
-			dp.startDate = $("input[name='yearMonth']").val();
-		}
+// 		if($("input[name='yearMonth']").val() == undefined){
+// 			dp.startDate = $("input[name='yearMonth2']").val();
+// 		}else{
+// 			dp.startDate = $("input[name='yearMonth']").val();
+// 		}
+		
+		dp.startDate = $("input[name='rosterStartSubOne']").val()
 		
 		console.log("dp.start222 : " + dp.startDate);
 // 		dp.startDate = $("input[name='yearMonth2']").val();
@@ -760,22 +765,61 @@
 		dp.update();
 	}
 	
+	function daysInMonth(month, year) {
+	    var days;
+	    switch (month) {
+	        case 1: // Feb, our problem child
+	            var leapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+	            days = leapYear ? 29 : 28;
+	            break;
+	        case 3: case 5: case 8: case 10: 
+	            days = 30;
+	            break;
+	        default: 
+	            days = 31;
+	        }
+	    console.log("year : " + year + " month : " + month + " days : " + days);
+	    
+	    return days;
+	}
+  
 	//year, month가 바뀌면 바뀐 데이터를 hidden에 넣어주는 기능
 	function yearMonthChange(){
 		var year = $("select[name=rosterYear]").val();
 		var month = $("select[name=rosterMonth]").val();
 		var day = "1";
 		
+		console.log("year : " + year);
+		console.log("month : " + month);
+		
 		var rosterDate = new Date(year, (month -1), "1");
 		
-		console.log("rosterDate : " + rosterDate);
+// 		rosterDate.setDate(rosterDate.getDate()-1);
 		
-		$("input[name='days']").val(daysInMonth(rosterDate.getMonth(), rosterDate.getFullYear()));
+		console.log("rosterDate : " + rosterDate);
+		var day2 = daysInMonth(rosterDate.getMonth(), rosterDate.getFullYear());
+		var day2 = Number(day2) + 1;
+		$("input[name='days']").val(day2);
+		
+		rosterDate.setDate(rosterDate.getDate() - 1);
+		
+		var yearMonth = rosterDate.getFullYear() + '-' + ((rosterDate.getMonth()+1)<10 ? '0' + (rosterDate.getMonth()+1) : (rosterDate.getMonth()+1)) + '-' +
+        (rosterDate.getDate()<10 ? '0'+rosterDate.getDate() : rosterDate.getDate());
+		
+		$("input[name='rosterStartSubOne']").val(yearMonth);
+		
+		console.log("rosterStartSubOne : " + $("input[name='rosterStartSubOne']").val());
+// 		
+		console.log("days22 : " + $("input[name='days']").val());
+		
+		rosterDate.setDate(rosterDate.getDate() + 1);
 		
 		var yearMonth = rosterDate.getFullYear() + '-' + ((rosterDate.getMonth()+1)<10 ? '0' + (rosterDate.getMonth()+1) : (rosterDate.getMonth()+1)) + '-' +
         (rosterDate.getDate()<10 ? '0'+rosterDate.getDate() : rosterDate.getDate());
 		
 		$("input[name='yearMonth2']").val(yearMonth);
+		
+		console.log("test : " + $("input[name='yearMonth2']").val());
 	}
     
 	function daysInMonth(month, year) {
@@ -797,7 +841,7 @@
 	}
 	
     function saveRosterBtn(){
-//     	console.log("startDate22 : " + option2.startDate);
+    	console.log("startDateOption : " + option2.startDate);
 
 		startDateString = String(option2.startDate);
 // 		startDateString = startDateString.substring(0,10);
@@ -867,7 +911,7 @@
     }
     
     function selectRosterMake(selectArray, startDate, endDate, startDateString){
-    	
+    	console.log("startDateString : " + startDateString);
     	var tmpEvents = new Array();
     	var tmpDate = new Date();
     	var standardDate = new Date(startDateString[0], startDateString[1]-1, startDateString[2]);
@@ -928,7 +972,7 @@
     		}
     		tmpDate.setYear(standardDate.getFullYear());
     		tmpDate.setMonth(((standardDate.getMonth())<10 ? '0' + (standardDate.getMonth()) : (standardDate.getMonth())));
-    		tmpDate.setDate(standardDate.getDate()<10 ? '0'+ standardDatempDate.getDate() : standardDate.getDate());
+    		tmpDate.setDate(standardDate.getDate()<10 ? '0'+ standardDate.getDate() : standardDate.getDate());
     	}
     	
     	console.log("tmpEvents55 : " + JSON.stringify(tmpEvents));
@@ -989,6 +1033,8 @@
     	var result = "";
     	var standardLetter = $("input[name='hiddenNotChangeRosterOrder']").val();
     	
+    	console.log("standardLetter : " + standardLetter);
+    	
     	standardLetter = standardLetter.split(",");
     	
     	for(var i = 0 ; i < standardLetter.length ; i++){
@@ -1015,7 +1061,9 @@
 
 		$("input[name='selectNumber']").val(0);
 		
-		console.log("tt : " + $("input[name='selectNumber']").val());
+		changeList();
+		
+		console.log("tt2 : " + $("input[name='days']").val());
 		
 		var rowArray = new Array();
 		//근무표안에 들어가는 cell 높이 넓이 지정해주는 부분.
@@ -1076,12 +1124,12 @@
 			endDateString = endDateString.split('-');
 			console.log("바뀜2 : " + endDateString);
 			endDate = new Date(endDateString[0], endDateString[1]-1, endDateString[2]);
-			console.log("days : " + dp.days);
-			endDate.setDate(endDate.getDate() + dp.days - 1);
+			console.log("데이 : " + dp.days);
+			endDate.setDate(endDate.getDate() + Number(dp.days) - 1);
 			
 			//selectRosterMake(JSON.stringify(dp.rows.selection.get()));
 			
-			console.log("바뀜13 : " + endDate);
+			console.log("바뀜44 : " + endDate);
 	    };
 		
 	    $('#insertBtn').click(function(){

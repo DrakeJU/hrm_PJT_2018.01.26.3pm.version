@@ -16,6 +16,7 @@
 			<div class="container-fluid">
 				<h3 class="page-title">증명서 신청</h3>
 				<!-- OverView -->
+				<!-- 증명서 신청 시 사원정보 및 신청하기 패널 -->
 				<div class="row" id="crtfRequestEmpInfo">
 					<div class="col-md-10">
 						<div class="panel">
@@ -75,6 +76,7 @@
 						</div>
 					</div>
 				</div>
+				<!-- 증명서 신청내역 검색 패널 -->
 				<div class="row">
 					<div class="col-md-10">
 						<div class="panel" id="crtfSearch">
@@ -102,13 +104,14 @@
 						</div>
 					</div>
 				</div>
+				<!-- 증명서 신청내역 목록 패널 -->
 				<div class="row">
 					<div class="col-md-10">
 						<div class="panel" id="crtfRequestList">
 							<div class="panel-heading" style="padding-bottom:0px">
 								<h4 class="panel-title" style="font-size:18px; padding-left:15px;">증명서 신청내역</h4>
 							</div>
-							<div class="panel-body">
+							<div class="panel-body" style="max-height:240px; overflow-y:auto">
 								<table class="table table-hover">
 									<thead>
 										<tr>
@@ -127,6 +130,7 @@
 									</tbody>
 								</table>
 							</div>
+							<nav name="pagingNav" aria-label="Paging navigation example" align="center"></nav>
 						</div>					
 					</div>
 				</div>

@@ -168,7 +168,7 @@ input:checked + .slider:before {
 												<tr>
 													<th>증명서구분</th>
 													<td>
-														<select name="crtfSelect" disabled="disabled">
+														<select name="crtfSelect" class="form-control" style="width:120px" disabled="disabled">
 															<option value="증명서종류">증명서종류</option>
 															<option value="재직증명서">재직증명서</option>
 															<option value="경력증명서">경력증명서</option>
@@ -178,31 +178,31 @@ input:checked + .slider:before {
 												</tr>
 												<tr>
 													<th>사원번호</th>
-													<td><input type="text" name="empEmno" value="" readonly></td>
+													<td><input type="text" class="form-control" name="empEmno" value="" style="width:120px" readonly></td>
 												</tr>
 												<tr>
 													<th>성명</th>
-													<td><input type="text" name="empName" value="" readonly></td>
+													<td><input type="text" class="form-control" name="empName" value="" style="width:120px" readonly></td>
 												</tr>
 												<tr>
 													<th>부서명</th>
-													<td><input type="text" name="deptName" value="" readonly></td>
+													<td><input type="text" class="form-control" name="deptName" value="" style="width:120px" readonly></td>
 												</tr>
 												<tr>
 													<th>직위/직급</th>
-													<td><input type="text" name="rankName" value="" readonly></td>
+													<td><input type="text" class="form-control" name="rankName" value="" style="width:120px" readonly></td>
 												</tr>
 												<tr>
 													<th>용도</th>
-													<td><input type="text" value=""name="use" size="20" readonly></td>
+													<td><input type="text" class="form-control" name="use" value="" readonly></td>
 												</tr>
 												<tr>
 													<th>신청일자</th>
-													<td><input type="text" name="requestDate" readonly></td>
+													<td><input type="text" class="form-control" name="requestDate" style="width:120px" readonly></td>
 												</tr>
 												<tr>
 													<th>발행일자</th>
-													<td><input type="text" name="issueDate" readonly></td>
+													<td><input type="text" class="form-control" name="issueDate" style="width:120px" readonly></td>
 												</tr>
 												<tr>
 													<th>결제상태</th>

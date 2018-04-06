@@ -21,7 +21,16 @@
 		certificateRequestListFunc(empEmno);
 		
 	});
-	
+	/* 
+	//body scroll 막기
+	function blockScroll(){
+		
+		$(window).on("mousewheel.disableScroll",function(e){
+			e.preventDefault();
+			return;
+		});
+	}
+	 */
 	
 	//증명서 신청 시 사원정보
 	function certificateRequestEmpInfoFunc(empEmno){
@@ -31,8 +40,6 @@
 		
 		paging.ajaxSubmit(url,data,function(result){
 			
-			console.log("증명서 신청 시 사원정보: " + JSON.stringify(result));
-
 			var thisBody = $("#crtfRequestEmpInfo tbody");
 			thisBody.find("input[name='crtfRequestDate']").val(result.crtfRequestDate);
 			thisBody.find("input[name='empEmno']").val(result.empEmno);
@@ -45,7 +52,7 @@
 	}//certificateRequestInfoFunc
 	
 	//증명서 신청내역
-	function certificateRequestListFunc(empEmno){
+	function certificateRequestListFunc(empEmno,choicePage){
 		
 		var url = "/spring/certificateRequestList.do";
 		var data = {"empEmno":empEmno};
@@ -93,13 +100,23 @@
 						$("tr[name='crtfListTr']:eq("+idx+")").find("input[name='toggleSwitch']").prop("checked", true).change();
 					}//if
 					
-				});
+				});//each
 			
 			}//if
 			
-		});
+			if(choicePage == undefined){
+				choicePage = 1;
+			}//if
+			
+			var data = {"totalNoticeNum":result.length,"choicePage":choicePage,"viewNoticeMaxNum":5,"viewPageMaxNum":5};
+			//$("#crtfRequestList nav[name='pagingNav']").pagingNav(data,function(target){
+				//certificateRequestListFunc(target.attr("name"));
+			//});
 		
-	}//certificateRequestList
+		});//paging.ajaxSubmit
+		
+	}//certificateRequestListFunc
+	
 	
 	//증명서 신청하기
 	$("#crtfRequestBtn").on("click",function(){

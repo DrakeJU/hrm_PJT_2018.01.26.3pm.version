@@ -390,8 +390,7 @@
 		VAST_START_DATE = REPLACE(#{vastStartDate},'.',''),
 		VAST_END_DATE = REPLACE(#{vastEndDate},'.',''),
 		VAST_VAC_UD = #{vastVacUd},
-		VAST_CONT = #{vastCont},
-		VAST_UPDT_DATE = REPLACE(#{vastReqDate},'.','')
+		VAST_CONT = #{vastCont}
 	WHERE VAST_SERIAL_NUMBER = #{vastSerialNumber}
 	</update>
 	

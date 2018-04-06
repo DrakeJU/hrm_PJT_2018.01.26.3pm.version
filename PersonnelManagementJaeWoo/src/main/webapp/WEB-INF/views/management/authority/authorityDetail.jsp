@@ -29,7 +29,7 @@
 												<select id="classSelect" class="selectpicker">
 													<option value="">선택</option>
 													<option value="admin" ${data.empAdminYn eq'Y'?'selected':''}>관리자</option>
-													<option value="user" ${data.empAdminYn eq'N'?'selected':''}>사원</option>
+													<option value="user" ${data.empAdminYn eq'N'?'selected':''}>일반</option>
 												</select>
 											</td>
 										</tr>

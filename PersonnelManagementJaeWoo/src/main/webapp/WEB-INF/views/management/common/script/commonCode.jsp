@@ -57,13 +57,13 @@
 			
 			//검색 버튼 눌렀을 떄
 			$("#searchPanel .panel-body").find("#searchBtn").on("click", function(){
-				commSearchList();
+				commSearchList();	//검색목록 함수 호출
 			});
 			
 			//검색 Enter 키 눌렀을 때
 			$("#searchPanel .panel-body").find("input[name='commonSearch']").on("keydown",function(e){
 				if(e.keyCode == 13){
-					commSearchList();
+					commSearchList();	//검색목록 함수 호출
 				}//if
 			});
 				
@@ -303,11 +303,11 @@
 					
 				});
 			}
-			// 하위 공통코드 등록 //
+			/* 하위 공통코드 등록 */
 			
 			
 			
-			// 하위 공통코드(공통코드 상세보기) 목록 //
+			/* 하위 공통코드(공통코드 상세보기) 목록 */
 			function commInfoListFunc(thisTr){	//하위 공통코드 목록 뿌리는 함수
 				
 				var url = "/spring/commonInfoList.do";
@@ -400,11 +400,11 @@
 				});
 				
 			}//commCodeInfoAjaxSubmit
-			//공통코드 상세보기 목록//
+			/* 공통코드 상세보기 목록 */
 			
 			
 			
-			// 공통코드 상세보기에서 코드 수정 //
+			/* 공통코드 상세보기에서 코드 수정 */
 			function commInfoUpdateFunc(infoUpdateBtn){	//하위 공통코드(상세보기)수정 함수
 				
 				var thisForm = $("#infoUpdateModal form[id='infoUpdateForm']");	//해당 함수에서 반복적으로 사용할 formId
@@ -464,11 +464,11 @@
 				});
 				
 			}
-			// 공통코드 상세보기에서 코드 수정 //
+			/* 공통코드 상세보기에서 코드 수정 */
 			
 			
 			
-			// 하위코드(상세보기)에서 코드 삭제 //
+			/* 하위코드(상세보기)에서 코드 삭제 */
 			function commInfoDeleteFunc(obj){	//하위코드(상세보기) 삭제 함수
 				
 				var url = "/spring/commonDelete.do";
@@ -496,7 +496,7 @@
 					
 				});
 			}
-			// 공통코드 상세보기에서 코드 삭제 //
+			/* 공통코드 상세보기에서 코드 삭제 */
 			
 			
 /* ==================================== 페이징 ============================================ */
